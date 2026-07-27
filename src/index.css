@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ease-signature: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-micro: 150ms;
+  --duration-standard: 350ms;
+  --duration-ambient: 2400ms;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #F6EEDD;
+    color: #2A2420;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  ::selection {
+    background: rgba(201, 138, 44, 0.2);
+    color: #2A2420;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid #C98A2C;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 4px;
+    background-color: #C98A2C;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    transition-property: background-color, transform;
+    transition-duration: var(--duration-micro);
+    transition-timing-function: var(--ease-signature);
+  }
+  .btn-primary:hover { background-color: #A16E23; }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:hover .btn-icon { transform: translateX(2px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 4px;
+    border: 2px solid #4F6D4F;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4F6D4F;
+    transition-property: background-color;
+    transition-duration: var(--duration-micro);
+    transition-timing-function: var(--ease-signature);
+  }
+  .btn-secondary:hover { background: rgba(79, 109, 79, 0.05); }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid rgba(42, 36, 32, 0.12);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2A2420;
+    transition-property: border-color;
+    transition-duration: var(--duration-micro);
+    transition-timing-function: var(--ease-signature);
+  }
+  .btn-outline:hover { border-color: rgba(42, 36, 32, 0.24); }
+
+  .card {
+    border-radius: 2px;
+    background-color: white;
+    padding: 1.5rem;
+    border: 1px solid rgba(42, 36, 32, 0.12);
+    transition-property: transform, border-color, box-shadow;
+    transition-duration: var(--duration-standard);
+    transition-timing-function: var(--ease-signature);
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(42, 36, 32, 0.24);
+  }
+
+  .card-static {
+    border-radius: 2px;
+    background-color: white;
+    padding: 1.5rem;
+    border: 1px solid rgba(42, 36, 32, 0.12);
+  }
+
+  .section-heading {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 1.875rem;
+    font-weight: 500;
+    color: #2A2420;
+  }
+  @media (min-width: 768px) {
+    .section-heading { font-size: 2.25rem; }
+  }
+  @media (min-width: 1024px) {
+    .section-heading { font-size: 3rem; }
+  }
+
+  .section-subheading {
+    margin-top: 1rem;
+    max-width: 42rem;
+    font-size: 1.125rem;
+    color: #5B5248;
+    line-height: 1.75;
+  }
+
+  .input-field {
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid rgba(42, 36, 32, 0.12);
+    background-color: white;
+    padding: 0.75rem 1rem;
+    color: #2A2420;
+    transition-property: border-color, box-shadow;
+    transition-duration: var(--duration-micro);
+  }
+  .input-field::placeholder { color: #8A827A; }
+  .input-field:focus {
+    outline: none;
+    border-color: #C98A2C;
+    box-shadow: 0 0 0 3px rgba(201, 138, 44, 0.1);
+  }
+
+  .label-text {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2A2420;
+    margin-bottom: 0.375rem;
+  }
+
+  .container-page {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 80rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-page { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+  @media (min-width: 1024px) {
+    .container-page { padding-left: 2rem; padding-right: 2rem; }
+  }
+
+  .text-label {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(42, 36, 32, 0.5);
+  }
+
+  .mono-number {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress-stripe {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.08) 3px,
+      rgba(255,255,255,0.08) 6px
+    );
+  }
+}

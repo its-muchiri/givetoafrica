@@ -1,0 +1,75 @@
+import express from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
+import morgan from 'morgan'
+import rateLimit from 'express-rate-limit'
+import { donationRoutes } from './routes/donations'
+import { campaignRoutes } from './routes/campaigns'
+import { stripeWebhookRoutes } from './routes/webhooks-stripe'
+import { flutterwaveWebhookRoutes } from './routes/webhooks-flutterwave'
+import { paystackWebhookRoutes } from './routes/webhooks-paystack'
+import { authRoutes } from './routes/auth'
+import { adminRoutes } from './routes/admin'
+import { donorPortalRoutes } from './routes/donor-portal'
+
+const app = express()
+const PORT = process.env.PORT || 4000
+
+// Security
+app.use(helmet())
+app.use(cors({
+  origin: process.env.VITE_APP_URL || 'http://localhost:3000',
+  credentials: true,
+}))
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+app.use('/api/', limiter)
+
+// Donation-specific rate limit (stricter)
+const donationLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: { error: 'Too many donation attempts. Please try again later.' },
+})
+app.use('/api/donations/create', donationLimiter)
+
+// Logging
+app.use(morgan('combined'))
+
+// Webhook routes need raw body (before JSON parsing)
+app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }), stripeWebhookRoutes)
+app.use('/api/webhooks/flutterwave', express.raw({ type: 'application/json' }), flutterwaveWebhookRoutes)
+app.use('/api/webhooks/paystack', express.raw({ type: 'application/json' }), paystackWebhookRoutes)
+
+// JSON parsing for other routes
+app.use(express.json({ limit: '1mb' }))
+
+// API Routes
+app.use('/api/donations', donationRoutes)
+app.use('/api/campaigns', campaignRoutes)
+app.use('/api/auth', authRoutes)
+app.use('/api/admin', adminRoutes)
+app.use('/api/donor-portal', donorPortalRoutes)
+
+// Health check
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() })
+})
+
+// Error handler
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error('Unhandled error:', err)
+  res.status(500).json({ error: 'Internal server error' })
+})
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
+
+export default app
