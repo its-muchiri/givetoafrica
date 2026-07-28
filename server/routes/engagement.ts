@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
-import { volunteerSchema, newsletterSchema } from '../lib/validation'
-import { logAuditEvent } from '../lib/audit'
-import { sendWelcomeEmail, sendNewsletterDigestEmail } from '../lib/email'
+import { volunteerSchema, newsletterSchema } from '../lib/validation.js'
+import { logAuditEvent } from '../lib/audit.js'
+import { sendWelcomeEmail, sendNewsletterDigestEmail } from '../lib/email.js'
 
 const router = Router()
 const prisma = new PrismaClient()

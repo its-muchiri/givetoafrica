@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import type { Request } from 'express'
-import type { PaymentProvider, CreatePaymentInput, PaymentSession, WebhookEvent, PaymentStatus } from './types'
+import type { PaymentProvider, CreatePaymentInput, PaymentSession, WebhookEvent, PaymentStatus } from './types.js'
 
 let _stripe: Stripe | null = null
 

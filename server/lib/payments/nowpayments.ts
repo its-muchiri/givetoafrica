@@ -1,7 +1,7 @@
 import axios from 'axios'
 import crypto from 'crypto'
 import type { Request } from 'express'
-import type { PaymentProvider, CreatePaymentInput, PaymentSession, WebhookEvent, PaymentStatus } from './types'
+import type { PaymentProvider, CreatePaymentInput, PaymentSession, WebhookEvent, PaymentStatus } from './types.js'
 
 function nowpaymentsApi() {
   return axios.create({

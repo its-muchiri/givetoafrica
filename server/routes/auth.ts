@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
-import { loginSchema } from '../lib/validation'
-import { sendMagicLinkEmail } from '../lib/email'
+import { loginSchema } from '../lib/validation.js'
+import { sendMagicLinkEmail } from '../lib/email.js'
 import crypto from 'crypto'
 
 const router = Router()

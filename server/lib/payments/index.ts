@@ -1,8 +1,8 @@
-import type { PaymentProvider, ProviderId } from './types'
-import { stripeProvider } from './stripe'
-import { paypalProvider } from './paypal'
-import { nowpaymentsProvider } from './nowpayments'
-import { bankWireProvider } from './bank-wire'
+import type { PaymentProvider, ProviderId } from './types.js'
+import { stripeProvider } from './stripe.js'
+import { paypalProvider } from './paypal.js'
+import { nowpaymentsProvider } from './nowpayments.js'
+import { bankWireProvider } from './bank-wire.js'
 
 const providers: Record<ProviderId, PaymentProvider> = {
   stripe: stripeProvider,
@@ -25,8 +25,8 @@ export function getAvailableProviders(): ProviderId[] {
   return Object.keys(providers) as ProviderId[]
 }
 
-export { stripeProvider } from './stripe'
-export { paypalProvider } from './paypal'
-export { nowpaymentsProvider } from './nowpayments'
-export { bankWireProvider } from './bank-wire'
-export type { PaymentProvider, ProviderId, CreatePaymentInput, PaymentSession, WebhookEvent, PaymentStatus } from './types'
+export { stripeProvider } from './stripe.js'
+export { paypalProvider } from './paypal.js'
+export { nowpaymentsProvider } from './nowpayments.js'
+export { bankWireProvider } from './bank-wire.js'
+export type { PaymentProvider, ProviderId, CreatePaymentInput, PaymentSession, WebhookEvent, PaymentStatus } from './types.js'

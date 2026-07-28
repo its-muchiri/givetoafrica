@@ -1,9 +1,9 @@
 import { Router } from 'express'
 import { PrismaClient, Prisma } from '@prisma/client'
-import { createDonationSchema } from '../lib/validation'
-import { generateReceiptNumber, logAuditEvent } from '../lib/audit'
-import { sendReceiptEmail, sendWelcomeEmail } from '../lib/email'
-import { getPaymentProvider, isSupportedProvider } from '../lib/payments'
+import { createDonationSchema } from '../lib/validation.js'
+import { generateReceiptNumber, logAuditEvent } from '../lib/audit.js'
+import { sendReceiptEmail, sendWelcomeEmail } from '../lib/email.js'
+import { getPaymentProvider, isSupportedProvider } from '../lib/payments/index.js'
 
 const router = Router()
 const prisma = new PrismaClient()

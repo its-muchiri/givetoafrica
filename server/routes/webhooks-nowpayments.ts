@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { PrismaClient, Prisma } from '@prisma/client'
-import { logAuditEvent, generateReceiptNumber } from '../lib/audit'
-import { sendReceiptEmail } from '../lib/email'
-import { nowpaymentsProvider } from '../lib/payments'
+import { logAuditEvent, generateReceiptNumber } from '../lib/audit.js'
+import { sendReceiptEmail } from '../lib/email.js'
+import { nowpaymentsProvider } from '../lib/payments/index.js'
 
 const router = Router()
 const prisma = new PrismaClient()

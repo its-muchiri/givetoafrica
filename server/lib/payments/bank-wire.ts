@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import type { Request } from 'express'
-import type { PaymentProvider, CreatePaymentInput, PaymentSession, WebhookEvent, PaymentStatus, WireDetails } from './types'
+import type { PaymentProvider, CreatePaymentInput, PaymentSession, WebhookEvent, PaymentStatus, WireDetails } from './types.js'
 
 interface BankConfig {
   bankName: string

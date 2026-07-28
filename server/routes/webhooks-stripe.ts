@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import Stripe from 'stripe'
 import { PrismaClient } from '@prisma/client'
-import { logAuditEvent, generateReceiptNumber } from '../lib/audit'
-import { sendReceiptEmail } from '../lib/email'
+import { logAuditEvent, generateReceiptNumber } from '../lib/audit.js'
+import { sendReceiptEmail } from '../lib/email.js'
 
 const router = Router()
 const prisma = new PrismaClient()
