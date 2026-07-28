@@ -3,20 +3,14 @@ deployment:
   tasks:
     - export FRONTPATH=/home2/datingsi/public_html/
     - export BACKENDPATH=/home2/datingsi/backend/
-    - npm install
-    - npx prisma generate
-    - npm run build
-    - npx tsc -p tsconfig.server.json
-    - rm -rf $FRONTPATH/assets $FRONTPATH/img $FRONTPATH/blogs
-    - /bin/cp -R dist/assets $FRONTPATH
-    - /bin/cp -R dist/img $FRONTPATH
-    - /bin/cp -R dist/blogs $FRONTPATH
-    - /bin/cp dist/index.html $FRONTPATH
-    - /bin/cp dist/favicon.ico $FRONTPATH
-    - /bin/cp dist/favicon.svg $FRONTPATH
-    - /bin/cp dist/logo-full.svg $FRONTPATH
-    - /bin/cp .htaccess $FRONTPATH
-    - /bin/cp -R dist/server/* $BACKENDPATH
-    - /bin/cp -R prisma $BACKENDPATH
-    - /bin/cp package.json $BACKENDPATH
-    - /bin/cp -R node_modules $BACKENDPATH
+    - cp -R dist/assets $FRONTPATH
+    - cp -R dist/img $FRONTPATH
+    - cp -R dist/blogs $FRONTPATH
+    - cp dist/index.html $FRONTPATH
+    - cp dist/favicon.ico $FRONTPATH
+    - cp dist/favicon.svg $FRONTPATH
+    - cp dist/logo-full.svg $FRONTPATH
+    - cp .htaccess $FRONTPATH
+    - cp -R dist/server $BACKENDPATH
+    - cp -R prisma $BACKENDPATH
+    - cp package.json $BACKENDPATH
