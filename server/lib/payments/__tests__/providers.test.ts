@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { bankWireProvider, getWireDetails } from '../bank-wire'
-import { nowpaymentsProvider } from '../nowpayments'
-import { stripeProvider } from '../stripe'
-import { paypalProvider } from '../paypal'
+import { bankWireProvider, getWireDetails } from '../bank-wire.js'
+import { nowpaymentsProvider } from '../nowpayments.js'
+import { stripeProvider } from '../stripe.js'
+import { paypalProvider } from '../paypal.js'
 
 describe('bankWireProvider', () => {
   it('has correct id', () => {

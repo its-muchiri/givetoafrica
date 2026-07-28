@@ -74,7 +74,7 @@ router.post('/subscriptions/:id/cancel', requireAuth, async (req: any, res) => {
 
     // Cancel with the appropriate provider
     if (subscription.provider === 'stripe') {
-      const { stripeProvider } = await import('../lib/payments')
+      const { stripeProvider } = await import('../lib/payments/index.js')
       // Use Stripe SDK directly for subscription cancellation
       const Stripe = (await import('stripe')).default
       const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', { apiVersion: '2024-04-10' })

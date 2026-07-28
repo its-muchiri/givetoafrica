@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { sendReceiptEmail, sendMagicLinkEmail, sendWelcomeEmail, sendNewsletterDigestEmail } from '../email'
+import { sendReceiptEmail, sendMagicLinkEmail, sendWelcomeEmail, sendNewsletterDigestEmail } from '../email.js'
 
 vi.mock('resend', () => {
   return {
