@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateReceiptNumber } from '../audit'
+import { generateReceiptNumber } from '../audit.js'
 
 describe('audit', () => {
   describe('generateReceiptNumber', () => {

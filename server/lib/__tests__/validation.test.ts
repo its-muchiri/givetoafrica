@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createDonationSchema, confirmWireSchema, loginSchema, adminLoginSchema, volunteerSchema, newsletterSchema } from '../validation'
+import { createDonationSchema, confirmWireSchema, loginSchema, adminLoginSchema, volunteerSchema, newsletterSchema } from '../validation.js'
 
 describe('createDonationSchema', () => {
   const validDonation = {
