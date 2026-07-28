@@ -14,6 +14,7 @@ RUN npm install
 COPY . .
 RUN npx prisma generate
 RUN npm run build
+RUN npx tsc -p tsconfig.server.json
 
 # Production
 FROM base AS runner
