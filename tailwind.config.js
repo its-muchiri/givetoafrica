@@ -19,6 +19,8 @@ export default {
         },
         ochre: {
           DEFAULT: '#C98A2C',
+          light: '#E8C47A',
+          dark: '#7A5A15',
           50: '#FBF4E8',
           100: '#F7E9D1',
           200: '#EFD3A3',
@@ -32,6 +34,8 @@ export default {
         },
         savanna: {
           DEFAULT: '#4F6D4F',
+          light: '#A8C9A8',
+          dark: '#2F412F',
           50: '#EDF2ED',
           100: '#DBE5DB',
           200: '#B7CBB7',
@@ -47,7 +51,7 @@ export default {
         ink: {
           DEFAULT: '#2A2420',
           soft: '#5B5248',
-          muted: '#8A827A',
+          muted: '#6B6560',
         },
         error: '#B3452C',
       },

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const createDonationSchema = z.object({
-  amount: z.number().int().min(100).max(100000000),
+  amount: z.number().int().min(5000).max(100000000),
   currency: z.enum(['USD', 'EUR', 'GBP', 'KES', 'NGN', 'GHS', 'ZAR', 'UGX', 'TZS']),
   isRecurring: z.boolean(),
   campaignId: z.string().uuid().optional().or(z.literal('')),
@@ -11,8 +11,12 @@ export const createDonationSchema = z.object({
   message: z.string().max(1000).optional(),
   isAnonymous: z.boolean(),
   coverFees: z.boolean(),
-  paymentMethod: z.enum(['card', 'mobile_money', 'bank_transfer']),
-  provider: z.enum(['stripe', 'flutterwave', 'paystack']),
+  paymentMethod: z.enum(['crypto', 'bank_transfer']),
+  provider: z.enum(['nowpayments', 'bank_wire']),
+})
+
+export const confirmWireSchema = z.object({
+  donationId: z.string().uuid(),
 })
 
 export const createCampaignSchema = z.object({
@@ -33,4 +37,15 @@ export const adminLoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
   mfaCode: z.string().length(6).optional(),
+})
+
+export const volunteerSchema = z.object({
+  name: z.string().min(2).max(200),
+  email: z.string().email(),
+  skills: z.string().max(2000).optional(),
+  availability: z.string().max(100).optional(),
+})
+
+export const newsletterSchema = z.object({
+  email: z.string().email(),
 })

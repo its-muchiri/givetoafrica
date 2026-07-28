@@ -1,20 +1,22 @@
 import { Router } from 'express'
 import Stripe from 'stripe'
 import { PrismaClient } from '@prisma/client'
-import { logAuditEvent } from '../lib/audit'
+import { logAuditEvent, generateReceiptNumber } from '../lib/audit'
 import { sendReceiptEmail } from '../lib/email'
-import { generateReceiptNumber } from '../lib/audit'
-import { getStripe } from '../lib/stripe'
 
 const router = Router()
 const prisma = new PrismaClient()
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', {
+  apiVersion: '2024-04-10',
+})
 
 router.post('/', async (req, res) => {
   const sig = req.headers['stripe-signature'] as string
   let event: Stripe.Event
 
   try {
-    event = getStripe().webhooks.constructEvent(
+    event = stripe.webhooks.constructEvent(
       req.body,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!
@@ -39,7 +41,6 @@ router.post('/', async (req, res) => {
             include: { donor: true, campaign: true },
           })
 
-          // Generate receipt
           const receipt = await prisma.receipt.create({
             data: {
               receiptNumber: generateReceiptNumber(),
@@ -48,7 +49,6 @@ router.post('/', async (req, res) => {
             },
           })
 
-          // Update campaign raised amount
           if (donation.campaignId) {
             await prisma.campaign.update({
               where: { id: donation.campaignId },
@@ -56,11 +56,10 @@ router.post('/', async (req, res) => {
             })
           }
 
-          // Send receipt email
           try {
             await sendReceiptEmail({
-              to: donation.donor.email,
-              donorName: donation.donor.name,
+              to: donation.donor!.email,
+              donorName: donation.donor!.name,
               amount: donation.amount,
               currency: donation.currency,
               receiptNumber: receipt.receiptNumber,

@@ -74,10 +74,15 @@ router.post('/subscriptions/:id/cancel', requireAuth, async (req: any, res) => {
 
     // Cancel with the appropriate provider
     if (subscription.provider === 'stripe') {
-      const { getStripe } = await import('../lib/stripe')
-      await getStripe().subscriptions.cancel(subscription.providerSubscriptionId)
+      const { stripeProvider } = await import('../lib/payments')
+      // Use Stripe SDK directly for subscription cancellation
+      const Stripe = (await import('stripe')).default
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder', { apiVersion: '2024-04-10' })
+      await stripe.subscriptions.cancel(subscription.providerSubscriptionId)
+    } else if (subscription.provider === 'paypal') {
+      // PayPal subscription cancellation is handled via their dashboard or API
+      // The webhook will update the status when cancelled
     }
-    // Add Flutterwave and Paystack cancellation logic as needed
 
     await prisma.subscription.update({
       where: { id: subscription.id },

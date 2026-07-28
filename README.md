@@ -1,4 +1,4 @@
-# Donate to Africa - Donation Platform
+# GiveToAfrica - Donation Platform
 
 A production-grade, scalable donation platform for a nonprofit organization raising funds to support communities across Africa.
 
@@ -24,7 +24,7 @@ A production-grade, scalable donation platform for a nonprofit organization rais
 1. Clone and install dependencies:
    ```bash
    git clone <repo-url>
-   cd donatetoafrica
+   cd givetoafrica
    npm install
    ```
 

@@ -3,11 +3,11 @@ import { Heart, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube, Link
 
 const footerLinks = {
   'Causes': [
-    { label: 'Education & Training', href: '/charities/education-and-training' },
-    { label: 'Healthcare', href: '/charities/health' },
-    { label: 'Children & Youth', href: '/charities/children-and-youth' },
-    { label: 'Environment', href: '/charities/environment' },
-    { label: 'Overseas Aid', href: '/charities/overseas-aid' },
+    { label: 'Education & Training', href: '/blog/category/education-and-training' },
+    { label: 'Healthcare', href: '/blog/category/health' },
+    { label: 'Children & Youth', href: '/blog/category/children-and-youth' },
+    { label: 'Environment', href: '/blog/category/environment' },
+    { label: 'Overseas Aid', href: '/blog/category/overseas-aid' },
     { label: 'All 28 Causes', href: '/causes' },
   ],
   'About': [
@@ -44,7 +44,7 @@ export default function Footer() {
   return (
     <footer className="bg-indigo text-white/80">
       {/* Pre-footer CTA */}
-      <div className="bg-ochre py-14">
+      <div className="bg-ochre-dark py-14">
         <div className="container-page text-center">
           <h3 className="font-display text-2xl font-medium text-white md:text-3xl">
             Every donation builds a brighter future
@@ -67,12 +67,11 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-6">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded bg-ochre text-white">
-                <Heart className="h-4.5 w-4.5" fill="currentColor" strokeWidth={0} />
-              </div>
+            <Link to="/" className="flex items-center gap-2">
+              <img src="/favicon.svg" alt="" className="h-9 w-9" aria-hidden="true" />
               <span className="font-display text-lg font-medium tracking-tight text-white">
-                Donate<span className="text-ochre"> to Africa</span>
+              <span className="font-extrabold text-white">Give</span>
+              <span className="font-normal text-white/80">ToAfrica</span>
               </span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/60">
@@ -81,8 +80,8 @@ export default function Footer() {
             </p>
 
             <div className="mt-6 space-y-2.5 text-sm">
-              <a href="mailto:info@donatetoafrica.org" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
-                <Mail className="h-4 w-4" /> info@donatetoafrica.org
+              <a href="mailto:info@givetoafrica.org" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
+                <Mail className="h-4 w-4" /> info@givetoafrica.org
               </a>
               <a href="tel:+1234567890" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
                 <Phone className="h-4 w-4" /> +1 (234) 567-890
@@ -99,7 +98,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="flex h-8 w-8 items-center justify-center rounded bg-white/10 text-white/50 transition-colors hover:bg-white/20 hover:text-white"
+                   className="flex h-8 w-8 items-center justify-center rounded bg-white/10 text-white/60 transition-colors hover:bg-white/20 hover:text-white"
                 >
                   <Icon className="h-3.5 w-3.5" />
                 </a>
@@ -134,7 +133,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
           <p className="text-xs text-white/40">
-            © {new Date().getFullYear()} Donate to Africa Foundation. EIN: 12-3456789. All rights reserved.
+            © {new Date().getFullYear()} GiveToAfrica Foundation. EIN: 12-3456789. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-2xs text-white/40 font-mono">
             <span>PCI-DSS</span>

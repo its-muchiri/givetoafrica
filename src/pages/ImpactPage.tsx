@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   Eye, Shield, Award, TrendingUp, Download, FileText,
-  ArrowRight, CheckCircle, BarChart3, Globe, Heart,
+  ArrowRight, CheckCircle, BarChart3, Heart,
 } from 'lucide-react'
+import { images } from '@/lib/images'
 
 const financialBreakdown = [
   { label: 'Programs & Services', pct: 84, color: 'bg-savanna', description: 'Direct impact through education, water, health, and food programs.' },
@@ -34,7 +35,7 @@ const ratings = [
     score: 'A+',
     description: 'Meets all 20 BBB Standards for Charity Accountability.',
     color: 'from-ochre/5 to-ochre/10 text-ochre-dark ring-ochre/12',
-    iconColor: 'text-ochre',
+    iconColor: 'text-ochre-dark',
   },
   {
     name: 'GlobalGiving',
@@ -42,7 +43,7 @@ const ratings = [
     score: 'Verified',
     description: 'Rigorously vetted partner meeting GlobalGiving\'s performance and reporting standards.',
     color: 'from-ochre/5 to-ochre/10 text-ochre-dark ring-ochre/12',
-    iconColor: 'text-ochre',
+    iconColor: 'text-ochre-dark',
   },
 ]
 
@@ -84,7 +85,11 @@ export default function ImpactPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-indigo text-white">
-        <div className="absolute inset-0 bg-[url('/hero-pattern.svg')] opacity-5" />
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${images.heroes.impact})` }}
+        />
+        <div className="absolute inset-0 bg-indigo/85" />
         <div className="container-page relative py-20 md:py-28 lg:py-36">
           <div className="max-w-3xl">
             <motion.div
@@ -114,7 +119,7 @@ export default function ImpactPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted"
+              className="mt-6 max-w-xl text-lg leading-relaxed text-white/70"
             >
               We believe every donor deserves to know exactly how their contribution creates change.
               Our financials are independently audited and publicly available.
@@ -178,7 +183,7 @@ export default function ImpactPage() {
 
             <div className="card bg-indigo text-white p-8">
               <h3 className="font-display text-xl font-medium">84 Cents of Every Dollar</h3>
-              <p className="mt-2 text-sm text-ink-muted leading-relaxed">
+              <p className="mt-2 text-sm text-white/70 leading-relaxed">
                 Goes directly to programs and services. That's among the highest in the nonprofit industry.
               </p>
               <div className="mt-8 grid grid-cols-2 gap-4">
@@ -191,7 +196,7 @@ export default function ImpactPage() {
                   <div key={stat.label} className="rounded-xl bg-white/5 p-4 ring-1 ring-white/10">
                     <stat.icon className="h-5 w-5 text-ochre-light" />
                     <div className="mt-2 font-display text-lg font-medium">{stat.value}</div>
-                    <div className="text-xs text-ink-muted">{stat.label}</div>
+                    <div className="text-xs text-white/70">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -204,7 +209,7 @@ export default function ImpactPage() {
       <section className="bg-white py-20 md:py-28">
         <div className="container-page">
           <div className="text-center">
-            <span className="text-label text-ochre">Verified Trust</span>
+            <span className="text-label text-ochre-dark">Verified Trust</span>
             <h2 className="section-heading mt-3">Third-Party Ratings</h2>
             <p className="section-subheading mx-auto">
               Independent organizations evaluate our performance, governance, and transparency so you can donate with confidence.
@@ -274,7 +279,7 @@ export default function ImpactPage() {
       <section className="bg-white py-20 md:py-28">
         <div className="container-page">
           <div className="text-center">
-            <span className="text-label text-ochre">Stories with Outcomes</span>
+            <span className="text-label text-ochre-dark">Stories with Outcomes</span>
             <h2 className="section-heading mt-3">Real Impact, Measured Results</h2>
             <p className="section-subheading mx-auto">
               We track and measure the impact of every program to ensure your donation creates
@@ -315,19 +320,19 @@ export default function ImpactPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-ochre via-ochre-dark to-ochre py-20 md:py-28">
+      <section className="bg-gradient-to-r from-ochre-dark via-ochre-dark to-ochre-dark py-20 md:py-28">
         <div className="container-page text-center">
           <h2 className="font-display text-3xl font-medium text-white md:text-5xl">
             See Your Donation in Action
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-white/80">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-ink-soft">
             Every dollar you give creates measurable, lasting change. Join thousands of
             donors who trust us to make an impact.
           </p>
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               to="/donate"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-10 py-4 text-base font-bold text-ochre shadow-xl transition-all hover:bg-parchment hover:shadow-2xl"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-10 py-4 text-base font-bold text-ink shadow-xl transition-all hover:bg-parchment hover:shadow-2xl"
             >
               <Heart className="h-5 w-5" />
               Donate Now

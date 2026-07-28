@@ -26,9 +26,9 @@ export async function sendReceiptEmail(params: SendReceiptEmailParams) {
   }).format(params.amount / 100)
 
   await getResend().emails.send({
-    from: process.env.EMAIL_FROM || 'receipts@donatetoafrica.org',
+            from: process.env.EMAIL_FROM || 'receipts@givetoafrica.org',
     to: params.to,
-    subject: `Thank you for your donation of ${formattedAmount} - Donate to Africa`,
+    subject: `Thank you for your donation of ${formattedAmount} - GiveToAfrica`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -67,15 +67,100 @@ export async function sendReceiptEmail(params: SendReceiptEmailParams) {
 
         <div style="background: #fef3f0; border-radius: 12px; padding: 20px; margin: 20px 0; border-left: 4px solid #ef5723;">
           <p style="margin: 0; font-size: 14px; color: #7a2412;">
-            <strong>Tax Information:</strong> Donate to Africa Foundation is a registered 501(c)(3) nonprofit organization (EIN: 12-3456789). 
+            <strong>Tax Information:</strong> GiveToAfrica Foundation is a registered 501(c)(3) nonprofit organization (EIN: 12-3456789). 
             This donation may be tax-deductible to the extent allowed by law. Please retain this receipt for your records.
           </p>
         </div>
 
         <div style="text-align: center; padding: 20px 0; border-top: 1px solid #e7e7e7; margin-top: 30px;">
           <p style="color: #888; font-size: 12px;">
-            Donate to Africa Foundation · 123 Impact Avenue, Washington DC 20001<br>
-            <a href="mailto:info@donatetoafrica.org" style="color: #ef5723;">info@donatetoafrica.org</a>
+            GiveToAfrica Foundation · 123 Impact Avenue, Washington DC 20001<br>
+            <a href="mailto:info@givetoafrica.org" style="color: #ef5723;">info@givetoafrica.org</a>
+          </p>
+        </div>
+      </body>
+      </html>
+    `,
+  })
+}
+
+interface SendWelcomeEmailParams {
+  to: string
+  donorName: string
+}
+
+export async function sendWelcomeEmail(to: string, donorName: string) {
+  await getResend().emails.send({
+            from: process.env.EMAIL_FROM || 'welcome@givetoafrica.org',
+    to,
+    subject: `Welcome to GiveToAfrica, ${donorName}!`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <body style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; padding: 30px 0;">
+          <h1 style="color: #146B38; margin: 0;">Welcome, ${donorName}!</h1>
+          <p style="color: #6d6d6d; font-size: 18px;">You're now part of a global community making a real difference.</p>
+        </div>
+
+        <div style="background: #f0faf3; border-radius: 12px; padding: 24px; margin: 20px 0;">
+          <h2 style="margin: 0 0 12px; color: #1a1a1a;">What Happens Next</h2>
+          <ul style="font-size: 14px; line-height: 1.8; color: #333; padding-left: 20px;">
+            <li>Your donation goes directly to verified programs in Africa</li>
+            <li>You'll receive receipts and tax documentation automatically</li>
+            <li>Monthly impact reports keep you updated on your generosity</li>
+            <li>Access your donor portal anytime to track your giving</li>
+          </ul>
+        </div>
+
+        <div style="text-align: center; padding: 20px 0;">
+          <a href="${process.env.VITE_APP_URL}/dashboard" style="display: inline-block; background: #146B38; color: white; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 600;">
+            View Your Donor Portal
+          </a>
+        </div>
+
+        <div style="text-align: center; padding: 20px 0; border-top: 1px solid #e7e7e7; margin-top: 30px;">
+          <p style="color: #888; font-size: 12px;">
+            GiveToAfrica Foundation · 123 Impact Avenue, Washington DC 20001<br>
+            <a href="mailto:info@givetoafrica.org" style="color: #146B38;">info@givetoafrica.org</a>
+          </p>
+        </div>
+      </body>
+      </html>
+    `,
+  })
+}
+
+export async function sendNewsletterDigestEmail(to: string, subject: string, content: string) {
+  await getResend().emails.send({
+            from: process.env.EMAIL_FROM || 'newsletter@givetoafrica.org',
+    to,
+    subject: `GiveToAfrica Newsletter — ${subject}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <body style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; padding: 30px 0;">
+          <h1 style="color: #146B38; margin: 0;">GiveToAfrica Newsletter</h1>
+          <p style="color: #6d6d6d; font-size: 18px;">${subject}</p>
+        </div>
+
+        <div style="background: #f0faf3; border-radius: 12px; padding: 24px; margin: 20px 0;">
+          <div style="font-size: 14px; line-height: 1.8; color: #333;">
+            ${content}
+          </div>
+        </div>
+
+        <div style="text-align: center; padding: 20px 0;">
+          <a href="${process.env.VITE_APP_URL}/blog" style="display: inline-block; background: #146B38; color: white; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: 600;">
+            Read More on Our Blog
+          </a>
+        </div>
+
+        <div style="text-align: center; padding: 20px 0; border-top: 1px solid #e7e7e7; margin-top: 30px;">
+          <p style="color: #888; font-size: 12px;">
+            You're receiving this because you subscribed to the GiveToAfrica newsletter.<br>
+            <a href="${process.env.VITE_APP_URL}/unsubscribe" style="color: #146B38;">Unsubscribe</a>
           </p>
         </div>
       </body>
@@ -88,15 +173,15 @@ export async function sendMagicLinkEmail(email: string, token: string) {
   const magicLink = `${process.env.VITE_APP_URL}/auth/verify?token=${token}`
 
   await getResend().emails.send({
-    from: process.env.EMAIL_FROM || 'auth@donatetoafrica.org',
+    from: process.env.EMAIL_FROM || 'auth@givetoafrica.org',
     to: email,
-    subject: 'Sign in to Donate to Africa',
+    subject: 'Sign in to GiveToAfrica',
     html: `
       <!DOCTYPE html>
       <html>
       <body style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; padding: 30px 0;">
-          <h1 style="color: #ef5723; margin: 0;">Sign In to Donate to Africa</h1>
+          <h1 style="color: #ef5723; margin: 0;">Sign In to GiveToAfrica</h1>
           <p style="color: #6d6d6d;">Click the button below to sign in to your donor portal.</p>
         </div>
         <div style="text-align: center; padding: 20px 0;">

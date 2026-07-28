@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -6,7 +6,7 @@ export async function logAuditEvent(eventType: string, payload: Record<string, u
   await prisma.auditLog.create({
     data: {
       eventType,
-      payload,
+      payload: payload as Prisma.InputJsonValue,
       ipAddress,
       userAgent,
     },

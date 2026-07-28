@@ -20,7 +20,7 @@ export default function PrivacyPage() {
         <div className="container-page py-16 md:py-20">
           <span className="text-label text-ochre-light">Legal</span>
           <h1 className="mt-4 font-display text-4xl font-medium md:text-5xl">Privacy Policy</h1>
-          <p className="mt-4 text-ink-muted">Last updated: January 15, 2025</p>
+          <p className="mt-4 text-white/70">Last updated: January 15, 2025</p>
         </div>
       </section>
 
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
             <ol className="space-y-1.5 text-sm text-ink-soft list-decimal list-inside">
               {sections.map((s) => (
                 <li key={s.id}>
-                  <a href={`#${s.id}`} className="text-ochre hover:text-ochre-dark transition-colors">
+                    <a href={`#${s.id}`} className="text-ochre-dark hover:text-ochre-dark transition-colors">
                     {s.title}
                   </a>
                 </li>
@@ -80,10 +80,10 @@ export default function PrivacyPage() {
               <h2 className="font-display text-2xl font-medium text-ink mb-3">3. Data Sharing</h2>
               <p className="mb-3">We do not sell, rent, or trade your personal information. We share data only in the following limited circumstances:</p>
               <ul className="list-disc list-inside space-y-1.5">
-                <li><strong>Payment Processors:</strong> We share transaction data with Stripe, Paystack, and Flutterwave solely for the purpose of processing your donation. These providers are PCI-DSS Level 1 certified and are contractually obligated to protect your data.</li>
+                <li><strong>Payment Processors:</strong> We share transaction data with Stripe, PayPal, and NOWPayments solely for the purpose of processing your donation. These providers are PCI-DSS Level 1 certified and are contractually obligated to protect your data.</li>
                 <li><strong>Tax Authorities:</strong> We may share donation information with the IRS (Form 990 filings) and HMRC (Gift Aid claims) as required by law.</li>
                 <li><strong>Service Providers:</strong> We share data with trusted third-party providers who assist in operating our website and services (email delivery, analytics, hosting), all under strict data processing agreements.</li>
-                <li><strong>Legal Requirements:</strong> We may disclose information if required by law, court order, or government regulation, or to protect the rights, property, or safety of Donate to Africa, our donors, or the public.</li>
+                <li><strong>Legal Requirements:</strong> We may disclose information if required by law, court order, or government regulation, or to protect the rights, property, or safety of GiveDirectly, our donors, or the public.</li>
                 <li><strong>Corporate Matching:</strong> If you request a corporate matching gift, we may share your donation details with your employer's matching gift program administrator for verification purposes.</li>
               </ul>
             </section>
@@ -92,7 +92,7 @@ export default function PrivacyPage() {
             <section id="international-transfers">
               <h2 className="font-display text-2xl font-medium text-ink mb-3">4. International Transfers</h2>
               <p>
-                Donate to Africa operates globally and processes data in the United States and other countries where our service providers operate. When you make a donation from outside the United States, your information may be transferred to and processed in the United States, where data protection laws may differ from those in your jurisdiction.
+                GiveDirectly operates globally and processes data in the United States and other countries where our service providers operate. When you make a donation from outside the United States, your information may be transferred to and processed in the United States, where data protection laws may differ from those in your jurisdiction.
               </p>
               <p className="mt-3">
                 For transfers of personal data from the European Economic Area (EEA), United Kingdom, or South Africa, we rely on Standard Contractual Clauses (SCCs) approved by the European Commission or equivalent safeguards to ensure adequate protection of your data. You may request a copy of these safeguards by contacting our privacy team.
@@ -209,7 +209,7 @@ export default function PrivacyPage() {
                 If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:
               </p>
               <div className="rounded-xl bg-parchment p-5 space-y-2 text-sm text-ink-soft">
-                <p><strong>Donate to Africa Inc.</strong></p>
+                <p><strong>GiveDirectly Inc.</strong></p>
                 <p>123 Impact Avenue, Washington, DC 20001, United States</p>
                 <p>Email: privacy@donatetoafrica.org</p>
                 <p>Phone: +1 (202) 555-1234</p>

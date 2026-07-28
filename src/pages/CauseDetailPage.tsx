@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, Heart, MapPin, ChevronRight, TrendingUp } from 'lucide-react'
 import { getCategoryBySlug, categories } from '@/lib/categories'
+import { causeImages } from '@/lib/images'
 import ImpactGrid from '@/components/ImpactGrid'
 
 const fadeInUp = {
@@ -26,13 +27,23 @@ export default function CauseDetailPage() {
 
   const Icon = cause.icon
   const progress = Math.round((cause.raisedAmount / cause.goalAmount) * 100)
+  const causeImage = causeImages[cause.slug]
 
   return (
     <>
       {/* Hero */}
-      <section className="bg-indigo py-16 text-white md:py-20">
-        <div className="container-page">
-          <Link to="/causes" className="inline-flex items-center gap-1.5 text-sm text-white/50 hover:text-white transition-colors">
+      <section className="relative overflow-hidden bg-indigo py-16 text-white md:py-20">
+        {causeImage && (
+          <>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${causeImage})` }}
+            />
+            <div className="absolute inset-0 bg-indigo/90" />
+          </>
+        )}
+        <div className="container-page relative">
+          <Link to="/causes" className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition-colors">
             <ArrowLeft className="h-4 w-4" /> All Causes
           </Link>
           <div className="mt-6 grid gap-8 lg:grid-cols-2 lg:items-center">
@@ -49,8 +60,8 @@ export default function CauseDetailPage() {
               <div className="mt-8">
                 <div className="flex items-baseline gap-3">
                   <span className="mono-number font-display text-3xl font-medium">${(cause.raisedAmount / 1000).toFixed(0)}K</span>
-                  <span className="text-white/50">of ${(cause.goalAmount / 1000).toFixed(0)}K goal</span>
-                  <span className="ml-auto mono-number text-sm font-medium text-ochre">{progress}%</span>
+                  <span className="text-white/70">of ${(cause.goalAmount / 1000).toFixed(0)}K goal</span>
+                  <span className="ml-auto mono-number text-sm font-medium text-ochre-light">{progress}%</span>
                 </div>
                 <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-white/10">
                   <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }}
@@ -59,7 +70,7 @@ export default function CauseDetailPage() {
                 </div>
               </div>
               <Link to={`/donate?campaign=${cause.slug}`}
-                className="mt-8 inline-flex items-center gap-2 rounded bg-ochre px-8 py-3.5 text-sm font-semibold text-white transition-all hover:bg-ochre-600">
+                className="mt-8 inline-flex items-center gap-2 rounded bg-ochre-dark px-8 py-3.5 text-sm font-semibold text-white transition-all hover:bg-ochre-dark">
                 <Heart className="h-4 w-4 btn-icon" fill="currentColor" strokeWidth={0} /> Donate to {cause.name}
               </Link>
             </div>
@@ -79,6 +90,11 @@ export default function CauseDetailPage() {
             <div className="lg:col-span-2 space-y-12">
               <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} variants={fadeInUp}>
                 <h2 className="font-display text-xl font-medium text-ink">About This Cause</h2>
+                {causeImage && (
+                  <div className="mt-4 overflow-hidden rounded-sm">
+                    <img src={causeImage} alt={cause.name} className="h-56 w-full object-cover" />
+                  </div>
+                )}
                 <p className="mt-4 text-ink-soft leading-relaxed">{cause.description}</p>
               </motion.div>
 
@@ -92,7 +108,7 @@ export default function CauseDetailPage() {
                 <div className="mt-6 space-y-3">
                   {cause.approach.map((step, i) => (
                     <div key={i} className="flex items-start gap-4 rounded-sm p-4 ring-1 ring-ink/8">
-                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-sm bg-ochre/10 mono-number text-xs font-medium text-ochre">{i + 1}</div>
+                      <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-sm bg-ochre-dark/10 mono-number text-xs font-medium text-ochre-dark">{i + 1}</div>
                       <p className="text-sm leading-relaxed text-ink-soft">{step}</p>
                     </div>
                   ))}
@@ -150,7 +166,7 @@ export default function CauseDetailPage() {
                 </div>
               </div>
 
-              <div className="card-static bg-ochre p-5 text-white">
+              <div className="card-static bg-ochre-dark p-5 text-white">
                 <h3 className="font-display text-base font-medium">Support {cause.name}</h3>
                 <p className="mt-2 text-sm text-white/80">Your donation goes directly to programmes helping communities across Africa.</p>
                 <Link to={`/donate?campaign=${cause.slug}`}
@@ -165,16 +181,16 @@ export default function CauseDetailPage() {
                   {categories.filter((c) => c.slug !== cause.slug).slice(0, 6).map((c) => {
                     const CIcon = c.icon
                     return (
-                      <Link key={c.slug} to={`/charities/${c.slug}`}
+                      <Link key={c.slug} to={`/blog/category/${c.slug}`}
                         className="flex items-center gap-2.5 rounded-sm p-2 text-sm text-ink-soft transition-colors hover:bg-parchment hover:text-ink">
                         <CIcon className={`h-3.5 w-3.5 flex-shrink-0 ${c.color}`} />
                         <span className="flex-1 truncate">{c.name}</span>
-                        <ChevronRight className="h-3 w-3 text-ink-muted" />
+                        <ChevronRight className="h-3 w-3 text-ink-soft" />
                       </Link>
                     )
                   })}
                 </div>
-                <Link to="/causes" className="mt-3 flex items-center gap-1 text-2xs font-medium text-ochre hover:text-ochre-600">
+                <Link to="/causes" className="mt-3 flex items-center gap-1 text-2xs font-medium text-ochre-dark hover:text-ochre-dark">
                   View all 28 causes <ChevronRight className="h-3 w-3" />
                 </Link>
               </div>

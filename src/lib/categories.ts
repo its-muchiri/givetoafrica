@@ -3,7 +3,6 @@ import {
   GraduationCap, Briefcase, Leaf, Home, Stethoscope, Ear, Bed,
   Building2, HandHeart, Globe2, BookOpen, Microscope, Pill,
   Brain, Plane, Church, Truck, UsersRound, Dumbbell, Eye,
-  HandHelping,
 } from 'lucide-react'
 
 export interface Category {

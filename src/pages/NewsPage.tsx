@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import {
   ArrowRight, Calendar, Tag, Clock, Search,
 } from 'lucide-react'
+import { images } from '@/lib/images'
 
 const categories = ['All', 'Field Update', 'Impact Story', 'News', 'Annual Report']
 
@@ -13,7 +14,7 @@ const featuredArticle = {
   date: 'January 15, 2025',
   category: 'Field Update',
   readTime: '5 min read',
-  image: '/news-water-well.jpg',
+  image: images.news.featured,
 }
 
 const articles = [
@@ -23,6 +24,7 @@ const articles = [
     date: 'December 20, 2024',
     category: 'Impact Story',
     readTime: '4 min read',
+    image: images.news.cards[0],
   },
   {
     title: 'Mobile Health Clinic Reaches Remote Villages in Northern Ghana',
@@ -30,6 +32,7 @@ const articles = [
     date: 'November 8, 2024',
     category: 'Field Update',
     readTime: '6 min read',
+    image: images.news.cards[1],
   },
   {
     title: 'Community Farming Initiative Doubles Harvest in Rural Tanzania',
@@ -37,6 +40,7 @@ const articles = [
     date: 'October 22, 2024',
     category: 'Impact Story',
     readTime: '5 min read',
+    image: images.news.cards[2],
   },
   {
     title: 'Emergency Response: Flood Relief in Mozambique',
@@ -44,6 +48,7 @@ const articles = [
     date: 'September 14, 2024',
     category: 'News',
     readTime: '3 min read',
+    image: images.news.cards[3],
   },
   {
     title: 'Annual Report 2024: A Year of Growth and Impact',
@@ -51,6 +56,7 @@ const articles = [
     date: 'March 1, 2025',
     category: 'Annual Report',
     readTime: '8 min read',
+    image: images.news.cards[4],
   },
   {
     title: 'New Scholarship Program Launches in Senegal',
@@ -58,6 +64,7 @@ const articles = [
     date: 'August 5, 2024',
     category: 'News',
     readTime: '4 min read',
+    image: images.news.cards[5],
   },
 ]
 
@@ -83,7 +90,11 @@ export default function NewsPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-indigo text-white">
-        <div className="absolute inset-0 bg-[url('/hero-pattern.svg')] opacity-5" />
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${images.heroes.news})` }}
+        />
+        <div className="absolute inset-0 bg-indigo/85" />
         <div className="container-page relative py-20 md:py-28 lg:py-36">
           <div className="max-w-3xl">
             <motion.div
@@ -113,7 +124,7 @@ export default function NewsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted"
+              className="mt-6 max-w-xl text-lg leading-relaxed text-white/70"
             >
               Read the latest updates from the field, learn about our impact, and stay informed
               about the communities we serve.
@@ -133,16 +144,12 @@ export default function NewsPage() {
             className="card group overflow-hidden p-0"
           >
             <div className="grid md:grid-cols-2">
-              <div className="relative h-64 md:h-auto bg-gradient-to-br from-blue-100 to-blue-200">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-blue-300">
-                    <svg className="h-24 w-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.5">
-                      <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                      <path d="M2 17l10 5 10-5" />
-                      <path d="M2 12l10 5 10-5" />
-                    </svg>
-                  </div>
-                </div>
+              <div className="relative h-64 md:h-auto">
+                <img
+                  src={featuredArticle.image}
+                  alt={featuredArticle.title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
               </div>
               <div className="p-6 md:p-8 lg:p-10">
                 <div className="flex items-center gap-3">
@@ -150,7 +157,7 @@ export default function NewsPage() {
                     <Tag className="h-3 w-3" />
                     {featuredArticle.category}
                   </span>
-                  <span className="flex items-center gap-1 text-xs text-ink-muted">
+                   <span className="flex items-center gap-1 text-xs text-ink-soft">
                     <Calendar className="h-3 w-3" />
                     {featuredArticle.date}
                   </span>
@@ -162,13 +169,13 @@ export default function NewsPage() {
                   {featuredArticle.excerpt}
                 </p>
                 <div className="mt-6 flex items-center justify-between">
-                  <span className="flex items-center gap-1 text-xs text-ink-muted">
+                  <span className="flex items-center gap-1 text-xs text-ink-soft">
                     <Clock className="h-3 w-3" />
                     {featuredArticle.readTime}
                   </span>
                   <Link
                     to="#"
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-ochre transition-colors hover:text-ochre-dark"
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-ochre-dark transition-colors hover:text-ochre-dark"
                   >
                     Read Full Story
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -186,7 +193,7 @@ export default function NewsPage() {
           {/* Search & Filter */}
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
               <input
                 type="text"
                 value={searchQuery}
@@ -221,27 +228,35 @@ export default function NewsPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="card group"
+                className="card group overflow-hidden p-0"
               >
-                <div className="flex items-center gap-3">
-                  <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ring-1 ${categoryColors[article.category] || 'bg-parchment text-ink-soft ring-ink/8'}`}>
-                    <Tag className="h-3 w-3" />
-                    {article.category}
-                  </span>
+                <div className="relative h-44 overflow-hidden">
+                  <img
+                    src={article.image}
+                    alt={article.title}
+                    className="h-full w-full object-cover transition-transform duration-350 group-hover:scale-105"
+                  />
                 </div>
+                <div className="p-5">
+                  <div className="flex items-center gap-3">
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ring-1 ${categoryColors[article.category] || 'bg-parchment text-ink-soft ring-ink/8'}`}>
+                      <Tag className="h-3 w-3" />
+                      {article.category}
+                    </span>
+                  </div>
 
-                <h3 className="mt-3 font-display text-lg font-medium text-ink leading-snug">
-                  {article.title}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-ink-soft line-clamp-3">
-                  {article.excerpt}
-                </p>
+                  <h3 className="mt-3 font-display text-lg font-medium text-ink leading-snug">
+                    {article.title}
+                  </h3>
+                  <p className="mt-2 text-xs leading-relaxed text-ink-soft line-clamp-3">
+                    {article.excerpt}
+                  </p>
 
-                <div className="mt-4 flex items-center justify-between border-t border-ink/8 pt-4">
-                  <div className="flex items-center gap-3 text-xs text-ink-muted">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {article.date}
+                  <div className="mt-4 flex items-center justify-between border-t border-ink/8 pt-4">
+                    <div className="flex items-center gap-3 text-xs text-ink-soft">
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {article.date}
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
@@ -250,11 +265,12 @@ export default function NewsPage() {
                   </div>
                   <Link
                     to="#"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-ochre transition-colors hover:text-ochre-dark"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-ochre-dark transition-colors hover:text-ochre-dark"
                   >
                     Read More
                     <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
                   </Link>
+                </div>
                 </div>
               </motion.div>
             ))}

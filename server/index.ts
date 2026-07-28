@@ -6,11 +6,12 @@ import rateLimit from 'express-rate-limit'
 import { donationRoutes } from './routes/donations'
 import { campaignRoutes } from './routes/campaigns'
 import { stripeWebhookRoutes } from './routes/webhooks-stripe'
-import { flutterwaveWebhookRoutes } from './routes/webhooks-flutterwave'
-import { paystackWebhookRoutes } from './routes/webhooks-paystack'
+import { paypalWebhookRoutes } from './routes/webhooks-paypal'
+import { nowpaymentsWebhookRoutes } from './routes/webhooks-nowpayments'
 import { authRoutes } from './routes/auth'
 import { adminRoutes } from './routes/admin'
 import { donorPortalRoutes } from './routes/donor-portal'
+import { engagementRoutes } from './routes/engagement'
 
 const app = express()
 const PORT = process.env.PORT || 4000
@@ -44,8 +45,8 @@ app.use(morgan('combined'))
 
 // Webhook routes need raw body (before JSON parsing)
 app.use('/api/webhooks/stripe', express.raw({ type: 'application/json' }), stripeWebhookRoutes)
-app.use('/api/webhooks/flutterwave', express.raw({ type: 'application/json' }), flutterwaveWebhookRoutes)
-app.use('/api/webhooks/paystack', express.raw({ type: 'application/json' }), paystackWebhookRoutes)
+app.use('/api/webhooks/paypal', express.raw({ type: 'application/json' }), paypalWebhookRoutes)
+app.use('/api/webhooks/nowpayments', express.json(), nowpaymentsWebhookRoutes)
 
 // JSON parsing for other routes
 app.use(express.json({ limit: '1mb' }))
@@ -56,6 +57,7 @@ app.use('/api/campaigns', campaignRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/donor-portal', donorPortalRoutes)
+app.use('/api/engagement', engagementRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => {

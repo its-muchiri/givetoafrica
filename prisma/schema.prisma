@@ -17,10 +17,10 @@ model Donor {
   magicLinkExpiry DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   donations     Donation[]
   subscriptions Subscription[]
-  
+
   @@map("donors")
 }
 
@@ -34,15 +34,15 @@ model Campaign {
   goalAmount  Int
   raisedAmount Int     @default(0)
   currency    String   @default("USD")
-  status      String   @default("active") // active, paused, completed
+  status      String   @default("active")
   startDate   DateTime?
   endDate     DateTime?
   imageUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
+
   donations Donation[]
-  
+
   @@map("campaigns")
 }
 
@@ -50,51 +50,56 @@ model Donation {
   id                String   @id @default(uuid())
   amount            Int
   currency          String
-  status            String   @default("pending") // pending, completed, failed, refunded
-  paymentProvider   String   // stripe, flutterwave, paystack
-  providerTransactionId String? @unique
+  usdAmount         Int      @default(0)
+  status            String   @default("pending")
+  paymentProvider   String
+  providerTransactionId String?
+  idempotencyKey    String?  @unique
   isRecurring       Boolean  @default(false)
   subscriptionId    String?
   coverFees         Boolean  @default(false)
   processingFee     Int      @default(0)
   isAnonymous       Boolean  @default(false)
   message           String?  @db.Text
+  wireReference     String?
   metadata          Json?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  
+
   donor        Donor       @relation(fields: [donorId], references: [id])
   donorId      String
   campaign     Campaign?   @relation(fields: [campaignId], references: [id])
   campaignId   String?
   subscription Subscription? @relation(fields: [subscriptionId], references: [id])
   receipt      Receipt?
-  
+
   @@index([donorId])
   @@index([campaignId])
   @@index([status])
+  @@index([paymentProvider])
+  @@index([idempotencyKey])
   @@index([createdAt])
   @@map("donations")
 }
 
 model Subscription {
   id                     String   @id @default(uuid())
-  provider               String   // stripe, flutterwave, paystack
+  provider               String
   providerSubscriptionId String   @unique
   amount                 Int
   currency               String
-  interval               String   // monthly, yearly
-  status                 String   @default("active") // active, paused, canceled, past_due
+  interval               String
+  status                 String   @default("active")
   currentPeriodStart     DateTime?
   currentPeriodEnd       DateTime?
   cancelAtPeriodEnd      Boolean  @default(false)
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
-  
+
   donor      Donor       @relation(fields: [donorId], references: [id])
   donorId    String
   donations  Donation[]
-  
+
   @@index([donorId])
   @@index([status])
   @@map("subscriptions")
@@ -108,10 +113,10 @@ model Receipt {
   taxDeductible Boolean  @default(true)
   taxAmount     Int?
   createdAt     DateTime @default(now())
-  
+
   donation Donation @relation(fields: [donationId], references: [id])
   donationId String @unique
-  
+
   @@map("receipts")
 }
 
@@ -119,13 +124,13 @@ model AdminUser {
   id        String   @id @default(uuid())
   email     String   @unique
   name      String
-  role      String   @default("admin") // admin, super_admin, viewer
+  role      String   @default("admin")
   mfaEnabled Boolean @default(false)
   mfaSecret String?
   lastLogin DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@map("admin_users")
 }
 
@@ -136,7 +141,7 @@ model AuditLog {
   ipAddress String?
   userAgent String?
   createdAt DateTime @default(now())
-  
+
   @@index([eventType])
   @@index([createdAt])
   @@map("audit_log")
@@ -149,7 +154,7 @@ model MagicLink {
   expiresAt DateTime
   used      Boolean  @default(false)
   createdAt DateTime @default(now())
-  
+
   @@index([token])
   @@map("magic_links")
 }

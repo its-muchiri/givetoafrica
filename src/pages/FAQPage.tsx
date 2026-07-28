@@ -5,7 +5,7 @@ const faqs = [
   {
     question: 'Is my donation tax-deductible?',
     answer:
-      "Yes. Donate to Africa is a registered 501(c)(3) nonprofit organization (EIN: 12-3456789). All donations made within the United States are tax-deductible to the full extent permitted by law. You will receive an automatic tax receipt via email after your donation is processed. For UK donors, our donations are Gift Aid eligible — please select the Gift Aid option during checkout so we can reclaim an additional 25p for every £1 you donate at no extra cost to you.",
+      "Yes. GiveToAfrica is a registered 501(c)(3) nonprofit organization (EIN: 12-3456789). All donations made within the United States are tax-deductible to the full extent permitted by law. You will receive an automatic tax receipt via email after your donation is processed. For UK donors, our donations are Gift Aid eligible — please select the Gift Aid option during checkout so we can reclaim an additional 25p for every £1 you donate at no extra cost to you.",
   },
   {
     question: 'How is my donation used?',
@@ -20,13 +20,13 @@ const faqs = [
   {
     question: 'What payment methods do you accept?',
     answer:
-      "We accept a wide range of payment methods to make giving as accessible as possible. These include all major credit and debit cards (Visa, Mastercard, AMEX, Discover), mobile money (M-Pesa, MTN Mobile Money, Airtel Money) for donors in Africa, direct bank transfers (ACH for US donors, SEPA for Europe), and PayPal. All transactions are processed through PCI-DSS compliant payment providers (Stripe, Paystack, or Flutterwave depending on your region).",
+      "We accept four payment methods: Credit/Debit Card (Visa, Mastercard, AMEX via Stripe), PayPal (PayPal balance, cards, Venmo), Cryptocurrency (BTC, ETH, USDT, USDC via NOWPayments), and Bank Wire Transfer. All card and PayPal transactions are processed through PCI-DSS compliant providers. Cryptocurrency payments are handled by NOWPayments. Bank wire transfers are confirmed manually by our team.",
   },
   {
     id: 'refunds',
     question: 'Can I get a refund?',
     answer:
-      "We understand that mistakes happen. If you made an accidental or duplicate donation, you can request a full refund within 30 calendar days of the transaction. Simply email support@donatetoafrica.org with your name, email address used for the donation, and the transaction reference number. We aim to process all refund requests within 5-7 business days. Please note that for recurring donations, you can cancel future charges at any time through your donor portal. Refunds for completed charges follow the same 30-day policy.",
+      "We understand that mistakes happen. If you made an accidental or duplicate donation, you can request a full refund within 30 calendar days of the transaction. Simply email support@givetoafrica.org with your name, email address used for the donation, and the transaction reference number. We aim to process all refund requests within 5-7 business days. Please note that for recurring donations, you can cancel future charges at any time through your donor portal. Refunds for completed charges follow the same 30-day policy.",
   },
   {
     question: 'How do I manage my recurring donation?',
@@ -41,7 +41,7 @@ const faqs = [
   {
     question: 'Can I donate from outside the US?',
     answer:
-      "Yes! We accept donations from donors around the world. We currently support 9 currencies: USD, EUR, GBP, CAD, AUD, KES, NGN, GHS, and ZAR. Payment methods are automatically adjusted based on your country — for example, donors in Kenya can use M-Pesa, while donors in Nigeria can use bank transfers through Paystack. Our system automatically handles currency conversion and selects the most convenient local payment option for you.",
+      "Yes! We accept donations from donors around the world. We currently support 9 currencies: USD, EUR, GBP, KES, NGN, GHS, ZAR, UGX, and TZS. You can pay via card, PayPal, cryptocurrency, or bank wire transfer. Our system automatically handles currency conversion.",
   },
   {
     question: 'How do corporate matching gifts work?',
@@ -51,7 +51,7 @@ const faqs = [
   {
     question: 'Can I donate by check or wire transfer?',
     answer:
-      "Yes, we accept both checks and wire transfers for donors who prefer traditional methods. For checks, please make them payable to 'Donate to Africa Inc.' and mail to our address: 123 Impact Avenue, Washington, DC 20001. For wire transfers, please visit our donate page for detailed banking instructions including our routing number and SWIFT code. Note that check and wire transfer donations may take 3-5 business days to process and appear in your donor account.",
+      "Yes, we accept both checks and wire transfers for donors who prefer traditional methods. For checks, please make them payable to 'GiveToAfrica Inc.' and mail to our address: 123 Impact Avenue, Washington, DC 20001. For wire transfers, please visit our donate page for detailed banking instructions including our routing number and SWIFT code. Note that check and wire transfer donations may take 3-5 business days to process and appear in your donor account.",
   },
 ]
 
@@ -69,7 +69,7 @@ export default function FAQPage() {
         <div className="container-page py-16 md:py-20">
           <span className="text-label text-ochre-light">Support</span>
           <h1 className="mt-4 font-display text-4xl font-medium md:text-5xl">Frequently Asked Questions</h1>
-          <p className="mt-4 max-w-xl text-lg text-ink-muted leading-relaxed">
+          <p className="mt-4 max-w-xl text-lg text-white/70 leading-relaxed">
             Everything you need to know about donating, payment methods, tax receipts, and managing your giving.
           </p>
         </div>
@@ -86,11 +86,11 @@ export default function FAQPage() {
                   className="flex w-full items-center justify-between gap-4 p-5 text-left"
                 >
                   <div className="flex items-start gap-3">
-                    <HelpCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-ochre" />
+                    <HelpCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-ochre-dark" />
                     <span className="text-sm font-semibold text-ink">{faq.question}</span>
                   </div>
                   <ChevronDown
-                    className={`h-5 w-5 flex-shrink-0 text-ink-muted transition-transform duration-200 ${
+                    className={`h-5 w-5 flex-shrink-0 text-ink-soft transition-transform duration-200 ${
                       openIndex === index ? 'rotate-180' : ''
                     }`}
                   />

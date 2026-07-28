@@ -17,7 +17,7 @@ interface UseImpactGridOptions {
 }
 
 export function useImpactGrid(options: UseImpactGridOptions = {}) {
-  const { cols = 12, rows = 8, idlePulseCount = 2 } = options
+  const { cols = 12, rows = 8 } = options
   const reducedMotion = useReducedMotion()
   const [nodes, setNodes] = useState<GridNode[]>(() => {
     const n: GridNode[] = []

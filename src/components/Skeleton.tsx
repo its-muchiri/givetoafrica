@@ -34,7 +34,7 @@ export function EmptyState({
       <p className="text-ink-soft text-lg">
         {accent && (
           <>
-            <span className="font-display font-soft-italic text-ochre">{accent}</span>
+            <span className="font-display font-soft-italic text-ochre-dark">{accent}</span>
             {' '}
           </>
         )}

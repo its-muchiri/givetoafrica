@@ -4,19 +4,19 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import toast from 'react-hot-toast'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
-  Heart, Shield, CreditCard, Smartphone, Building2, Check,
-  Lock, ChevronDown, Info, Repeat, Zap, Globe, X,
+  Heart, Shield, Building2, Check,
+  Lock, ChevronDown, Info, Repeat, Zap, Globe, Bitcoin,
 } from 'lucide-react'
 import {
   cn, CURRENCIES, SUGGESTED_AMOUNTS,
-  getPaymentProvider, AFRICAN_COUNTRIES,
+  AFRICAN_COUNTRIES, getPaymentMethods, type PaymentProviderId,
 } from '@/lib/utils'
 import { categories } from '@/lib/categories'
 
 const donationSchema = z.object({
-  amount: z.number().min(100, 'Minimum donation is $1.00').max(100000000, 'Amount too large'),
+  amount: z.number().min(5000, 'Minimum donation is $50.00').max(100000000, 'Amount too large'),
   currency: z.string().min(3).max(3),
   isRecurring: z.boolean(),
   campaignId: z.string().optional(),
@@ -26,7 +26,8 @@ const donationSchema = z.object({
   message: z.string().optional(),
   isAnonymous: z.boolean(),
   coverFees: z.boolean(),
-  paymentMethod: z.enum(['card', 'mobile_money', 'bank_transfer']),
+  paymentMethod: z.enum(['crypto', 'bank_transfer']),
+  provider: z.enum(['nowpayments', 'bank_wire']),
 })
 
 type DonationFormData = z.infer<typeof donationSchema>
@@ -36,21 +37,31 @@ const campaignList = [
   ...categories.map((c) => ({ id: c.slug, name: c.name })),
 ]
 
+const PROVIDER_ICONS: Record<PaymentProviderId, typeof Heart> = {
+  nowpayments: Bitcoin,
+  bank_wire: Building2,
+}
+
+const PROVIDER_METHOD_MAP: Record<PaymentProviderId, DonationFormData['paymentMethod']> = {
+  nowpayments: 'crypto',
+  bank_wire: 'bank_transfer',
+}
+
 export default function DonatePage() {
   const [searchParams] = useSearchParams()
-  const [step, setStep] = useState<'amount' | 'details' | 'payment' | 'processing' | 'success'>('amount')
+  const [step, setStep] = useState<'amount' | 'details' | 'payment' | 'processing' | 'success' | 'wire_instructions'>('amount')
   const [selectedCurrency, setSelectedCurrency] = useState('USD')
-  const [selectedAmount, setSelectedAmount] = useState<number>(2500)
+  const [selectedAmount, setSelectedAmount] = useState<number>(5000)
   const [customAmount, setCustomAmount] = useState('')
   const [isCustom, setIsCustom] = useState(false)
-  const [currencyTransition, setCurrencyTransition] = useState(false)
-
+  const [selectedProvider, setSelectedProvider] = useState<PaymentProviderId>('nowpayments')
+  const [wireDetails, setWireDetails] = useState<any>(null)
   const {
     register, handleSubmit, watch, setValue, trigger, formState: { errors },
   } = useForm<DonationFormData>({
     resolver: zodResolver(donationSchema),
     defaultValues: {
-      amount: 2500,
+      amount: 5000,
       currency: 'USD',
       isRecurring: true,
       campaignId: searchParams.get('campaign') || '',
@@ -60,14 +71,13 @@ export default function DonatePage() {
       message: '',
       isAnonymous: false,
       coverFees: true,
-      paymentMethod: 'card',
+      paymentMethod: 'crypto',
+      provider: 'nowpayments',
     },
   })
 
   const isRecurring = watch('isRecurring')
   const coverFees = watch('coverFees')
-  const donorCountry = watch('donorCountry')
-  const paymentMethod = watch('paymentMethod')
 
   useEffect(() => {
     const amt = searchParams.get('amount')
@@ -79,21 +89,20 @@ export default function DonatePage() {
   }, [searchParams, setValue])
 
   const currency = CURRENCIES.find((c) => c.code === selectedCurrency)!
-  const amounts = SUGGESTED_AMOUNTS[selectedCurrency] || [1000, 2500, 5000, 10000]
+  const amounts = SUGGESTED_AMOUNTS[selectedCurrency] || [5000, 10000, 25000, 35900, 50000, 70000, 100000]
   const displayAmount = (selectedAmount / 100).toFixed(2)
   const processingFee = coverFees ? Math.ceil(selectedAmount * 0.03) : 0
   const totalAmount = selectedAmount + processingFee
-
-  const provider = getPaymentProvider(donorCountry, selectedCurrency)
-  const isAfricanPayment = provider === 'flutterwave' || provider === 'paystack'
+  const availableMethods = getPaymentMethods(isRecurring)
 
   const getImpactMessage = (amount: number): string => {
     const amt = amount / 100
     if (selectedCurrency === 'USD') {
-      if (amt >= 100) return 'Builds a water well serving an entire village'
+      if (amt >= 500) return 'Funds a complete classroom with desks and materials'
+      if (amt >= 250) return 'Builds a water well serving an entire village'
+      if (amt >= 100) return 'Trains 10 community health workers'
       if (amt >= 50) return 'Funds health screenings for 20 community members'
-      if (amt >= 25) return 'Delivers clean water to one family for a month'
-      if (amt >= 10) return 'Provides school supplies for one student for a term'
+      return 'Provides school supplies for one student for a term'
     }
     return 'Your generosity creates real change'
   }
@@ -116,14 +125,16 @@ export default function DonatePage() {
   }
 
   const handleCurrencyChange = (newCurrency: string) => {
-    setCurrencyTransition(true)
-    setTimeout(() => {
-      setSelectedCurrency(newCurrency)
-      setValue('currency', newCurrency)
-      const newAmounts = SUGGESTED_AMOUNTS[newCurrency]
-      if (newAmounts) handleAmountSelect(newAmounts[1])
-      setCurrencyTransition(false)
-    }, 150)
+    setSelectedCurrency(newCurrency)
+    setValue('currency', newCurrency)
+    const newAmounts = SUGGESTED_AMOUNTS[newCurrency]
+    if (newAmounts) handleAmountSelect(newAmounts[1])
+  }
+
+  const handleProviderSelect = (provider: PaymentProviderId) => {
+    setSelectedProvider(provider)
+    setValue('provider', provider)
+    setValue('paymentMethod', PROVIDER_METHOD_MAP[provider])
   }
 
   const goToStep = async (target: 'details' | 'payment') => {
@@ -137,13 +148,24 @@ export default function DonatePage() {
   const processPayment = async (data: DonationFormData) => {
     setStep('processing')
     try {
+      const idempotencyKey = `${data.donorEmail}-${data.amount}-${Date.now()}`
       const response = await fetch('/api/donations/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, amount: totalAmount, provider }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idempotencyKey,
+        },
+        body: JSON.stringify({ ...data, amount: totalAmount, provider: selectedProvider }),
       })
       if (!response.ok) throw new Error('Payment failed')
       const result = await response.json()
+
+      if (selectedProvider === 'bank_wire' && result.wireDetails) {
+        setWireDetails(result.wireDetails)
+        setStep('wire_instructions')
+        return
+      }
+
       if (result.redirectUrl) { window.location.href = result.redirectUrl; return }
       setStep('success')
       toast.success('Thank you for your donation!')
@@ -151,6 +173,50 @@ export default function DonatePage() {
       setStep('payment')
       toast.error('Something went wrong. Please try again.')
     }
+  }
+
+  if (step === 'wire_instructions' && wireDetails) {
+    return (
+      <div className="container-page py-20">
+        <div className="mx-auto max-w-lg text-center">
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }}>
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-sm bg-ochre-dark/10">
+              <Building2 className="h-10 w-10 text-ochre-dark" />
+            </div>
+          </motion.div>
+          <h1 className="mt-8 font-display text-3xl font-medium text-ink">Wire Transfer Details</h1>
+          <p className="mt-4 text-ink-soft">Complete your transfer using the details below. We'll confirm once received.</p>
+
+          <div className="mt-8 rounded-lg border border-ink/10 bg-white p-6 text-left">
+            <h3 className="font-display text-base font-medium text-ink">Bank Details</h3>
+            <div className="mt-4 space-y-3 text-sm">
+              {[
+                ['Bank', wireDetails.bankName],
+                ['Account Name', wireDetails.accountName],
+                ['Account Number', wireDetails.accountNumber],
+                wireDetails.iban && ['IBAN', wireDetails.iban],
+                ['SWIFT/BIC', wireDetails.swift],
+                wireDetails.routingNumber && ['Routing', wireDetails.routingNumber],
+              ].filter(Boolean).map(([label, value]) => (
+                <div key={label as string} className="flex justify-between">
+                  <span className="text-ink-soft">{label}</span>
+                  <span className="mono-number font-medium text-ink">{value}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 rounded bg-ochre-dark/5 p-4 text-center">
+              <p className="text-2xs text-ink-soft">Your reference code (include in transfer memo)</p>
+              <p className="mono-number mt-1 text-lg font-bold text-ochre-dark tracking-wider">{wireDetails.reference}</p>
+            </div>
+            <p className="mt-4 text-xs text-ink-soft leading-relaxed">{wireDetails.instructions}</p>
+          </div>
+
+          <button onClick={() => setStep('success')} className="btn-primary mt-8">
+            <Check className="h-4 w-4" /> I've Made the Transfer
+          </button>
+        </div>
+      </div>
+    )
   }
 
   if (step === 'success') {
@@ -205,14 +271,14 @@ export default function DonatePage() {
               <div key={s} className="flex items-center">
                 <div className={cn(
                   'flex h-8 w-8 items-center justify-center rounded-sm text-xs font-mono font-medium transition-all',
-                  isActive ? 'bg-ochre text-white' : 'bg-parchment text-ink-muted'
+                  isActive ? 'bg-ochre-dark text-white' : 'bg-parchment text-ink-soft'
                 )}>
                   {isActive && i < currentIdx ? <Check className="h-4 w-4" /> : i + 1}
                 </div>
-                <span className={cn('ml-2 text-sm font-medium hidden sm:inline', isActive ? 'text-ink' : 'text-ink-muted')}>
+                <span className={cn('ml-2 text-sm font-medium hidden sm:inline', isActive ? 'text-ink' : 'text-ink-soft')}>
                   {s === 'amount' ? 'Amount' : s === 'details' ? 'Details' : 'Payment'}
                 </span>
-                {i < 2 && <div className={cn('mx-3 h-px w-8 sm:w-12', isActive && i < currentIdx ? 'bg-ochre' : 'bg-ink/12')} />}
+                  {i < 2 && <div className={cn('mx-3 h-px w-8 sm:w-12', isActive && i < currentIdx ? 'bg-ochre-dark' : 'bg-ink/12')} />}
               </div>
             )
           })}
@@ -231,12 +297,12 @@ export default function DonatePage() {
                     <div className="grid grid-cols-2 gap-1 rounded-sm bg-parchment p-1">
                       <button type="button" onClick={() => setValue('isRecurring', true)}
                         className={cn('rounded-sm py-2.5 px-4 text-sm font-medium transition-all',
-                          isRecurring ? 'bg-white text-ochre shadow-sm ring-1 ring-ink/8' : 'text-ink-soft hover:text-ink')}>
+                          isRecurring ? 'bg-white text-ochre-dark shadow-sm ring-1 ring-ink/8' : 'text-ink-soft hover:text-ink')}>
                         <Repeat className="mr-1 inline h-4 w-4" /> Monthly
                       </button>
                       <button type="button" onClick={() => setValue('isRecurring', false)}
                         className={cn('rounded-sm py-2.5 px-4 text-sm font-medium transition-all',
-                          !isRecurring ? 'bg-white text-ochre shadow-sm ring-1 ring-ink/8' : 'text-ink-soft hover:text-ink')}>
+                          !isRecurring ? 'bg-white text-ochre-dark shadow-sm ring-1 ring-ink/8' : 'text-ink-soft hover:text-ink')}>
                         One-time
                       </button>
                     </div>
@@ -256,7 +322,7 @@ export default function DonatePage() {
                           <option key={c.code} value={c.code}>{c.flag} {c.code} — {c.name}</option>
                         ))}
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
                     </div>
                   </div>
 
@@ -269,13 +335,13 @@ export default function DonatePage() {
                           className={cn(
                             'relative rounded-sm p-3.5 text-center transition-all',
                             !isCustom && selectedAmount === amount
-                              ? 'bg-ochre/10 text-ochre ring-2 ring-ochre'
+                              ? 'bg-ochre-dark/10 text-ochre-dark ring-2 ring-ochre-dark'
                               : 'bg-white text-ink ring-1 ring-ink/12 hover:ring-ochre/40 hover:scale-[1.02]'
                           )}
                           style={{ transitionDuration: 'var(--duration-micro)', transitionTimingFunction: 'var(--ease-signature)' }}>
                           {isCustom && selectedAmount === amount && (
                             <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
-                              className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-ochre">
+                               className="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-ochre-dark">
                               <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
                             </motion.div>
                           )}
@@ -286,11 +352,11 @@ export default function DonatePage() {
                       ))}
                     </div>
                     <div className="mt-2 relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-muted font-mono text-sm">{currency.symbol}</span>
-                      <input type="number" placeholder="Custom amount" value={customAmount}
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-soft font-mono text-sm">{currency.symbol}</span>
+                      <input type="number" placeholder="Custom amount (min $50)" value={customAmount}
                         onFocus={() => setIsCustom(true)}
                         onChange={(e) => handleCustomAmountChange(e.target.value)}
-                        className={cn('input-field pl-8 font-mono', isCustom && 'border-ochre ring-2 ring-ochre/10')} min="1" step="0.01" />
+                        className={cn('input-field pl-8 font-mono', isCustom && 'border-ochre ring-2 ring-ochre/10')} min="50" step="0.01" />
                     </div>
                   </div>
 
@@ -300,7 +366,7 @@ export default function DonatePage() {
                       <select {...register('campaignId')} className="input-field appearance-none pr-10">
                         {campaignList.map((c) => (<option key={c.id} value={c.id}>{c.name}</option>))}
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
                     </div>
                   </div>
 
@@ -313,7 +379,7 @@ export default function DonatePage() {
               {/* Step 2: Donor Details */}
               {step === 'details' && (
                 <div className="space-y-5">
-                  <button type="button" onClick={() => setStep('amount')} className="text-sm text-ochre hover:text-ochre-600 font-medium">← Back to amount</button>
+                  <button type="button" onClick={() => setStep('amount')} className="text-sm text-ochre-dark hover:text-ochre-dark font-medium">&larr; Back to amount</button>
                   <div>
                     <label className="label-text">Full Name *</label>
                     <input {...register('donorName')} className="input-field" placeholder="Your full name" />
@@ -340,7 +406,7 @@ export default function DonatePage() {
                           <option value="Other">Other</option>
                         </optgroup>
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
                     </div>
                     {errors.donorCountry && <p className="mt-1 text-2xs text-error">{errors.donorCountry.message}</p>}
                   </div>
@@ -349,7 +415,7 @@ export default function DonatePage() {
                     <textarea {...register('message')} rows={3} className="input-field resize-none" placeholder="Leave a note..." />
                   </div>
                   <label className="flex items-center gap-3 rounded-sm p-3 cursor-pointer ring-1 ring-ink/12">
-                    <input type="checkbox" {...register('isAnonymous')} className="h-4 w-4 rounded-sm border-ink/20 text-ochre focus:ring-ochre" />
+                    <input type="checkbox" {...register('isAnonymous')} className="h-4 w-4 rounded-sm border-ink/20 text-ochre-dark focus:ring-ochre-dark" />
                     <div>
                       <div className="text-sm font-medium text-ink">Donate Anonymously</div>
                       <div className="text-2xs text-ink-soft">Your name won't be publicly displayed</div>
@@ -364,39 +430,42 @@ export default function DonatePage() {
               {/* Step 3: Payment */}
               {step === 'payment' && (
                 <div className="space-y-5">
-                  <button type="button" onClick={() => setStep('details')} className="text-sm text-ochre hover:text-ochre-600 font-medium">← Back to details</button>
+                  <button type="button" onClick={() => setStep('details')} className="text-sm text-ochre-dark hover:text-ochre-dark font-medium">&larr; Back to details</button>
                   <div>
                     <label className="label-text">Payment Method</label>
                     <div className="space-y-2">
-                      {[
-                        { id: 'card', label: 'Credit / Debit Card', icon: CreditCard, desc: 'Visa, Mastercard, AMEX', provider: 'Stripe' },
-                        ...(isAfricanPayment ? [
-                          { id: 'mobile_money', label: 'Mobile Money', icon: Smartphone, desc: 'M-Pesa, MTN, Airtel', provider: provider === 'paystack' ? 'Paystack' : 'Flutterwave' },
-                          { id: 'bank_transfer', label: 'Bank Transfer', icon: Building2, desc: 'Direct transfer', provider: provider === 'paystack' ? 'Paystack' : 'Flutterwave' },
-                        ] : []),
-                      ].map((method) => (
-                        <label key={method.id}
-                          className={cn('flex items-center gap-4 rounded-sm p-3.5 cursor-pointer transition-all',
-                            paymentMethod === method.id ? 'bg-ochre/8 ring-2 ring-ochre' : 'bg-white ring-1 ring-ink/12 hover:ring-ink/20')}>
-                          <input type="radio" {...register('paymentMethod')} value={method.id} className="sr-only" />
-                          <div className={cn('flex h-9 w-9 items-center justify-center rounded-sm',
-                            paymentMethod === method.id ? 'bg-ochre/15 text-ochre' : 'bg-parchment text-ink-muted')}>
-                            <method.icon className="h-4 w-4" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="text-sm font-medium text-ink">{method.label}</div>
-                            <div className="text-2xs text-ink-soft">{method.desc}</div>
-                          </div>
-                          <span className="text-2xs font-mono text-ink-muted bg-parchment px-2 py-1 rounded-sm">
-                            {method.provider}
-                          </span>
-                        </label>
-                      ))}
+                      {availableMethods.map((method) => {
+                        const Icon = PROVIDER_ICONS[method.id]
+                        return (
+                          <label key={method.id}
+                            className={cn('flex items-center gap-4 rounded-sm p-3.5 cursor-pointer transition-all',
+                              selectedProvider === method.id ? 'bg-ochre-dark/10 text-ochre-dark ring-2 ring-ochre-dark' : 'bg-white ring-1 ring-ink/12 hover:ring-ink/20')}>
+                            <input type="radio" checked={selectedProvider === method.id}
+                              onChange={() => handleProviderSelect(method.id)} className="sr-only" />
+                            <div className={cn('flex h-9 w-9 items-center justify-center rounded-sm',
+                              selectedProvider === method.id ? 'bg-ochre-dark/15 text-ochre-dark' : 'bg-parchment text-ink-soft')}>
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-sm font-medium text-ink">{method.label}</div>
+                              <div className="text-2xs text-ink-soft">{method.description}</div>
+                            </div>
+                            <span className="text-2xs font-mono text-ink-soft bg-parchment px-2 py-1 rounded-sm">
+                              {method.trustBadge}
+                            </span>
+                          </label>
+                        )
+                      })}
                     </div>
+                    {isRecurring && (
+                      <p className="mt-2 text-2xs text-ink-soft">
+                        Recurring donations are only available with cryptocurrency. Choose "One-time" for bank transfers.
+                      </p>
+                    )}
                   </div>
 
                   <label className="flex items-start gap-3 rounded-sm p-3.5 cursor-pointer ring-1 ring-ink/12">
-                    <input type="checkbox" {...register('coverFees')} className="mt-0.5 h-4 w-4 rounded-sm border-ink/20 text-ochre focus:ring-ochre" />
+                    <input type="checkbox" {...register('coverFees')} className="mt-0.5 h-4 w-4 rounded-sm border-ink/20 text-ochre-dark focus:ring-ochre-dark" />
                     <div>
                       <div className="text-sm font-medium text-ink">
                         Cover transaction fees (+{currency.symbol}{(processingFee / 100).toFixed(2)})
@@ -408,13 +477,13 @@ export default function DonatePage() {
                   </label>
 
                   <div className="flex items-center justify-center gap-6 py-2">
-                    <div className="flex items-center gap-1.5 text-2xs text-ink-muted">
+                    <div className="flex items-center gap-1.5 text-2xs text-ink-soft">
                       <Lock className="h-3 w-3" /> SSL Secured
                     </div>
-                    <div className="flex items-center gap-1.5 text-2xs text-ink-muted">
+                    <div className="flex items-center gap-1.5 text-2xs text-ink-soft">
                       <Shield className="h-3 w-3" /> PCI-DSS
                     </div>
-                    <div className="flex items-center gap-1.5 text-2xs text-ink-muted">
+                    <div className="flex items-center gap-1.5 text-2xs text-ink-soft">
                       <Zap className="h-3 w-3" /> 256-bit
                     </div>
                   </div>
@@ -423,7 +492,7 @@ export default function DonatePage() {
                     <Heart className="h-5 w-5 btn-icon" fill="currentColor" strokeWidth={0} />
                     Donate {currency.symbol}{(totalAmount / 100).toFixed(2)}{isRecurring ? ' / month' : ''}
                   </button>
-                  <p className="text-center text-2xs text-ink-muted leading-relaxed">
+                  <p className="text-center text-2xs text-ink-soft leading-relaxed">
                     By proceeding, you agree to our Terms of Service. Your donation is tax-deductible.
                   </p>
                 </div>
@@ -457,7 +526,7 @@ export default function DonatePage() {
                   )}
                   <div className="border-t border-white/10 pt-3 flex justify-between text-base">
                     <span className="font-medium">Total</span>
-                    <span className="mono-number font-semibold text-ochre">{currency.symbol}{(totalAmount / 100).toFixed(2)}</span>
+                    <span className="mono-number font-semibold text-ochre-dark">{currency.symbol}{(totalAmount / 100).toFixed(2)}</span>
                   </div>
                   {isRecurring && (
                     <div className="rounded-sm bg-white/5 p-2 text-center text-2xs text-white/60">
@@ -485,7 +554,8 @@ export default function DonatePage() {
                 <div className="flex items-start gap-3">
                   <Info className="h-4 w-4 flex-shrink-0 text-savanna mt-0.5" />
                   <div className="text-2xs leading-relaxed text-savanna">
-                    <strong>100% goes to programs.</strong> Donate to Africa covers all administrative costs through separate funding.
+                    <strong>100% goes to programs.</strong> GiveToAfrica covers all 
+administrative costs through separate funding.
                   </div>
                 </div>
               </div>

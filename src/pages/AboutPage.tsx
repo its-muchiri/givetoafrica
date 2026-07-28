@@ -4,9 +4,10 @@ import {
   Heart, ArrowRight, Users, Eye, Leaf, Award, Download,
   Building2, Mail, Phone, MapPin, Globe, BookOpen, Shield, TrendingUp,
 } from 'lucide-react'
+import { images } from '@/lib/images'
 
 const timeline = [
-  { year: '2015', title: 'Founded', description: 'Donate to Africa was established with a mission to empower underserved communities across Africa through sustainable development programs.' },
+  { year: '2015', title: 'Founded', description: 'GiveToAfrica was established with a mission to empower underserved communities across Africa through sustainable development programs.' },
   { year: '2016', title: 'First Projects', description: 'Launched our first education and clean water programs in Kenya and Ghana, reaching 500 families in the first year.' },
   { year: '2018', title: 'Continental Expansion', description: 'Expanded operations to Tanzania, Nigeria, Uganda, and South Africa. Built our 50th clean water well.' },
   { year: '2020', title: 'Healthcare Initiative', description: 'Launched mobile health clinics and community health worker training programs, serving 10,000+ patients annually.' },
@@ -36,19 +37,19 @@ const values = [
     icon: Users,
     title: 'Community-Led',
     description: 'Every project starts with community input. We don\'t impose solutions — we listen, collaborate, and support communities in building what they need most.',
-    color: 'bg-ochre/5 text-ochre ring-ochre/8',
+    color: 'bg-ochre/5 text-ochre-dark ring-ochre/8',
   },
   {
     icon: Eye,
     title: 'Transparency',
     description: 'Every dollar is tracked and publicly reported. Our financials are independently audited annually, and donors receive detailed impact updates.',
-    color: 'bg-savanna/5 text-savanna ring-savanna/8',
+    color: 'bg-savanna/5 text-savanna-dark ring-savanna/8',
   },
   {
     icon: Leaf,
     title: 'Sustainability',
     description: 'We build programs that outlast our involvement. From training local leaders to establishing maintenance funds, our projects are designed to endure.',
-    color: 'bg-ochre/5 text-ochre ring-ochre/8',
+    color: 'bg-ochre/5 text-ochre-dark ring-ochre/8',
   },
   {
     icon: Heart,
@@ -72,6 +73,11 @@ export default function AboutPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-indigo text-white">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${images.heroes.about})` }}
+        />
+        <div className="absolute inset-0 bg-indigo/85" />
         <div className="container-page relative py-20 md:py-28 lg:py-36">
           <div className="max-w-3xl">
             <motion.span
@@ -100,9 +106,10 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted md:text-xl"
+              className="mt-6 max-w-xl text-lg leading-relaxed text-white/80 md:text-xl"
             >
-              Since 2015, Donate to Africa has partnered with communities across Africa to deliver
+            Since 2015, GiveToAfrica has partnered with communities across Africa to 
+deliver
               education, clean water, healthcare, and food security — with dignity, transparency,
               and lasting impact at the center of everything we do.
             </motion.p>
@@ -139,11 +146,11 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <span className="text-label text-ochre">Our Mission</span>
+            <span className="text-label text-ochre-dark">Our Mission</span>
             <h2 className="section-heading mt-3">What Drives Us Forward</h2>
             <p className="section-subheading mx-auto">
               We believe every community deserves the resources, knowledge, and support to thrive —
-              not just survive. Donate to Africa exists to make that belief a reality.
+              not just survive. GiveToAfrica exists to make that belief a reality.
             </p>
           </motion.div>
 
@@ -165,6 +172,12 @@ export default function AboutPage() {
             ))}
           </motion.div>
         </div>
+      </section>
+
+      {/* Photo Banner */}
+      <section className="relative h-64 overflow-hidden md:h-80">
+        <img src={images.about.team2} alt="Children in our programs" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-indigo/30" />
       </section>
 
       {/* Timeline */}
@@ -197,11 +210,11 @@ export default function AboutPage() {
                   className={`relative flex flex-col md:flex-row ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-start md:items-center`}
                 >
                   <div className={`flex-1 ${i % 2 === 0 ? 'md:text-right md:pr-12' : 'md:text-left md:pl-12'} pl-12 md:pl-0`}>
-                    <span className="text-sm font-bold text-ochre">{event.year}</span>
+                    <span className="text-sm font-bold text-ochre-dark">{event.year}</span>
                     <h3 className="mt-1 font-display text-lg font-medium text-ink">{event.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-ink-soft">{event.description}</p>
                   </div>
-                  <div className="absolute left-4 top-0 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full border-4 border-white bg-ochre shadow-sm md:relative md:left-auto md:translate-x-0">
+                  <div className="absolute left-4 top-0 flex h-8 w-8 -translate-x-1/2 items-center justify-center rounded-full border-4 border-white bg-ochre-dark shadow-sm md:relative md:left-auto md:translate-x-0">
                     <span className="text-[10px] font-bold text-white">{i + 1}</span>
                   </div>
                   <div className="hidden flex-1 md:block" />
@@ -222,7 +235,7 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <span className="text-label text-ochre">Our People</span>
+            <span className="text-label text-ochre-dark">Our People</span>
             <h2 className="section-heading mt-3">Meet the Team</h2>
             <p className="section-subheading mx-auto">
               Passionate professionals dedicated to creating lasting change across the continent.
@@ -242,7 +255,7 @@ export default function AboutPage() {
                   {member.initials}
                 </div>
                 <h3 className="mt-4 font-display text-lg font-medium text-ink">{member.name}</h3>
-                <p className="mt-1 text-sm font-medium text-ochre">{member.role}</p>
+                <p className="mt-1 text-sm font-medium text-ochre-dark">{member.role}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -296,7 +309,7 @@ export default function AboutPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-label text-ochre">Trust & Accountability</span>
+              <span className="text-label text-ochre-dark">Trust & Accountability</span>
               <h2 className="section-heading mt-3">Built on Integrity</h2>
               <p className="section-subheading">
                 We hold ourselves to the highest standards of transparency and accountability,
@@ -306,8 +319,8 @@ export default function AboutPage() {
                 {[
                   { icon: Award, label: 'Charity Navigator', value: '4-Star Rating', color: 'bg-savanna/5 text-savanna' },
                   { icon: Shield, label: 'PCI-DSS', value: 'Fully Compliant', color: 'bg-blue-50 text-blue-600' },
-                  { icon: TrendingUp, label: 'Program Spending', value: '84% to Programs', color: 'bg-ochre/5 text-ochre' },
-                  { icon: Eye, label: 'Annual Audit', value: 'Publicly Available', color: 'bg-ochre/5 text-ochre' },
+                  { icon: TrendingUp, label: 'Program Spending', value: '84% to Programs', color: 'bg-ochre/5 text-ochre-dark' },
+                  { icon: Eye, label: 'Annual Audit', value: 'Publicly Available', color: 'bg-ochre/5 text-ochre-dark' },
                 ].map((item) => (
                   <div key={item.label} className="flex items-center gap-3">
                     <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg ${item.color}`}>
@@ -329,7 +342,7 @@ export default function AboutPage() {
               className="rounded-2xl bg-indigo p-8 md:p-10 text-white"
             >
               <h3 className="font-display text-xl font-medium">Download Our Annual Report</h3>
-              <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+              <p className="mt-3 text-sm leading-relaxed text-white/80">
                 Get the full picture of our programs, finances, and impact. Our 2024 Annual Report
                 includes audited financials, project outcomes, and stories from the communities we serve.
               </p>
@@ -348,7 +361,7 @@ export default function AboutPage() {
                     </div>
                     <div className="flex-1">
                       <div className="text-sm font-medium">{doc.label}</div>
-                      <div className="text-xs text-ink-muted">{doc.size}</div>
+                        <div className="text-xs text-white/60">{doc.size}</div>
                     </div>
                   </button>
                 ))}
@@ -370,7 +383,7 @@ export default function AboutPage() {
             <h2 className="text-center font-display text-2xl font-medium text-ink">Organizational Details</h2>
             <div className="mt-8 grid gap-8 md:grid-cols-3">
               <div className="card text-center">
-                <Building2 className="mx-auto h-8 w-8 text-ochre" />
+                <Building2 className="mx-auto h-8 w-8 text-ochre-dark" />
                 <h3 className="mt-3 font-display text-base font-medium text-ink">Legal Registration</h3>
                 <p className="mt-2 text-sm text-ink-soft leading-relaxed">
                   Registered 501(c)(3) nonprofit organization.<br />
@@ -386,7 +399,7 @@ export default function AboutPage() {
                 </p>
               </div>
               <div className="card text-center">
-                <Globe className="mx-auto h-8 w-8 text-ochre" />
+                <Globe className="mx-auto h-8 w-8 text-ochre-dark" />
                 <h3 className="mt-3 font-display text-base font-medium text-ink">Regional Offices</h3>
                 <p className="mt-2 text-sm text-ink-soft leading-relaxed">
                   Nairobi, Kenya &amp; Accra, Ghana<br />
@@ -395,16 +408,16 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-ink-soft">
-              <span className="flex items-center gap-2"><Mail className="h-4 w-4 text-ochre" /> info@donatetoafrica.org</span>
+              <span className="flex items-center gap-2"><Mail className="h-4 w-4 text-ochre-dark" /> info@donatetoafrica.org</span>
               <span className="flex items-center gap-2"><Phone className="h-4 w-4 text-savanna" /> +1 (202) 555-0187</span>
-              <span className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-ochre" /> Annual reports publicly available</span>
+              <span className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-ochre-dark" /> Annual reports publicly available</span>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-ochre via-ochre-dark to-ochre py-20 md:py-28">
+      <section className="bg-gradient-to-r from-ochre-dark via-ochre-dark to-ochre-dark py-20 md:py-28">
         <div className="container-page text-center">
           <h2 className="font-display text-3xl font-medium text-white md:text-5xl">
             Join Us in Building a Better Future
@@ -416,7 +429,7 @@ export default function AboutPage() {
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               to="/donate"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-10 py-4 text-base font-bold text-ochre shadow-xl transition-all hover:bg-parchment hover:shadow-2xl"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-10 py-4 text-base font-bold text-ink shadow-xl transition-all hover:bg-parchment hover:shadow-2xl"
             >
               <Heart className="h-5 w-5" />
               Donate Now

@@ -1,11 +1,9 @@
 import { Router } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { createDonationSchema } from '../lib/validation'
 import { generateReceiptNumber, logAuditEvent } from '../lib/audit'
-import { sendReceiptEmail } from '../lib/email'
-import { getStripe } from '../lib/stripe'
-import { getFlutterwave } from '../lib/flutterwave'
-import { getPaystack } from '../lib/paystack'
+import { sendReceiptEmail, sendWelcomeEmail } from '../lib/email'
+import { getPaymentProvider, isSupportedProvider } from '../lib/payments'
 
 const router = Router()
 const prisma = new PrismaClient()
@@ -13,7 +11,6 @@ const prisma = new PrismaClient()
 // Create a donation
 router.post('/create', async (req, res) => {
   try {
-    // Validate input
     const validation = createDonationSchema.safeParse(req.body)
     if (!validation.success) {
       return res.status(400).json({ error: 'Invalid input', details: validation.error.flatten() })
@@ -21,12 +18,21 @@ router.post('/create', async (req, res) => {
 
     const data = validation.data
 
-    // Verify amount server-side (re-validate against provider charges)
-    let providerTransactionId: string | undefined
-    let redirectUrl: string | undefined
+    if (!isSupportedProvider(data.provider)) {
+      return res.status(400).json({ error: 'Unsupported payment provider' })
+    }
+
+    // Idempotency check
+    const idempotencyKey = req.headers['idempotency-key'] as string || `${data.donorEmail}-${data.amount}-${Date.now()}`
+
+    const existingDonation = await prisma.donation.findUnique({ where: { idempotencyKey } })
+    if (existingDonation) {
+      return res.json({ donationId: existingDonation.id, redirectUrl: (existingDonation.metadata as Record<string, unknown>)?.redirectUrl })
+    }
 
     // Find or create donor
     let donor = await prisma.donor.findUnique({ where: { email: data.donorEmail } })
+    let isNewDonor = false
     if (!donor) {
       donor = await prisma.donor.create({
         data: {
@@ -36,13 +42,31 @@ router.post('/create', async (req, res) => {
           isAnonymous: data.isAnonymous,
         },
       })
+      isNewDonor = true
     }
 
-    // Create pending donation record
+    // Compute USD equivalent (simplified — providers report actual in webhooks)
+    const usdAmount = data.currency === 'USD' ? data.amount : Math.round(data.amount * getExchangeRate(data.currency))
+
+    // Resolve campaign
+    let campaignId: string | undefined
+    let campaignName: string | undefined
+    if (data.campaignId && data.campaignId !== '') {
+      const campaign = await prisma.campaign.findFirst({
+        where: { OR: [{ id: data.campaignId }, { slug: data.campaignId }] },
+      })
+      if (campaign) {
+        campaignId = campaign.id
+        campaignName = campaign.title
+      }
+    }
+
+    // Create pending donation
     const donation = await prisma.donation.create({
       data: {
         amount: data.amount,
         currency: data.currency,
+        usdAmount,
         status: 'pending',
         paymentProvider: data.provider,
         isRecurring: data.isRecurring,
@@ -50,66 +74,68 @@ router.post('/create', async (req, res) => {
         processingFee: data.coverFees ? Math.ceil(data.amount * 0.03) : 0,
         isAnonymous: data.isAnonymous,
         message: data.message,
+        idempotencyKey,
         donorId: donor.id,
-        campaignId: data.campaignId || undefined,
+        campaignId,
       },
     })
 
-    // Process payment based on provider
-    if (data.provider === 'stripe') {
-      const session = await getStripe().checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: [{
-          price_data: {
-            currency: data.currency.toLowerCase(),
-            product_data: {
-              name: data.campaignId ? `Donation to ${data.campaignId}` : 'Donate to Africa General Donation',
-              description: data.isRecurring ? 'Monthly recurring donation' : 'One-time donation',
-            },
-            unit_amount: data.amount,
-            ...(data.isRecurring && { recurring: { interval: 'month' } }),
-          },
-          quantity: 1,
-        }],
-        mode: data.isRecurring ? 'subscription' : 'payment',
-        success_url: `${process.env.VITE_APP_URL}/donate/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.VITE_APP_URL}/donate?cancelled=true`,
-        metadata: { donationId: donation.id, donorId: donor.id },
-        customer_email: data.donorEmail,
-      })
+    // Dispatch to provider
+    const provider = getPaymentProvider(data.provider)
+    const session = await provider.createPayment({
+      amount: data.amount,
+      currency: data.currency,
+      donorEmail: data.donorEmail,
+      donorName: data.donorName,
+      campaignSlug: data.campaignId || undefined,
+      campaignName,
+      isRecurring: data.isRecurring,
+      idempotencyKey,
+      donationId: donation.id,
+    })
 
-      redirectUrl = session.url || undefined
-      await prisma.donation.update({
-        where: { id: donation.id },
-        data: { metadata: { sessionId: session.id } },
-      })
-    } else if (data.provider === 'flutterwave') {
-      const response = await (await getFlutterwave()).Charges.bankTransfer({
-        amount: data.amount / 100,
-        currency: data.currency,
-        email: data.donorEmail,
-        narration: 'Donate to Africa Donation',
-        tx_ref: `GF-${donation.id.slice(0, 8)}`,
-      })
-      redirectUrl = response.data?.link
-    } else if (data.provider === 'paystack') {
-      const response = await getPaystack().post('/transaction/initialize', {
-        email: data.donorEmail,
-        amount: data.amount,
-        currency: data.currency === 'NGN' ? 'NGN' : undefined,
-        reference: `GF-${donation.id.slice(0, 8)}`,
-        callback_url: `${process.env.VITE_APP_URL}/donate/success`,
-        metadata: {
-          donation_id: donation.id,
-          donor_id: donor.id,
-          custom_fields: [{
-            display_name: 'Campaign',
-            variable_name: 'campaign',
-            value: data.campaignId || 'general',
-          }],
-        },
-      })
-      redirectUrl = response.data.data.authorization_url
+    // Update donation with provider details
+    const metadataUpdate: Record<string, unknown> = session.metadata || {}
+    if (session.redirectUrl) {
+      metadataUpdate.redirectUrl = session.redirectUrl
+    }
+
+    const updateData: Prisma.DonationUpdateInput = {
+      metadata: metadataUpdate as Prisma.InputJsonValue,
+    }
+    if (session.providerTransactionId) {
+      updateData.providerTransactionId = session.providerTransactionId
+    }
+    if (session.wireReference) {
+      updateData.wireReference = session.wireReference
+      updateData.status = 'pending_wire'
+    }
+
+    await prisma.donation.update({ where: { id: donation.id }, data: updateData })
+
+    // For bank wire, send email with wire details
+    if (data.provider === 'bank_wire' && session.wireDetails) {
+      try {
+        await sendWireDetailsEmail({
+          to: data.donorEmail,
+          donorName: data.donorName,
+          amount: data.amount,
+          currency: data.currency,
+          wireDetails: session.wireDetails,
+          campaignName,
+        })
+      } catch (emailError) {
+        console.error('Failed to send wire details email:', emailError)
+      }
+    }
+
+    // Send welcome email to new donors
+    if (isNewDonor) {
+      try {
+        await sendWelcomeEmail(data.donorEmail, data.donorName)
+      } catch (emailError) {
+        console.error('Failed to send welcome email:', emailError)
+      }
     }
 
     await logAuditEvent('donation_created', {
@@ -119,7 +145,13 @@ router.post('/create', async (req, res) => {
       provider: data.provider,
     }, req.ip, req.headers['user-agent'])
 
-    res.json({ donationId: donation.id, redirectUrl })
+    res.json({
+      donationId: donation.id,
+      redirectUrl: session.redirectUrl,
+      wireDetails: session.wireDetails,
+      wireReference: session.wireReference,
+      status: session.status,
+    })
   } catch (error) {
     console.error('Donation creation error:', error)
     res.status(500).json({ error: 'Failed to create donation' })
@@ -139,5 +171,66 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch donation' })
   }
 })
+
+function getExchangeRate(currency: string): number {
+  const rates: Record<string, number> = {
+    USD: 1,
+    EUR: 1.08,
+    GBP: 1.27,
+    KES: 0.0077,
+    NGN: 0.00065,
+    GHS: 0.083,
+    ZAR: 0.055,
+    UGX: 0.00027,
+    TZS: 0.00039,
+  }
+  return rates[currency] || 1
+}
+
+async function sendWireDetailsEmail(params: {
+  to: string
+  donorName: string
+  amount: number
+  currency: string
+  wireDetails: { bankName: string; accountName: string; accountNumber: string; iban?: string; swift: string; routingNumber?: string; reference: string; instructions: string }
+  campaignName?: string
+}) {
+  const { Resend } = await import('resend')
+  const resend = new Resend(process.env.RESEND_API_KEY)
+  const formattedAmount = new Intl.NumberFormat('en-US', { style: 'currency', currency: params.currency }).format(params.amount / 100)
+
+  await resend.emails.send({
+    from: process.env.EMAIL_FROM || 'donations@donatetoafrica.org',
+    to: params.to,
+    subject: `Wire Transfer Instructions — ${formattedAmount} Donation`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <body style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #7A5A15;">Wire Transfer Instructions</h1>
+        <p>Thank you, ${params.donorName}! Please complete your wire transfer using the details below.</p>
+        <div style="background: #F6EEDD; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <h3 style="margin-top:0;">Bank Details</h3>
+          <table style="width: 100%; font-size: 14px;">
+            <tr><td style="padding: 6px 0; color: #5B5248;">Bank</td><td style="text-align: right; font-weight: 600;">${params.wireDetails.bankName}</td></tr>
+            <tr><td style="padding: 6px 0; color: #5B5248;">Account Name</td><td style="text-align: right; font-weight: 600;">${params.wireDetails.accountName}</td></tr>
+            <tr><td style="padding: 6px 0; color: #5B5248;">Account Number</td><td style="text-align: right; font-weight: 600;">${params.wireDetails.accountNumber}</td></tr>
+            ${params.wireDetails.iban ? `<tr><td style="padding: 6px 0; color: #5B5248;">IBAN</td><td style="text-align: right; font-weight: 600;">${params.wireDetails.iban}</td></tr>` : ''}
+            <tr><td style="padding: 6px 0; color: #5B5248;">SWIFT/BIC</td><td style="text-align: right; font-weight: 600;">${params.wireDetails.swift}</td></tr>
+            ${params.wireDetails.routingNumber ? `<tr><td style="padding: 6px 0; color: #5B5248;">Routing Number</td><td style="text-align: right; font-weight: 600;">${params.wireDetails.routingNumber}</td></tr>` : ''}
+          </table>
+          <div style="margin-top: 16px; padding: 12px; background: white; border-radius: 4px; text-align: center;">
+            <p style="margin: 0; font-size: 12px; color: #5B5248;">Your unique reference code:</p>
+            <p style="margin: 4px 0 0; font-size: 20px; font-weight: 700; color: #7A5A15; letter-spacing: 2px;">${params.wireDetails.reference}</p>
+          </div>
+        </div>
+        <p style="font-size: 14px; color: #5B5248;"><strong>Important:</strong> ${params.wireDetails.instructions}</p>
+        <p style="font-size: 14px; color: #5B5248;">Amount: <strong>${formattedAmount}</strong>${params.campaignName ? `<br>Campaign: <strong>${params.campaignName}</strong>` : ''}</p>
+        <p style="font-size: 12px; color: #8A827A; margin-top: 30px;">GiveToAfrica Foundation · 123 Impact Avenue, Washington DC 20001</p>
+      </body>
+      </html>
+    `,
+  })
+}
 
 export { router as donationRoutes }

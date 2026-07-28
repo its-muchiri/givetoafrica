@@ -1,5 +1,4 @@
 import { useEffect, useRef, useCallback } from 'react'
-import { useReducedMotion, motion, AnimatePresence } from 'framer-motion'
 import { useImpactGrid } from '@/hooks/useImpactGrid'
 
 interface ImpactGridProps {

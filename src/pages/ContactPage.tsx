@@ -24,7 +24,7 @@ export default function ContactPage() {
         <div className="container-page py-16 md:py-20">
           <span className="text-label text-ochre-light">Get In Touch</span>
           <h1 className="mt-4 font-display text-4xl font-medium md:text-5xl">Contact Us</h1>
-          <p className="mt-4 max-w-xl text-lg text-ink-muted leading-relaxed">
+          <p className="mt-4 max-w-xl text-lg text-white/70 leading-relaxed">
             Have a question, want to partner, or need help with a donation? We'd love to hear from you.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function ContactPage() {
                           <option key={s} value={s}>{s}</option>
                         ))}
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
                     </div>
                   </div>
 
@@ -121,13 +121,13 @@ export default function ContactPage() {
                 </p>
                 <div className="mt-6 space-y-5">
                   <div className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-ochre/5 text-ochre">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-ochre-dark/10 text-ochre-dark">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-ink">Email</div>
-                      <a href="mailto:hello@donatetoafrica.org" className="text-sm text-ochre hover:text-ochre-dark">
-                        hello@donatetoafrica.org
+                      <a href="mailto:hello@donatetoafrica.org" className="text-sm text-ochre-dark hover:text-ochre-dark font-medium">
+hello@givetoafrica.org
                       </a>
                     </div>
                   </div>
@@ -138,14 +138,14 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-ink">Phone</div>
-                      <a href="tel:+12025551234" className="text-sm text-ochre hover:text-ochre-dark">
+                      <a href="tel:+12025551234" className="text-sm text-ochre-dark hover:text-ochre-dark font-medium">
                         +1 (202) 555-1234
                       </a>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-ochre/5 text-ochre">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-ochre-dark/10 text-ochre-dark">
                       <MapPin className="h-5 w-5" />
                     </div>
                     <div>
@@ -188,7 +188,7 @@ export default function ContactPage() {
                       key={social.label}
                       href={social.href}
                       aria-label={social.label}
-                      className="flex h-10 w-10 items-center justify-center rounded-lg bg-parchment text-ink-soft transition-colors hover:bg-ochre/5 hover:text-ochre"
+                      className="flex h-10 w-10 items-center justify-center rounded-lg bg-parchment text-ink-soft transition-colors hover:bg-ochre-dark/10 hover:text-ochre-dark"
                     >
                       <social.icon className="h-5 w-5" />
                     </a>
@@ -197,13 +197,13 @@ export default function ContactPage() {
               </div>
 
               {/* Emergency */}
-              <div className="card bg-ochre/5 ring-1 ring-ochre/8">
-                <h4 className="text-sm font-semibold text-ink-dark">Urgent Donation Issues</h4>
-                <p className="mt-2 text-sm text-ochre-dark leading-relaxed">
+              <div className="card bg-ochre-dark/5 ring-1 ring-ochre-dark/8">
+                <h4 className="text-sm font-semibold text-ink">Urgent Donation Issues</h4>
+                <p className="mt-2 text-sm text-ink-soft leading-relaxed">
                   If you're experiencing an issue with a recent donation or need immediate assistance with a
                   transaction, please email{' '}
                   <a href="mailto:support@donatetoafrica.org" className="font-semibold underline">
-                    support@donatetoafrica.org
+support@givetoafrica.org
                   </a>{' '}
                   with "Urgent" in the subject line.
                 </p>
@@ -217,9 +217,9 @@ export default function ContactPage() {
       <section className="pb-16 md:pb-20">
         <div className="container-page">
           <div className="card overflow-hidden p-0">
-            <div className="flex h-72 items-center justify-center bg-ink/8 text-ink-muted">
+            <div className="flex h-72 items-center justify-center bg-ink/8 text-ink-soft">
               <div className="text-center">
-                <MapPin className="mx-auto h-10 w-10 text-ink-muted" />
+                <MapPin className="mx-auto h-10 w-10 text-ink-soft" />
                 <p className="mt-3 text-sm font-medium">Map Loading...</p>
               </div>
             </div>

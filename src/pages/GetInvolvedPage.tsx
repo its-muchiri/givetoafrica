@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import toast from 'react-hot-toast'
 import {
   Heart, Users, Building2, Target, ArrowRight, Check,
-  Mail, Calendar, Briefcase, Star, Gift, Globe,
+  Mail, Calendar, Briefcase, Star, Gift, Globe, Loader2,
 } from 'lucide-react'
+import { images } from '@/lib/images'
 
 const partnershipTiers = [
   {
@@ -73,22 +75,58 @@ export default function GetInvolvedPage() {
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [isVolunteerSubmitted, setIsVolunteerSubmitted] = useState(false)
   const [isNewsletterSubmitted, setIsNewsletterSubmitted] = useState(false)
+  const [isVolunteerLoading, setIsVolunteerLoading] = useState(false)
+  const [isNewsletterLoading, setIsNewsletterLoading] = useState(false)
 
-  const handleVolunteerSubmit = (e: React.FormEvent) => {
+  const handleVolunteerSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsVolunteerSubmitted(true)
+    setIsVolunteerLoading(true)
+    try {
+      const res = await fetch('/api/engagement/volunteer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(volunteerForm),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Submission failed')
+      setIsVolunteerSubmitted(true)
+      toast.success('Application submitted!')
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to submit application')
+    } finally {
+      setIsVolunteerLoading(false)
+    }
   }
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsNewsletterSubmitted(true)
+    setIsNewsletterLoading(true)
+    try {
+      const res = await fetch('/api/engagement/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Subscription failed')
+      setIsNewsletterSubmitted(true)
+      toast.success('Subscribed successfully!')
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to subscribe')
+    } finally {
+      setIsNewsletterLoading(false)
+    }
   }
 
   return (
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-indigo text-white">
-        <div className="absolute inset-0 bg-[url('/hero-pattern.svg')] opacity-5" />
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${images.heroes.getInvolved})` }}
+        />
+        <div className="absolute inset-0 bg-indigo/85" />
         <div className="container-page relative py-20 md:py-28 lg:py-36">
           <div className="max-w-3xl">
             <motion.div
@@ -118,7 +156,7 @@ export default function GetInvolvedPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted"
+              className="mt-6 max-w-xl text-lg leading-relaxed text-white/70"
             >
               There are many ways to make a difference beyond donating. Volunteer your skills,
               partner with us, or start your own fundraising campaign.
@@ -182,7 +220,8 @@ export default function GetInvolvedPage() {
                   </div>
                   <h3 className="mt-4 font-display text-xl font-medium text-ink">Thank You for Volunteering!</h3>
                   <p className="mt-2 text-sm text-ink-soft">
-                    We'll review your application and reach out within 5 business days.
+                    We've received your application and will reach out within 5 business days.
+                    Check your email for a confirmation.
                   </p>
                 </div>
               ) : (
@@ -240,8 +279,12 @@ export default function GetInvolvedPage() {
                     </select>
                   </div>
 
-                  <button type="submit" className="btn-primary w-full py-3 text-base">
-                    Submit Application
+                  <button type="submit" disabled={isVolunteerLoading} className="btn-primary w-full py-3 text-base">
+                    {isVolunteerLoading ? (
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Submitting...</>
+                    ) : (
+                      'Submit Application'
+                    )}
                   </button>
                 </form>
               )}
@@ -254,7 +297,7 @@ export default function GetInvolvedPage() {
       <section id="corporate" className="bg-white py-20 md:py-28">
         <div className="container-page">
           <div className="text-center">
-            <span className="text-label text-ochre">Corporate Partnerships</span>
+            <span className="text-label text-ochre-dark">Corporate Partnerships</span>
             <h2 className="section-heading mt-3">Partner With Us</h2>
             <p className="section-subheading mx-auto">
               Align your brand with meaningful impact. Our corporate partnerships create value
@@ -328,7 +371,7 @@ export default function GetInvolvedPage() {
             </div>
 
             <div className="card bg-gradient-to-br from-savanna-800 to-savanna-950 text-white p-8">
-              <h3 className="font-display text-xl font-medium">Why Fundraise for Donate to Africa?</h3>
+              <h3 className="font-display text-xl font-medium">Why Fundraise for GiveToAfrica?</h3>
               <div className="mt-6 space-y-4">
                 {[
                   '84% of funds go directly to programs',
@@ -358,7 +401,7 @@ export default function GetInvolvedPage() {
       <section className="bg-white py-20 md:py-28">
         <div className="container-page">
           <div className="text-center">
-            <span className="text-label text-ochre">Sponsorship</span>
+            <span className="text-label text-ochre-dark">Sponsorship</span>
             <h2 className="section-heading mt-3">Sponsorship Programs</h2>
             <p className="section-subheading mx-auto">
               Create lasting legacy by sponsoring specific programs, schools, or community projects.
@@ -373,7 +416,7 @@ export default function GetInvolvedPage() {
                 title: 'Sponsor a Child',
                 amount: '$35/month',
                 desc: 'Cover education, meals, and school supplies for one student for an entire year.',
-                color: 'bg-ochre/5 text-ochre ring-ochre/8',
+                color: 'bg-ochre/5 text-ochre-dark ring-ochre/8',
               },
               {
                 icon: Globe,
@@ -395,7 +438,7 @@ export default function GetInvolvedPage() {
                   <item.icon className="h-6 w-6" />
                 </div>
                 <h3 className="mt-4 font-display text-lg font-medium text-ink">{item.title}</h3>
-                <div className="mt-1 font-display text-xl font-medium text-ochre">{item.amount}</div>
+                <div className="mt-1 font-display text-xl font-medium text-ochre-dark">{item.amount}</div>
                 <p className="mt-2 text-xs leading-relaxed text-ink-soft">{item.desc}</p>
                 <Link to="/contact" className="btn-primary mt-4 w-full text-xs py-2">
                   <Gift className="h-3.5 w-3.5" />
@@ -414,7 +457,7 @@ export default function GetInvolvedPage() {
             <div className="mx-auto max-w-2xl text-center">
               <Mail className="mx-auto h-10 w-10 text-ochre-light" />
               <h2 className="mt-4 font-display text-2xl font-medium md:text-3xl">Stay Connected</h2>
-              <p className="mt-2 text-sm text-ink-muted">
+              <p className="mt-2 text-sm text-white/70">
                 Get monthly updates on our impact, stories from the field, and ways to get involved.
               </p>
 
@@ -430,16 +473,20 @@ export default function GetInvolvedPage() {
                     required
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="input-field flex-1 bg-white/10 text-white placeholder:text-ink-muted"
+                    className="input-field flex-1 bg-white/10 text-white placeholder:text-white/40"
                     placeholder="Enter your email address"
                   />
-                  <button type="submit" className="btn-primary px-6 py-3">
-                    Subscribe
+                  <button type="submit" disabled={isNewsletterLoading} className="btn-primary px-6 py-3">
+                    {isNewsletterLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      'Subscribe'
+                    )}
                   </button>
                 </form>
               )}
 
-              <p className="mt-3 text-[11px] text-ink-soft">
+              <p className="mt-3 text-[11px] text-white/50">
                 We respect your privacy. Unsubscribe anytime.
               </p>
             </div>
@@ -448,7 +495,7 @@ export default function GetInvolvedPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-ochre via-ochre-dark to-ochre py-20 md:py-28">
+      <section className="bg-gradient-to-r from-ochre-dark via-ochre-dark to-ochre-dark py-20 md:py-28">
         <div className="container-page text-center">
           <h2 className="font-display text-3xl font-medium text-white md:text-5xl">
             Ready to Make a Difference?
@@ -460,7 +507,7 @@ export default function GetInvolvedPage() {
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               to="/donate"
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-10 py-4 text-base font-bold text-ochre shadow-xl transition-all hover:bg-parchment hover:shadow-2xl"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-10 py-4 text-base font-bold text-ink shadow-xl transition-all hover:bg-parchment hover:shadow-2xl"
             >
               <Heart className="h-5 w-5" />
               Donate Now

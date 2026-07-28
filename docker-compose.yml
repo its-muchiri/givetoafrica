@@ -7,7 +7,7 @@ services:
       - '4000:4000'
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://donatetoafrica:password@db:5432/donatetoafrica
+       - DATABASE_URL=postgresql://givetoafrica:password@db:5432/givetoafrica
       - REDIS_URL=redis://redis:6379
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
@@ -26,9 +26,9 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: donatetoafrica
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: donatetoafrica
+       POSTGRES_USER: givetoafrica
+       POSTGRES_PASSWORD: password
+       POSTGRES_DB: givetoafrica
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Search, ArrowRight, Filter } from 'lucide-react'
 import { categories } from '@/lib/categories'
-import { cn } from '@/lib/utils'
+import { images } from '@/lib/images'
 
 const allTags = Array.from(new Set(categories.flatMap((c) => c.countries)))
 
@@ -21,19 +21,24 @@ export default function CausesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-indigo py-20 text-white md:py-28">
-        <div className="container-page">
+      <section className="relative overflow-hidden bg-indigo py-20 text-white md:py-28">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${images.heroes.causes})` }}
+        />
+        <div className="absolute inset-0 bg-indigo/85" />
+        <div className="container-page relative">
           <span className="text-label text-ochre-light">Our Work</span>
-          <h1 className="mt-4 font-display text-4xl font-medium md:text-5xl lg:text-6xl">
+           <h1 className="mt-4 font-display text-4xl font-medium md:text-5xl lg:text-6xl">
             28 Ways to <span className="text-transparent bg-clip-text bg-gradient-to-r from-ochre-light to-ochre">Change Lives</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink-muted">
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/70">
             From aged care to wildlife protection, every cause represents a real need and a proven path to impact.
             Choose the cause that matters most to you.
           </p>
           <div className="mt-8 flex items-center gap-4">
             <div className="relative max-w-md flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
               <input
                 type="text"
                 placeholder="Search causes..."
@@ -43,7 +48,7 @@ export default function CausesPage() {
               />
             </div>
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+              <Filter className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" />
               <select
                 value={selectedCountry}
                 onChange={(e) => setSelectedCountry(e.target.value)}
@@ -77,13 +82,13 @@ export default function CausesPage() {
                   transition={{ duration: 0.3, delay: Math.min(i * 0.03, 0.5) }}
                 >
                   <Link
-                    to={`/charities/${cat.slug}`}
+                    to={`/blog/category/${cat.slug}`}
                     className="card group flex h-full flex-col"
                   >
                     <div className={`inline-flex w-fit rounded-xl p-2.5 ring-1 ${cat.bgColor} ${cat.ringColor} ${cat.color}`}>
                       <Icon className="h-5 w-5" />
                     </div>
-                    <h3 className="mt-3 font-display text-base font-medium text-ink group-hover:text-ochre transition-colors">
+                    <h3 className="mt-3 font-display text-base font-medium text-ink group-hover:text-ochre-dark transition-colors">
                       {cat.name}
                     </h3>
                     <p className="mt-1 text-xs leading-relaxed text-ink-soft line-clamp-2">
@@ -96,7 +101,7 @@ export default function CausesPage() {
                         </span>
                       ))}
                       {cat.countries.length > 3 && (
-                        <span className="rounded-md bg-parchment px-1.5 py-0.5 text-[10px] text-ink-muted">
+                        <span className="rounded-md bg-parchment px-1.5 py-0.5 text-[10px] text-ink-soft">
                           +{cat.countries.length - 3}
                         </span>
                       )}
@@ -128,15 +133,15 @@ export default function CausesPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-ochre to-ochre py-16 text-center text-white">
+      <section className="bg-gradient-to-r from-ochre-dark to-ochre-dark py-16 text-center">
         <div className="container-page">
-          <h2 className="font-display text-3xl font-medium md:text-4xl">
+          <h2 className="font-display text-3xl font-medium md:text-4xl text-white">
             Can't Find What You're Looking For?
           </h2>
-          <p className="mx-auto mt-3 max-w-lg text-white/80">
+          <p className="mx-auto mt-3 max-w-lg text-ink-soft">
             Donate to the General Fund and we'll direct your gift to where it's needed most across all 28 causes.
           </p>
-          <Link to="/donate" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-sm font-bold text-ochre shadow-lg transition-all hover:bg-parchment">
+          <Link to="/donate" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-8 py-4 text-sm font-bold text-ink shadow-lg transition-all hover:bg-parchment">
             Donate to General Fund <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

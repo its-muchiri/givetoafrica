@@ -4,8 +4,10 @@ import {
   Heart, ArrowRight, Shield, Eye, Award, TrendingUp, Quote,
 } from 'lucide-react'
 import { useCountUp } from '@/hooks/useCountUp'
-import ImpactGrid from '@/components/ImpactGrid'
+import HeroBlogCarousel from '@/components/HeroBlogCarousel'
+import BlogCarousel from '@/components/BlogCarousel'
 import { categories } from '@/lib/categories'
+import { images } from '@/lib/images'
 
 const stagger = {
   hidden: {},
@@ -24,7 +26,7 @@ const topCauses = categories.slice(0, 4)
 
 const testimonials = [
   {
-    quote: "Donate to Africa helped us build a school in our village. Now my daughter walks to class instead of walking to fetch water. She wants to be a doctor.",
+    quote: "GiveToAfrica helped us build a school in our village. Now my daughter walks to class instead of walking to fetch water. She wants to be a doctor.",
     name: "Grace Wanjiku",
     role: "Parent, Machakos County, Kenya",
   },
@@ -47,6 +49,36 @@ const trustBadges = [
   { name: 'GlobalGiving', badge: 'Vetted' },
 ]
 
+const latestStories = [
+  {
+    title: 'Clean Water Transforms Machakos County',
+    excerpt: 'A deep-bore well providing clean, safe drinking water to over 3,000 people has changed everything in Kyaani village, Kenya.',
+    date: 'June 15, 2026',
+    readTime: '7 min read',
+    category: 'Community Development',
+    image: images.news.featured,
+    href: '/blog/clean-water-transforms-machakos-county',
+  },
+  {
+    title: 'Breaking Down Barriers for Girls in Northern Ghana',
+    excerpt: 'Targeted scholarships and mentorship are helping girls stay in school and build futures their mothers never had.',
+    date: 'May 28, 2026',
+    readTime: '6 min read',
+    category: 'Education & Training',
+    image: images.news.cards[0],
+    href: '/blog/education-barriers-girls-northern-ghana',
+  },
+  {
+    title: 'Mobile Health Clinic Reaches Remote Villages',
+    excerpt: 'Our mobile health unit has completed over 12,000 patient consultations across remote communities in northern Ghana.',
+    date: 'April 22, 2026',
+    readTime: '8 min read',
+    category: 'Healthcare',
+    image: images.news.cards[1],
+    href: '/blog/mobile-health-clinic-remote-northern-ghana',
+  },
+]
+
 export default function HomePage() {
   const rm = useReducedMotion()
   const fundsRaised = useCountUp(2450000)
@@ -57,6 +89,11 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-indigo text-white">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${images.heroes.home})` }}
+        />
+        <div className="absolute inset-0 bg-indigo/85" />
         <div className="container-page relative py-20 md:py-28 lg:py-36">
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             {/* Left: Text */}
@@ -65,13 +102,13 @@ export default function HomePage() {
               initial="hidden"
               animate="show"
             >
-              <motion.span variants={wordReveal} className="text-label text-ochre">
+              <motion.span variants={wordReveal} className="text-label text-ochre-light">
                 Trusted by 12,000+ donors worldwide
               </motion.span>
 
               <motion.h1 variants={wordReveal} className="mt-6 font-display text-4xl font-medium leading-tight md:text-5xl lg:text-6xl xl:text-7xl">
                 Empowering Communities.{' '}
-                <span className="font-soft-italic text-ochre">
+                <span className="font-soft-italic text-ochre-light">
                   Building Futures.
                 </span>
               </motion.h1>
@@ -95,30 +132,64 @@ export default function HomePage() {
               </motion.div>
 
               {/* Impact Counters */}
-              <motion.div variants={wordReveal} className="mt-14 grid grid-cols-3 gap-6">
-                {[
-                  { value: fundsRaised.count, display: `$${(fundsRaised.count / 1000000).toFixed(1)}M`, label: 'Funds Raised' },
-                  { value: peopleHelped.count, display: `${peopleHelped.count.toLocaleString()}+`, label: 'Lives Changed' },
-                  { value: projectsComplete.count, display: `${projectsComplete.count}`, label: 'Projects Completed' },
-                ].map((stat) => (
-                  <div key={stat.label}>
-                    <span ref={fundsRaised.ref} className="mono-number block font-display text-2xl font-medium text-ochre md:text-3xl">
-                      {stat.display}
-                    </span>
-                    <span className="mt-1 block text-xs text-white/50">{stat.label}</span>
+              <motion.div variants={wordReveal} className="mt-14">
+                <div className="relative overflow-hidden rounded-xl ring-1 ring-white/10">
+                  <img
+                    src={images.misc.fieldPhoto}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover blur-sm scale-110"
+                  />
+                  <div className="absolute inset-0 bg-indigo/60" />
+                  <div className="relative grid grid-cols-3 gap-4 p-5">
+                    {[
+                      { ref: fundsRaised.ref, count: fundsRaised.count, display: `$${(fundsRaised.count / 1000000).toFixed(1)}M`, label: 'Funds Raised' },
+                      { ref: peopleHelped.ref, count: peopleHelped.count, display: `${peopleHelped.count.toLocaleString()}+`, label: 'Lives Changed' },
+                      { ref: projectsComplete.ref, count: projectsComplete.count, display: `${projectsComplete.count}`, label: 'Projects Completed' },
+                    ].map((stat) => (
+                      <div key={stat.label}>
+                        <span ref={stat.ref} className="mono-number block font-display text-2xl font-medium text-ochre-light md:text-3xl">
+                          {stat.display}
+                        </span>
+                        <span className="mt-1 block text-xs text-white/70">{stat.label}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </motion.div>
             </motion.div>
 
-            {/* Right: Impact Grid */}
+            {/* Right: Blog Carousel */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: rm ? 0 : 0.3, duration: rm ? 0 : 0.6 }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: rm ? 0 : 0.4, duration: rm ? 0 : 0.6 }}
               className="hidden lg:flex items-center justify-center"
             >
-              <ImpactGrid cols={14} rows={8} regionShape="full" />
+              <HeroBlogCarousel
+                items={[
+                  {
+                    title: 'Clean Water Transforms Machakos County',
+                    excerpt: 'A deep-bore well providing clean, safe drinking water to over 3,000 people in rural Kenya.',
+                    category: 'Community Development',
+                    image: images.news.featured,
+                    href: '/blog/clean-water-transforms-machakos-county',
+                  },
+                  {
+                    title: 'Breaking Down Barriers for Girls in Ghana',
+                    excerpt: 'Targeted scholarships and mentorship are helping girls stay in school and build futures.',
+                    category: 'Education & Training',
+                    image: images.news.cards[0],
+                    href: '/blog/education-barriers-girls-northern-ghana',
+                  },
+                  {
+                    title: 'Mobile Health Clinic Reaches Remote Villages',
+                    excerpt: 'Our mobile health unit completed over 12,000 patient consultations across northern Ghana.',
+                    category: 'Healthcare',
+                    image: images.news.cards[1],
+                    href: '/blog/mobile-health-clinic-remote-northern-ghana',
+                  },
+                ]}
+              />
             </motion.div>
           </div>
         </div>
@@ -164,13 +235,13 @@ export default function HomePage() {
               const Icon = cause.icon
               return (
                 <motion.div key={cause.slug} variants={fadeInUp}>
-                  <Link to={`/charities/${cause.slug}`} className="card group block">
+                  <Link to={`/blog/category/${cause.slug}`} className="card group block">
                     <div className="overflow-hidden rounded-sm">
                       <div className={`inline-flex rounded-sm p-2.5 ${cause.bgColor} ${cause.color}`}>
                         <Icon className="h-5 w-5" />
                       </div>
                     </div>
-                    <h3 className="mt-4 font-display text-base font-medium text-ink group-hover:text-ochre transition-colors">
+                    <h3 className="mt-4 font-display text-base font-medium text-ink group-hover:text-ochre-dark transition-colors">
                       {cause.name}
                     </h3>
                     <p className="mt-1.5 text-sm leading-relaxed text-ink-soft line-clamp-2">
@@ -223,7 +294,7 @@ export default function HomePage() {
               { step: '03', title: 'See Your Impact', desc: 'Receive updates, photos, and reports showing exactly how your donation helped.' },
             ].map((item) => (
               <motion.div key={item.step} variants={fadeInUp} className="text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-sm bg-ochre/10 font-mono text-xl font-medium text-ochre">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-sm bg-ochre-dark/10 font-mono text-xl font-medium text-ochre-dark">
                   {item.step}
                 </div>
                 <h3 className="mt-5 font-display text-lg font-medium text-ink">{item.title}</h3>
@@ -249,13 +320,13 @@ export default function HomePage() {
           </motion.div>
           <div className="mt-14 grid gap-4 md:grid-cols-3">
             {testimonials.map((t, i) => (
-              <motion.div key={i} variants={fadeInUp} className="card-static p-6 relative">
-                <Quote className="absolute right-5 top-5 h-6 w-6 text-ochre/15" />
+                <motion.div key={i} variants={fadeInUp} className="card-static p-6 relative">
+                <Quote className="absolute right-5 top-5 h-6 w-6 text-ochre-dark/15" />
                 <p className="relative z-10 text-sm leading-relaxed text-ink-soft">
                   &ldquo;{t.quote}&rdquo;
                 </p>
                 <div className="mt-5 flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-ochre/10 font-mono text-xs font-medium text-ochre">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-ochre-dark/10 font-mono text-xs font-medium text-ochre-dark">
                     {t.name.charAt(0)}
                   </div>
                   <div>
@@ -312,7 +383,7 @@ export default function HomePage() {
               {[
                 { icon: Award, title: 'Charity Navigator', sub: '4-Star Rating', bg: 'bg-savanna/10 text-savanna' },
                 { icon: Shield, title: 'PCI-DSS', sub: 'Fully Compliant', bg: 'bg-indigo/10 text-indigo' },
-                { icon: TrendingUp, title: '84% to Programs', sub: 'Industry Leading', bg: 'bg-ochre/10 text-ochre' },
+                { icon: TrendingUp, title: '84% to Programs', sub: 'Industry Leading', bg: 'bg-ochre-dark/10 text-ochre-dark' },
                 { icon: Eye, title: 'Annual Audit', sub: 'Publicly Available', bg: 'bg-ink/5 text-ink' },
               ].map((item) => (
                 <div key={item.title} className={`rounded-sm p-5 ${item.bg}`}>
@@ -326,8 +397,41 @@ export default function HomePage() {
         </div>
       </motion.section>
 
+      {/* Latest Stories Carousel */}
+      <section className="py-20 md:py-28">
+        <div className="container-page">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="text-label text-ochre-dark">Latest Stories</span>
+            <h2 className="section-heading mt-3">From the Field</h2>
+            <p className="section-subheading">
+              Real updates from the communities you're helping. Every story represents
+              lives changed through your generosity.
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mt-10"
+          >
+            <BlogCarousel items={latestStories} />
+          </motion.div>
+          <div className="mt-8 text-center">
+            <Link to="/news" className="btn-secondary">
+              View All Stories <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Banner */}
-      <section className="bg-ochre py-20 md:py-28">
+      <section className="bg-ochre-dark py-20 md:py-28">
         <div className="container-page text-center">
           <h2 className="font-display text-3xl font-medium text-white md:text-5xl">
             Ready to Change a Life Today?
@@ -342,7 +446,7 @@ export default function HomePage() {
               className="inline-flex items-center gap-2 rounded bg-white px-10 py-4 text-base font-semibold text-ink transition-all hover:bg-parchment"
             >
               <Heart className="h-5 w-5" fill="currentColor" strokeWidth={0} />
-              Donate $25 Now
+              Donate $50 Now
             </Link>
             <Link
               to="/donate?amount=5000&recurring=true"

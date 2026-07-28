@@ -34,7 +34,7 @@ export default function CookieConsent() {
               We use essential cookies to make our site work. With your consent, we may also use
               analytics cookies to improve your experience. You can accept all cookies or choose
               only essential ones. See our{' '}
-              <a href="/privacy#cookies" className="underline hover:text-ochre">
+              <a href="/privacy#cookies" className="underline hover:text-ochre-dark">
                 Cookie Policy
               </a>{' '}
               for details. GDPR &amp; POPIA compliant.
@@ -42,7 +42,7 @@ export default function CookieConsent() {
           </div>
           <button
             onClick={() => setShow(false)}
-            className="rounded-lg p-1 text-ink-muted hover:text-ink-soft"
+            className="rounded-lg p-1 text-ink-soft hover:text-ink"
             aria-label="Close"
           >
             <X className="h-5 w-5" />

@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-07-27T20:50:24.437Z",
+  "totalPosts": 28,
+  "validCategories": 28,
+  "issues": [],
+  "summary": {
+    "totalIssues": 0,
+    "invalidCategories": 0,
+    "missingImages": 0,
+    "shortArticles": 0,
+    "metaDescIssues": 0,
+    "duplicateSlugs": 0,
+    "duplicateTitles": 0
+  }
+}

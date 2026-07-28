@@ -1,12 +1,11 @@
 import { useSearchParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Check, Heart, Share2, Facebook, Twitter } from 'lucide-react'
+import { Check, Heart, Share2 } from 'lucide-react'
 import ImpactGrid from '@/components/ImpactGrid'
 
 export default function DonationSuccessPage() {
   const [searchParams] = useSearchParams()
   const amount = searchParams.get('amount') || '25.00'
-  const currency = searchParams.get('currency') || 'USD'
 
   return (
     <div className="min-h-[80vh] flex items-center">
@@ -70,7 +69,7 @@ export default function DonationSuccessPage() {
             <button
               onClick={() => {
                 if (navigator.share) {
-                  navigator.share({ title: 'I just donated to Donate to Africa!', url: window.location.origin })
+                  navigator.share({ title: 'I just donated to GiveDirectly!', url: window.location.origin })
                 }
               }}
               className="btn-outline"

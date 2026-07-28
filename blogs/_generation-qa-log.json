@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-07-28T04:56:30.869Z",
+  "totalPosts": 799,
+  "totalKeywords": 799,
+  "deduplicatedKeywords": 799,
+  "categoryDistribution": {
+    "community": 115,
+    "international": 57,
+    "education-and-training": 110,
+    "overseas-aid": 51,
+    "children-and-youth": 78,
+    "health": 74,
+    "employment-trades-and-professions": 72,
+    "animals": 60,
+    "culture-and-heritage": 41,
+    "environment": 34,
+    "religious": 34,
+    "family": 20,
+    "social-welfare": 19,
+    "disabled": 9,
+    "human-rights": 7,
+    "housing": 5,
+    "rescue-services": 7,
+    "sport-and-recreation": 2,
+    "hearing-impairments": 3,
+    "armed-and-ex-services": 1
+  },
+  "issues": [],
+  "summary": {
+    "totalIssues": 0
+  }
+}

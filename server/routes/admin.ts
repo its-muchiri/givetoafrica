@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
+import { logAuditEvent, generateReceiptNumber } from '../lib/audit'
+import { sendReceiptEmail } from '../lib/email'
 
 const router = Router()
 const prisma = new PrismaClient()
@@ -14,13 +16,13 @@ function requireAdmin(req: any, _res: any, next: any) {
   next()
 }
 
-// Dashboard stats
+// Dashboard stats — excludes unconfirmed wire pledges
 router.get('/dashboard', requireAdmin, async (_req, res) => {
   try {
     const now = new Date()
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
 
-    const [totalRaised, newDonors, activeCampaigns, recentDonations] = await Promise.all([
+    const [totalRaised, newDonors, activeCampaigns, recentDonations, pendingWires] = await Promise.all([
       prisma.donation.aggregate({
         where: { status: 'completed', createdAt: { gte: monthStart } },
         _sum: { amount: true },
@@ -34,6 +36,9 @@ router.get('/dashboard', requireAdmin, async (_req, res) => {
         take: 20,
         include: { donor: true, campaign: true },
       }),
+      prisma.donation.count({
+        where: { status: 'pending_wire' },
+      }),
     ])
 
     res.json({
@@ -41,6 +46,7 @@ router.get('/dashboard', requireAdmin, async (_req, res) => {
         totalRaised: totalRaised._sum.amount || 0,
         newDonors,
         activeCampaigns,
+        pendingWires,
       },
       recentDonations,
     })
@@ -106,6 +112,92 @@ router.get('/donations', requireAdmin, async (_req, res) => {
     res.json(donations)
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch donations' })
+  }
+})
+
+// Get pending wire transfers
+router.get('/wires/pending', requireAdmin, async (_req, res) => {
+  try {
+    const wires = await prisma.donation.findMany({
+      where: { status: 'pending_wire' },
+      orderBy: { createdAt: 'desc' },
+      include: { donor: true, campaign: true },
+    })
+    res.json(wires)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch pending wires' })
+  }
+})
+
+// Confirm a wire transfer received
+router.post('/wires/confirm', requireAdmin, async (req: any, res) => {
+  try {
+    const { donationId } = req.body
+    if (!donationId) {
+      return res.status(400).json({ error: 'donationId is required' })
+    }
+
+    const donation = await prisma.donation.findUnique({
+      where: { id: donationId },
+      include: { donor: true, campaign: true },
+    })
+
+    if (!donation) {
+      return res.status(404).json({ error: 'Donation not found' })
+    }
+
+    if (donation.status !== 'pending_wire') {
+      return res.status(400).json({ error: 'Donation is not a pending wire' })
+    }
+
+    const updated = await prisma.donation.update({
+      where: { id: donationId },
+      data: { status: 'completed' },
+      include: { donor: true, campaign: true },
+    })
+
+    // Generate receipt
+    const receipt = await prisma.receipt.create({
+      data: {
+        receiptNumber: generateReceiptNumber(),
+        donationId: updated.id,
+        sentAt: new Date(),
+      },
+    })
+
+    // Update campaign raised amount
+    if (updated.campaignId) {
+      await prisma.campaign.update({
+        where: { id: updated.campaignId },
+        data: { raisedAmount: { increment: updated.amount } },
+      })
+    }
+
+    // Send receipt email
+    try {
+      await sendReceiptEmail({
+        to: updated.donor.email,
+        donorName: updated.donor.name,
+        amount: updated.amount,
+        currency: updated.currency,
+        receiptNumber: receipt.receiptNumber,
+        campaignName: updated.campaign?.title,
+        isRecurring: updated.isRecurring,
+      })
+    } catch (emailError) {
+      console.error('Failed to send receipt email:', emailError)
+    }
+
+    await logAuditEvent('wire_confirmed', {
+      donationId: updated.id,
+      amount: updated.amount,
+      confirmedBy: req.headers['x-admin-role'],
+    })
+
+    res.json({ success: true, donation: updated })
+  } catch (error) {
+    console.error('Wire confirmation error:', error)
+    res.status(500).json({ error: 'Failed to confirm wire transfer' })
   }
 })
 

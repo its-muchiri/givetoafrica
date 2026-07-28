@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   Mail, Lock, Shield, CreditCard, Download, Pause, X,
   Heart, Receipt, TrendingUp, Calendar, ArrowRight,
@@ -36,7 +35,7 @@ export default function DonorPortalPage() {
           <div className="mx-auto max-w-md">
             <div className="card">
               <div className="flex flex-col items-center text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ochre/5 text-ochre ring-1 ring-ochre/8">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-ochre/5 text-ochre-dark ring-1 ring-ochre/8">
                   <Lock className="h-6 w-6" />
                 </div>
                 <h1 className="mt-6 font-display text-2xl font-medium text-ink">
@@ -51,7 +50,7 @@ export default function DonorPortalPage() {
                 <div>
                   <label className="label-text">Email Address</label>
                   <div className="relative">
-                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
                     <input
                       type="email"
                       value={email}
@@ -81,14 +80,14 @@ export default function DonorPortalPage() {
                 </button>
               </form>
 
-              <p className="mt-6 text-center text-xs text-ink-muted leading-relaxed">
+              <p className="mt-6 text-center text-xs text-ink-soft leading-relaxed">
                 No password needed. Click the link in your email to access your donor dashboard instantly.
               </p>
 
               <div className="mt-6 rounded-xl bg-savanna/5 p-4 ring-1 ring-savanna/8">
                 <div className="flex items-start gap-3">
                   <Shield className="h-5 w-5 flex-shrink-0 text-savanna mt-0.5" />
-                  <p className="text-xs leading-relaxed text-savanna-dark">
+                  <p className="text-xs leading-relaxed text-savanna">
                     Your data is encrypted and never shared. We use industry-standard security to protect your information and donation history.
                   </p>
                 </div>
@@ -123,9 +122,9 @@ export default function DonorPortalPage() {
         {/* Summary Cards */}
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
-            { icon: Heart, label: 'Total Donated', value: '$4,250', color: 'text-ochre bg-ochre/5' },
+            { icon: Heart, label: 'Total Donated', value: '$4,250', color: 'text-ochre-dark bg-ochre/5' },
             { icon: TrendingUp, label: 'Active Recurring', value: '$50/mo', color: 'text-savanna bg-savanna/5' },
-            { icon: Receipt, label: 'Tax Receipts', value: '12', color: 'text-ochre bg-ochre/5' },
+            { icon: Receipt, label: 'Tax Receipts', value: '12', color: 'text-ochre-dark bg-ochre/5' },
           ].map((stat) => (
             <div key={stat.label} className="card">
               <div className="flex items-center gap-3">
@@ -162,7 +161,7 @@ export default function DonorPortalPage() {
                   <tr key={d.receiptId} className="hover:bg-parchment/50 transition-colors">
                     <td className="whitespace-nowrap px-6 py-4 text-ink-soft">
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-3.5 w-3.5 text-ink-muted" />
+                        <Calendar className="h-3.5 w-3.5 text-ink-soft" />
                         {new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </div>
                     </td>
@@ -174,7 +173,7 @@ export default function DonorPortalPage() {
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-6 py-4">
-                      <button className="inline-flex items-center gap-1 text-xs font-medium text-ochre hover:text-ochre-dark">
+                      <button className="inline-flex items-center gap-1 text-xs font-medium text-ochre-dark hover:text-ochre-dark">
                         <Download className="h-3.5 w-3.5" />
                         Download Receipt
                       </button>
@@ -198,7 +197,7 @@ export default function DonorPortalPage() {
                 </div>
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ${
                   recurringStatus === 'active'
-                    ? 'bg-savanna/5 text-savanna-dark ring-savanna/8'
+                    ? 'bg-savanna/5 text-savanna ring-savanna/8'
                     : 'bg-ink/8 text-ink-soft ring-ink/12'
                 }`}>
                   {recurringStatus === 'active' ? 'Active' : 'Paused'}
@@ -230,7 +229,7 @@ export default function DonorPortalPage() {
               <div>
                 <label className="label-text">Card Number</label>
                 <div className="relative">
-                  <CreditCard className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+                  <CreditCard className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
                   <input
                     type="text"
                     placeholder="4242 4242 4242 4242"

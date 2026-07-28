@@ -1,0 +1,14 @@
+{
+  "buildCommand": "tsc && vite build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "framework": null,
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "env": {
+    "VITE_APP_URL": "@vite_app_url",
+    "VITE_API_URL": "@vite_api_url",
+    "VITE_STRIPE_PUBLISHABLE_KEY": "@vite_stripe_publishable_key"
+  }
+}

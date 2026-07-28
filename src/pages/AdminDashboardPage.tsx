@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Users, Megaphone, DollarSign, FileText, Settings,
-  Search, Download, Plus, Edit, Trash2, ChevronDown, TrendingUp,
-  TrendingDown, BarChart3, Eye, MoreHorizontal, Check, X,
+  Search, Download, Plus, Edit, Trash2, TrendingUp,
+  TrendingDown, Eye, MoreHorizontal, Check, X, LogOut,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -62,17 +62,44 @@ const maxRevenue = Math.max(...monthlyRevenue.map((m) => m.amount))
 export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [donorSearch, setDonorSearch] = useState('')
+  const [adminUser, setAdminUser] = useState<{ name: string; email: string; role: string } | null>(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const session = localStorage.getItem('admin_session')
+    if (!session) {
+      navigate('/admin/login')
+      return
+    }
+    try {
+      const parsed = JSON.parse(session)
+      if (parsed.role !== 'admin') {
+        navigate('/admin/login')
+        return
+      }
+      setAdminUser(parsed.user)
+    } catch {
+      navigate('/admin/login')
+    }
+  }, [navigate])
+
+  function handleLogout() {
+    localStorage.removeItem('admin_session')
+    navigate('/admin/login')
+  }
 
   const filteredDonors = donors.filter(
     (d) => d.name.toLowerCase().includes(donorSearch.toLowerCase()) || d.email.toLowerCase().includes(donorSearch.toLowerCase())
   )
+
+  if (!adminUser) return null
 
   return (
     <div className="flex min-h-screen bg-parchment">
       {/* Sidebar */}
       <aside className="hidden w-64 flex-shrink-0 border-r border-ink/12 bg-white lg:block">
         <div className="flex h-16 items-center gap-2 border-b border-ink/8 px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ochre text-sm font-bold text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ochre-dark text-sm font-bold text-white">
             GF
           </div>
           <span className="font-display text-sm font-bold text-ink">Admin Panel</span>
@@ -94,6 +121,20 @@ export default function AdminDashboardPage() {
             </button>
           ))}
         </nav>
+        <div className="absolute bottom-0 left-0 right-0 border-t border-ink/8 p-3">
+          <div className="flex items-center gap-3 px-3 py-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ochre/10 text-xs font-bold text-ochre-dark">
+              {adminUser.name.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-ink truncate">{adminUser.name}</p>
+              <p className="text-xs text-ink-soft truncate">{adminUser.email}</p>
+            </div>
+            <button onClick={handleLogout} className="p-1.5 text-ink-soft hover:text-red-500 transition-colors" title="Logout">
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
       </aside>
 
       {/* Mobile Header */}
@@ -110,8 +151,8 @@ export default function AdminDashboardPage() {
               className={cn(
                 'rounded-lg p-2 transition-all',
                 activeTab === item.id
-                  ? 'bg-ochre/5 text-ochre'
-                  : 'text-ink-muted hover:text-ink-soft'
+                  ? 'bg-ochre/5 text-ochre-dark'
+                  : 'text-ink-soft hover:text-ink-soft'
               )}
             >
               <item.icon className="h-4 w-4" />
@@ -133,8 +174,8 @@ export default function AdminDashboardPage() {
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {[
                   { label: 'Total Raised This Month', value: '$47,500', change: '+12%', up: true, icon: DollarSign, color: 'text-savanna bg-savanna/5' },
-                  { label: 'New Donors', value: '234', change: '+8%', up: true, icon: Users, color: 'text-ochre bg-ochre/5' },
-                  { label: 'Active Campaigns', value: '5', change: '0', up: true, icon: Megaphone, color: 'text-ochre bg-ochre/5' },
+                    { label: 'New Donors', value: '234', change: '+8%', up: true, icon: Users, color: 'text-ochre-dark bg-ochre/5' },
+                    { label: 'Active Campaigns', value: '5', change: '0', up: true, icon: Megaphone, color: 'text-ochre-dark bg-ochre/5' },
                   { label: 'Donor Retention', value: '68%', change: '-2%', up: false, icon: TrendingUp, color: 'text-ink-soft bg-parchment' },
                 ].map((kpi) => (
                   <div key={kpi.label} className="card">
@@ -179,7 +220,7 @@ export default function AdminDashboardPage() {
                         <tr key={i} className="hover:bg-parchment/50 transition-colors">
                           <td className="whitespace-nowrap px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ochre/5 text-xs font-bold text-ochre">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ochre/5 text-xs font-bold text-ochre-dark">
                                 {d.name.charAt(0)}
                               </div>
                               <div>
@@ -226,7 +267,7 @@ export default function AdminDashboardPage() {
                             style={{ width: `${progress}%` }}
                           />
                         </div>
-                        <div className="mt-1 flex justify-between text-xs text-ink-muted">
+                        <div className="mt-1 flex justify-between text-xs text-ink-soft">
                           <span>${(c.raised / 1000).toFixed(0)}K raised</span>
                           <span>Goal: ${(c.goal / 1000).toFixed(0)}K</span>
                         </div>
@@ -280,7 +321,7 @@ export default function AdminDashboardPage() {
                                 <div
                                   className={cn(
                                     'h-full rounded-full',
-                                    c.status === 'completed' ? 'bg-savanna' : 'bg-ochre'
+                                     c.status === 'completed' ? 'bg-savanna' : 'bg-ochre-dark'
                                   )}
                                   style={{ width: `${progress}%` }}
                                 />
@@ -298,13 +339,13 @@ export default function AdminDashboardPage() {
                             </td>
                             <td className="whitespace-nowrap px-6 py-4">
                               <div className="flex items-center gap-1">
-                                <button className="rounded-lg p-1.5 text-ink-muted hover:bg-ink/8 hover:text-ink-soft">
+                                <button className="rounded-lg p-1.5 text-ink-soft hover:bg-ink/8 hover:text-ink-soft">
                                   <Eye className="h-4 w-4" />
                                 </button>
-                                <button className="rounded-lg p-1.5 text-ink-muted hover:bg-ink/8 hover:text-ink-soft">
+                                <button className="rounded-lg p-1.5 text-ink-soft hover:bg-ink/8 hover:text-ink-soft">
                                   <Edit className="h-4 w-4" />
                                 </button>
-                                <button className="rounded-lg p-1.5 text-ink-muted hover:bg-red-50 hover:text-red-600">
+                                <button className="rounded-lg p-1.5 text-ink-soft hover:bg-red-50 hover:text-red-600">
                                   <Trash2 className="h-4 w-4" />
                                 </button>
                               </div>
@@ -334,7 +375,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div className="relative mt-6">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" />
                 <input
                   type="text"
                   placeholder="Search donors by name or email..."
@@ -361,7 +402,7 @@ export default function AdminDashboardPage() {
                         <tr key={i} className="hover:bg-parchment/50 transition-colors">
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ochre/5 text-xs font-bold text-ochre">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ochre/5 text-xs font-bold text-ochre-dark">
                                 {d.name.charAt(0)}
                               </div>
                               <div>
@@ -383,7 +424,7 @@ export default function AdminDashboardPage() {
                             </span>
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
-                            <button className="rounded-lg p-1.5 text-ink-muted hover:bg-ink/8 hover:text-ink-soft">
+                            <button className="rounded-lg p-1.5 text-ink-soft hover:bg-ink/8 hover:text-ink-soft">
                               <MoreHorizontal className="h-4 w-4" />
                             </button>
                           </td>
@@ -513,10 +554,10 @@ export default function AdminDashboardPage() {
                           <td className="whitespace-nowrap px-6 py-4 text-ink-soft">{post.date}</td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <div className="flex items-center gap-1">
-                              <button className="rounded-lg p-1.5 text-ink-muted hover:bg-ink/8 hover:text-ink-soft">
+                              <button className="rounded-lg p-1.5 text-ink-soft hover:bg-ink/8 hover:text-ink-soft">
                                 <Edit className="h-4 w-4" />
                               </button>
-                              <button className="rounded-lg p-1.5 text-ink-muted hover:bg-red-50 hover:text-red-600">
+                              <button className="rounded-lg p-1.5 text-ink-soft hover:bg-red-50 hover:text-red-600">
                                 <Trash2 className="h-4 w-4" />
                               </button>
                             </div>
@@ -566,15 +607,16 @@ export default function AdminDashboardPage() {
                 <p className="mt-1 text-sm text-ink-soft">Status of connected payment gateways.</p>
                 <div className="mt-4 space-y-3">
                   {[
-                    { name: 'Stripe', status: 'connected', desc: 'International card payments' },
-                    { name: 'Flutterwave', status: 'connected', desc: 'African mobile money & cards' },
-                    { name: 'Paystack', status: 'connected', desc: 'Nigerian payments' },
+                    { name: 'Stripe', status: 'connected', desc: 'Cards, Apple Pay, Google Pay' },
+                    { name: 'PayPal', status: 'connected', desc: 'PayPal balance, cards, Venmo' },
+                    { name: 'NOWPayments', status: 'connected', desc: 'Cryptocurrency (BTC, ETH, USDT)' },
+                    { name: 'Bank Wire', status: 'connected', desc: 'Manual wire transfers' },
                   ].map((provider) => (
                     <div key={provider.name} className="flex items-center justify-between rounded-xl border border-ink/8 p-4">
                       <div className="flex items-center gap-3">
                         <div className={cn(
                           'flex h-8 w-8 items-center justify-center rounded-lg',
-                          provider.status === 'connected' ? 'bg-savanna/5 text-savanna' : 'bg-ink/8 text-ink-muted'
+                               provider.status === 'connected' ? 'bg-savanna/5 text-savanna' : 'bg-ink/8 text-ink-soft'
                         )}>
                           {provider.status === 'connected' ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
                         </div>
