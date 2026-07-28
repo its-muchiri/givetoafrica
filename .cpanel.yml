@@ -1,7 +1,7 @@
 ---
 deployment:
   tasks:
-    - export FRONTPATH=/home2/datingsi/public_html/
+    - export FRONTPATH=/home2/datingsi/givetoafrica.net/
     - export BACKENDPATH=/home2/datingsi/backend/
     - cp -R dist/assets $FRONTPATH
     - cp -R dist/img $FRONTPATH
@@ -11,6 +11,6 @@ deployment:
     - cp dist/favicon.svg $FRONTPATH
     - cp dist/logo-full.svg $FRONTPATH
     - cp .htaccess $FRONTPATH
-    - cp -R dist/server $BACKENDPATH
+    - cp -R dist/server/. $BACKENDPATH
     - cp -R prisma $BACKENDPATH
     - cp package.json $BACKENDPATH
