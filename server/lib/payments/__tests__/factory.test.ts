@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { getPaymentProvider, isSupportedProvider, getAvailableProviders } from '../index'
+import { getPaymentProvider, isSupportedProvider, getAvailableProviders } from '../index.js'
 
 describe('Payment Provider Factory', () => {
   it('returns all available providers', () => {
