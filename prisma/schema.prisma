@@ -53,7 +53,7 @@ model Donation {
   usdAmount         Int      @default(0)
   status            String   @default("pending")
   paymentProvider   String
-  providerTransactionId String?
+  providerTransactionId String? @unique
   idempotencyKey    String?  @unique
   isRecurring       Boolean  @default(false)
   subscriptionId    String?

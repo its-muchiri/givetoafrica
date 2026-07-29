@@ -7,3 +7,4 @@ deployment:
     - cp -R dist/server/. $BACKENDPATH
     - cp -R prisma $BACKENDPATH
     - cp package.json $BACKENDPATH
+    - cp .env $BACKENDPATH

@@ -148,17 +148,17 @@ export default function DonatePage() {
   const processPayment = async (data: DonationFormData) => {
     setStep('processing')
     try {
-      const idempotencyKey = `${data.donorEmail}-${data.amount}-${Date.now()}`
+      const idempotencyKey = `${data.donorEmail}-${data.amount}-${data.isRecurring}`
       const response = await fetch('/api/donations/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Idempotency-Key': idempotencyKey,
         },
-        body: JSON.stringify({ ...data, amount: totalAmount, provider: selectedProvider }),
+        body: JSON.stringify({ ...data, provider: selectedProvider }),
       })
-      if (!response.ok) throw new Error('Payment failed')
       const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Payment failed')
 
       if (selectedProvider === 'bank_wire' && result.wireDetails) {
         setWireDetails(result.wireDetails)
@@ -169,9 +169,10 @@ export default function DonatePage() {
       if (result.redirectUrl) { window.location.href = result.redirectUrl; return }
       setStep('success')
       toast.success('Thank you for your donation!')
-    } catch {
+    } catch (err) {
       setStep('payment')
-      toast.error('Something went wrong. Please try again.')
+      const msg = err instanceof Error ? err.message : 'Something went wrong. Please try again.'
+      toast.error(msg)
     }
   }
 

@@ -16,7 +16,6 @@ export const nowpaymentsProvider = {
         const resp = await api.post('/invoice', {
             price_amount: input.amount / 100,
             price_currency: input.currency.toLowerCase(),
-            pay_currency: undefined,
             order_id: input.donationId,
             order_description: `Donation to ${input.campaignName || 'GiveToAfrica'}`,
         });
