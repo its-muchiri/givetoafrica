@@ -1,6 +1,12 @@
+import Seo from '@/components/Seo'
+
 export default function TermsPage() {
   return (
-    <>
+    <><Seo
+        title="Terms of Service — GiveToAfrica"
+        description="GiveToAfrica's terms of service govern your use of our website and services. Read our terms before donating."
+        url="/terms"
+      />
       <section className="bg-indigo text-white">
         <div className="container-page py-16 md:py-20">
           <span className="text-label text-ochre-light">Legal</span>

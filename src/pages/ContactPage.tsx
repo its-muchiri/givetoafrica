@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Mail, Phone, MapPin, Clock, Send, ChevronDown, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
+import Seo from '@/components/Seo'
 
 const subjects = [
   'General Inquiry',
@@ -11,6 +12,16 @@ const subjects = [
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false)
+
+  return (<><Seo
+    title="Contact Us — GiveToAfrica"
+    description="Get in touch with GiveToAfrica. We'd love to hear from you about donations, partnerships, media inquiries, or general questions."
+    url="/contact"
+  />
+  <ContactContent submitted={submitted} setSubmitted={setSubmitted} /></>)
+}
+
+function ContactContent({ submitted, setSubmitted }: { submitted: boolean; setSubmitted: (v: boolean) => void }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

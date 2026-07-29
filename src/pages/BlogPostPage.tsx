@@ -1,9 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
-import { useEffect } from 'react'
 import { Calendar, Clock, Tag, ChevronRight } from 'lucide-react'
 import { getPostBySlug, getRelatedPosts } from '@/lib/blog'
 import BlogArticleBody from '@/components/BlogArticleBody'
 import BlogSidebarCTA from '@/components/BlogSidebarCTA'
+import Seo from '@/components/Seo'
 
 const SITE_URL = 'https://donatetoafrica.org'
 
@@ -11,50 +11,6 @@ export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>()
   const post = getPostBySlug(slug ?? '')
   const relatedPosts = post ? getRelatedPosts(post, 3) : []
-
-  useEffect(() => {
-    if (!post) return
-
-    document.title = post.metaTitle
-
-    const setMeta = (attr: 'name' | 'property', key: string, content: string) => {
-      const selector = attr === 'name' ? `meta[name="${key}"]` : `meta[property="${key}"]`
-      let el = document.querySelector(selector) as HTMLMetaElement | null
-      if (!el) {
-        el = document.createElement('meta')
-        el.setAttribute(attr, key)
-        document.head.appendChild(el)
-      }
-      el.content = content
-    }
-
-    setMeta('name', 'description', post.metaDescription)
-    setMeta('property', 'og:title', post.metaTitle)
-    setMeta('property', 'og:description', post.metaDescription)
-    setMeta('property', 'og:image', `${SITE_URL}${post.featuredImage.src}`)
-    setMeta('property', 'og:type', 'article')
-    setMeta('property', 'og:url', `${SITE_URL}/blog/${post.slug}`)
-    setMeta('property', 'og:site_name', 'GiveDirectly')
-    setMeta('property', 'og:locale', 'en_US')
-    setMeta('property', 'article:published_time', post.publishedAt)
-    setMeta('property', 'article:section', post.categoryName)
-    setMeta('property', 'article:author', 'GiveDirectly Editorial Team')
-    post.tags.forEach(tag => {
-      setMeta('property', 'article:tag', tag)
-    })
-    setMeta('name', 'twitter:card', 'summary_large_image')
-    setMeta('name', 'twitter:title', post.metaTitle)
-    setMeta('name', 'twitter:description', post.metaDescription)
-    setMeta('name', 'twitter:image', `${SITE_URL}${post.featuredImage.src}`)
-
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null
-    if (!canonical) {
-      canonical = document.createElement('link')
-      canonical.rel = 'canonical'
-      document.head.appendChild(canonical)
-    }
-    canonical.href = `${SITE_URL}/blog/${post.slug}`
-  }, [post])
 
   if (!post) {
     return (
@@ -76,11 +32,20 @@ export default function BlogPostPage() {
     day: 'numeric',
   })
 
-  const articleUrl = `${SITE_URL}/blog/${post.slug}`
   const authorName = 'GiveDirectly Editorial Team'
 
-  return (
-    <>
+  const articleUrl = `${SITE_URL}/blog/${post.slug}`
+    return (
+    <><Seo
+        title={post.metaTitle}
+        description={post.metaDescription}
+        image={post.featuredImage.src}
+        url={`/blog/${post.slug}`}
+        type="article"
+        publishedTime={post.publishedAt}
+        section={post.categoryName}
+        tags={post.tags}
+      />
       {/* Hero */}
       <section className="bg-indigo py-12 text-white md:py-16">
         <div className="container-page">

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import Seo from '@/components/Seo'
 import {
   Eye, Shield, Award, TrendingUp, Download, FileText,
   ArrowRight, CheckCircle, BarChart3, Heart,
@@ -81,6 +82,15 @@ const impactStories = [
 ]
 
 export default function ImpactPage() {
+  return (<><Seo
+    title="Impact & Transparency — GiveToAfrica"
+    description="See the measurable impact of your donations. 84% of every dollar goes directly to programs. View our financial reports and ratings."
+    url="/impact"
+  />
+  <ImpactContent /></>)
+}
+
+function ImpactContent() {
   return (
     <>
       {/* Hero */}

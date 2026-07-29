@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import Seo from '@/components/Seo'
 import {
   ArrowRight, Calendar, Tag, Clock, Search,
 } from 'lucide-react'
@@ -76,6 +77,15 @@ const categoryColors: Record<string, string> = {
 }
 
 export default function NewsPage() {
+  return (<><Seo
+    title="News — GiveToAfrica"
+    description="Latest news and updates from GiveToAfrica. Field reports, impact stories, annual reports, and announcements."
+    url="/news"
+  />
+  <NewsContent /></>)
+}
+
+function NewsContent() {
   const [activeCategory, setActiveCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
 

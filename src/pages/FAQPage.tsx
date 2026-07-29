@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ChevronDown, HelpCircle } from 'lucide-react'
+import Seo from '@/components/Seo'
 
 const faqs = [
   {
@@ -63,7 +64,11 @@ export default function FAQPage() {
   }
 
   return (
-    <>
+    <><Seo
+        title="FAQ — GiveToAfrica"
+        description="Frequently asked questions about donating to GiveToAfrica. Learn about tax deductions, how your donation is used, and more."
+        url="/faq"
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-indigo text-white">
         <div className="container-page py-16 md:py-20">

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Calendar, Clock, ChevronRight, ChevronLeft, Search } from 'lucide-react'
 import { categories } from '@/lib/categories'
 import { getPublishedPosts, getBlogCategorySlugs, paginatePosts } from '@/lib/blog'
+import Seo from '@/components/Seo'
 
 export default function BlogListingPage() {
   const allPosts = getPublishedPosts()
@@ -26,7 +27,11 @@ export default function BlogListingPage() {
   const paginated = paginatePosts(filtered, page, 9)
 
   return (
-    <>
+    <><Seo
+        title="Blog — GiveToAfrica"
+        description="Read the latest stories about our work across Africa. Impact updates, field reports, and insights from our team."
+        url="/blog"
+      />
       {/* Hero */}
       <section className="bg-indigo py-16 text-white md:py-20">
         <div className="container-page">

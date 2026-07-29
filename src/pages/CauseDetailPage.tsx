@@ -4,6 +4,7 @@ import { ArrowLeft, Heart, MapPin, ChevronRight, TrendingUp } from 'lucide-react
 import { getCategoryBySlug, categories } from '@/lib/categories'
 import { causeImages } from '@/lib/images'
 import ImpactGrid from '@/components/ImpactGrid'
+import Seo from '@/components/Seo'
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 16 },
@@ -17,11 +18,13 @@ export default function CauseDetailPage() {
 
   if (!cause) {
     return (
+      <><Seo title="Cause Not Found — GiveToAfrica" url={`/causes/${slug}`} />
       <div className="container-page py-20 text-center">
         <h1 className="section-heading">Cause Not Found</h1>
         <p className="mt-4 text-ink-soft">The cause you're looking for doesn't exist.</p>
         <Link to="/causes" className="btn-primary mt-6"><ArrowLeft className="h-4 w-4" /> Browse All Causes</Link>
       </div>
+    </>
     )
   }
 
@@ -29,8 +32,14 @@ export default function CauseDetailPage() {
   const progress = Math.round((cause.raisedAmount / cause.goalAmount) * 100)
   const causeImage = causeImages[cause.slug]
 
+  const url = `/causes/${cause.slug}`
   return (
-    <>
+    <><Seo
+        title={`${cause.name} — GiveToAfrica`}
+        description={cause.tagline || cause.description?.slice(0, 160)}
+        image={causeImages[cause.slug]}
+        url={url}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-indigo py-16 text-white md:py-20">
         {causeImage && (

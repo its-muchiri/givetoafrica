@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import Seo from '@/components/Seo'
 import { Search, ArrowRight, Filter } from 'lucide-react'
 import { categories } from '@/lib/categories'
 import { images } from '@/lib/images'
@@ -8,6 +9,15 @@ import { images } from '@/lib/images'
 const allTags = Array.from(new Set(categories.flatMap((c) => c.countries)))
 
 export default function CausesPage() {
+  return (<><Seo
+    title="Causes — GiveToAfrica"
+    description="Browse 28 causes across Africa. Support education, clean water, healthcare, food security, and more. Every donation creates measurable impact."
+    url="/causes"
+  />
+  <CausesContent /></>)
+}
+
+function CausesContent() {
   const [search, setSearch] = useState('')
   const [selectedCountry, setSelectedCountry] = useState('All')
 

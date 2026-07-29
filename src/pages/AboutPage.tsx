@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import Seo from '@/components/Seo'
 import {
   Heart, ArrowRight, Users, Eye, Leaf, Award, Download,
   Building2, Mail, Phone, MapPin, Globe, BookOpen, Shield, TrendingUp,
@@ -69,6 +70,15 @@ const item = {
 }
 
 export default function AboutPage() {
+  return (<><Seo
+    title="About GiveToAfrica — Our Mission & Team"
+    description="Learn about GiveToAfrica's mission to empower African communities through education, clean water, healthcare, and food security. Meet our team and see our impact."
+    url="/about"
+  />
+  <AboutContent /></>)
+}
+
+function AboutContent() {
   return (
     <>
       {/* Hero */}

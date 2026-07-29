@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react'
 import { Calendar, Clock, ChevronRight, ChevronLeft } from 'lucide-react'
 import { categories } from '@/lib/categories'
 import { getPostsByCategory, paginatePosts } from '@/lib/blog'
-
-const SITE_URL = 'https://donatetoafrica.org'
+import Seo from '@/components/Seo'
 
 export default function BlogCategoryPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -14,14 +13,11 @@ export default function BlogCategoryPage() {
   const posts = slug ? getPostsByCategory(slug) : []
   const paginated = paginatePosts(posts, page, 6)
 
-  useEffect(() => {
-    if (!category) return
-    document.title = `${category.name} Articles | GiveDirectly Blog`
-    setPage(1)
-  }, [category])
+  useEffect(() => { setPage(1) }, [slug])
 
   if (!category) {
     return (
+      <><Seo title="Category Not Found — GiveToAfrica Blog" />
       <section className="bg-indigo py-20 text-white text-center">
         <div className="container-page">
           <h1 className="font-display text-3xl font-medium">Category Not Found</h1>
@@ -30,10 +26,11 @@ export default function BlogCategoryPage() {
             Back to Blog
           </Link>
         </div>
-      </section>
+      </section></>
     )
   }
 
+  const SITE_URL = 'https://donatetoafrica.org'
   const categoryUrl = `${SITE_URL}/blog/category/${category.slug}`
   const itemListElements = posts.map((post, index) => ({
     "@type": "ListItem",
@@ -43,7 +40,11 @@ export default function BlogCategoryPage() {
   }))
 
   return (
-    <>
+    <><Seo
+        title={`${category.name} Articles — GiveToAfrica Blog`}
+        description={`Read the latest articles about ${category.name.toLowerCase()} in Africa. Impact stories, field updates, and more from GiveToAfrica.`}
+        url={`/blog/category/${slug}`}
+      />
       {/* Hero */}
       <section className="bg-indigo py-16 text-white md:py-20">
         <div className="container-page">

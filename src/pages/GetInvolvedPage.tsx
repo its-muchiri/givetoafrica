@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import Seo from '@/components/Seo'
 import toast from 'react-hot-toast'
 import {
   Heart, Users, Building2, Target, ArrowRight, Check,
@@ -66,6 +67,15 @@ const partnershipTiers = [
 ]
 
 export default function GetInvolvedPage() {
+  return (<><Seo
+    title="Get Involved — GiveToAfrica"
+    description="Partner with GiveToAfrica to empower African communities. Volunteer, sponsor a project, or become a corporate partner."
+    url="/get-involved"
+  />
+  <GetInvolvedContent /></>)
+}
+
+function GetInvolvedContent() {
   const [volunteerForm, setVolunteerForm] = useState({
     name: '',
     email: '',

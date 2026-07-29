@@ -1,4 +1,15 @@
+import Seo from '@/components/Seo'
+
 export default function PrivacyPage() {
+  return (<><Seo
+    title="Privacy Policy — GiveToAfrica"
+    description="GiveToAfrica's privacy policy explains how we collect, use, and protect your personal information when you donate or interact with our website."
+    url="/privacy"
+  />
+  <PrivacyContent /></>)
+}
+
+function PrivacyContent() {
   const sections = [
     { id: 'information-we-collect', title: 'Information We Collect' },
     { id: 'how-we-use-information', title: 'How We Use Information' },

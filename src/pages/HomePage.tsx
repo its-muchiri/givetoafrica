@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
+import Seo from '@/components/Seo'
 import {
   Heart, ArrowRight, Shield, Eye, Award, TrendingUp, Quote,
 } from 'lucide-react'
@@ -80,6 +81,15 @@ const latestStories = [
 ]
 
 export default function HomePage() {
+  return (<><Seo
+    title="GiveToAfrica — Empowering African Communities"
+    description="Donate to verified causes across Africa. Education, clean water, healthcare, food security, and more. 100% of donations go to programs."
+    url="/"
+  />
+  <HomePageContent /></>)
+}
+
+function HomePageContent() {
   const rm = useReducedMotion()
   const fundsRaised = useCountUp(2450000)
   const peopleHelped = useCountUp(47500)
