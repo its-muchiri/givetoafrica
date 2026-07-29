@@ -12,18 +12,18 @@ const DIST = join(ROOT, 'dist')
 const require = createRequire(import.meta.url)
 
 const STATIC_ROUTES = [
-  '/', '/about', '/causes', '/impact', '/get-involved',
+  '/', '/about', '/causes', '/charities', '/impact', '/get-involved',
   '/news', '/blog', '/contact', '/faq', '/privacy', '/terms',
 ]
 
 const CATEGORY_SLUGS = [
-  'aged', 'animals', 'armed-forces', 'arts-culture', 'babies-children',
-  'community-development', 'disability', 'disaster-relief', 'education',
-  'employment', 'environment', 'housing-homelessness', 'healthcare',
-  'hearing-health', 'hospitality', 'human-rights', 'hunger',
-  'infrastructure', 'medical-research', 'mental-health', 'museums-libraries',
-  'oceans', 'people-of-faith', 'poverty', 'racial-justice',
-  'sports-recreation', 'vision-health', 'water-sanitation',
+  'aged', 'animals', 'armed-and-ex-services', 'children-and-youth',
+  'community', 'culture-and-heritage', 'disabled', 'education-and-training',
+  'employment-trades-and-professions', 'environment', 'family', 'health',
+  'hearing-impairments', 'hospices', 'hospitals', 'housing', 'human-rights',
+  'international', 'learning-disabilities-and-sen', 'medical-research',
+  'medical-welfare', 'mental-health', 'overseas-aid', 'religious',
+  'rescue-services', 'social-welfare', 'sport-and-recreation', 'visual-impairments',
 ]
 
 function getChromePath() {
@@ -59,10 +59,11 @@ function getRoutes() {
   const blogCategorySlugs = [...new Set(publishedPosts.map(p => p.categorySlug))]
 
   const categoryRoutes = CATEGORY_SLUGS.map(s => `/causes/${s}`)
+  const charityRoutes = CATEGORY_SLUGS.map(s => `/charities/${s}`)
   const blogCategoryRoutes = blogCategorySlugs.map(s => `/blog/category/${s}`)
   const blogPostRoutes = publishedPosts.map(p => `/blog/${p.slug}`)
 
-  return [...STATIC_ROUTES, ...categoryRoutes, ...blogCategoryRoutes, ...blogPostRoutes]
+  return [...STATIC_ROUTES, ...categoryRoutes, ...charityRoutes, ...blogCategoryRoutes, ...blogPostRoutes]
 }
 
 function startPreviewServer() {

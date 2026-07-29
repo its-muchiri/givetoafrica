@@ -8,7 +8,7 @@ const footerLinks = {
     { label: 'Children & Youth', href: '/blog/category/children-and-youth' },
     { label: 'Environment', href: '/blog/category/environment' },
     { label: 'Overseas Aid', href: '/blog/category/overseas-aid' },
-    { label: 'All 28 Causes', href: '/causes' },
+    { label: 'All 28 Causes', href: '/charities' },
   ],
   'About': [
     { label: 'Our Story', href: '/about' },

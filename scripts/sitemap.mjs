@@ -12,6 +12,7 @@ const STATIC_ROUTES = [
   { path: '/', priority: 1.0, changefreq: 'weekly' },
   { path: '/about', priority: 0.7, changefreq: 'monthly' },
   { path: '/causes', priority: 0.8, changefreq: 'weekly' },
+  { path: '/charities', priority: 0.8, changefreq: 'weekly' },
   { path: '/impact', priority: 0.6, changefreq: 'monthly' },
   { path: '/get-involved', priority: 0.6, changefreq: 'monthly' },
   { path: '/news', priority: 0.6, changefreq: 'weekly' },
@@ -23,13 +24,13 @@ const STATIC_ROUTES = [
 ]
 
 const CATEGORY_SLUGS = [
-  'aged', 'animals', 'armed-forces', 'arts-culture', 'babies-children',
-  'community-development', 'disability', 'disaster-relief', 'education',
-  'employment', 'environment', 'housing-homelessness', 'healthcare',
-  'hearing-health', 'hospitality', 'human-rights', 'hunger',
-  'infrastructure', 'medical-research', 'mental-health', 'museums-libraries',
-  'oceans', 'people-of-faith', 'poverty', 'racial-justice',
-  'sports-recreation', 'vision-health', 'water-sanitation',
+  'aged', 'animals', 'armed-and-ex-services', 'children-and-youth',
+  'community', 'culture-and-heritage', 'disabled', 'education-and-training',
+  'employment-trades-and-professions', 'environment', 'family', 'health',
+  'hearing-impairments', 'hospices', 'hospitals', 'housing', 'human-rights',
+  'international', 'learning-disabilities-and-sen', 'medical-research',
+  'medical-welfare', 'mental-health', 'overseas-aid', 'religious',
+  'rescue-services', 'social-welfare', 'sport-and-recreation', 'visual-impairments',
 ]
 
 function getBlogPosts() {
@@ -62,6 +63,12 @@ function generateSitemap() {
   for (const slug of CATEGORY_SLUGS) {
     urls.push(`  <url>
     <loc>${SITE_URL}/causes/${slug}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`)
+    urls.push(`  <url>
+    <loc>${SITE_URL}/charities/${slug}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

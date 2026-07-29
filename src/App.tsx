@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
 import CausesPage from './pages/CausesPage'
 import CauseDetailPage from './pages/CauseDetailPage'
+import CharitiesPage from './pages/CharitiesPage'
+import CharityDetailPage from './pages/CharityDetailPage'
 import DonatePage from './pages/DonatePage'
 import ImpactPage from './pages/ImpactPage'
 import GetInvolvedPage from './pages/GetInvolvedPage'
@@ -42,6 +44,8 @@ export default function App() {
           <Route path="about" element={<AboutPage />} />
           <Route path="causes" element={<CausesPage />} />
           <Route path="causes/:slug" element={<CauseDetailPage />} />
+          <Route path="charities" element={<CharitiesPage />} />
+          <Route path="charities/:slug" element={<CharityDetailPage />} />
           <Route path="donate" element={<DonatePage />} />
           <Route path="donate/success" element={<DonationSuccessPage />} />
           <Route path="impact" element={<ImpactPage />} />

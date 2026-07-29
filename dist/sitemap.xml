@@ -19,6 +19,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://donatetoafrica.org/charities</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://donatetoafrica.org/impact</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>monthly</changefreq>
@@ -73,55 +79,103 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://donatetoafrica.org/charities/aged</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://donatetoafrica.org/causes/animals</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/armed-forces</loc>
+    <loc>https://donatetoafrica.org/charities/animals</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/arts-culture</loc>
+    <loc>https://donatetoafrica.org/causes/armed-and-ex-services</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/babies-children</loc>
+    <loc>https://donatetoafrica.org/charities/armed-and-ex-services</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/community-development</loc>
+    <loc>https://donatetoafrica.org/causes/children-and-youth</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/disability</loc>
+    <loc>https://donatetoafrica.org/charities/children-and-youth</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/disaster-relief</loc>
+    <loc>https://donatetoafrica.org/causes/community</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/education</loc>
+    <loc>https://donatetoafrica.org/charities/community</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/employment</loc>
+    <loc>https://donatetoafrica.org/causes/culture-and-heritage</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/culture-and-heritage</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/disabled</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/disabled</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/education-and-training</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/education-and-training</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/employment-trades-and-professions</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/employment-trades-and-professions</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -133,25 +187,79 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/housing-homelessness</loc>
+    <loc>https://donatetoafrica.org/charities/environment</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/healthcare</loc>
+    <loc>https://donatetoafrica.org/causes/family</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/hearing-health</loc>
+    <loc>https://donatetoafrica.org/charities/family</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/hospitality</loc>
+    <loc>https://donatetoafrica.org/causes/health</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/health</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/hearing-impairments</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/hearing-impairments</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/hospices</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/hospices</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/hospitals</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/hospitals</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/housing</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/housing</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -163,13 +271,31 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/hunger</loc>
+    <loc>https://donatetoafrica.org/charities/human-rights</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/infrastructure</loc>
+    <loc>https://donatetoafrica.org/causes/international</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/international</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/learning-disabilities-and-sen</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/learning-disabilities-and-sen</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -181,55 +307,103 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://donatetoafrica.org/charities/medical-research</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/medical-welfare</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/medical-welfare</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://donatetoafrica.org/causes/mental-health</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/museums-libraries</loc>
+    <loc>https://donatetoafrica.org/charities/mental-health</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/oceans</loc>
+    <loc>https://donatetoafrica.org/causes/overseas-aid</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/people-of-faith</loc>
+    <loc>https://donatetoafrica.org/charities/overseas-aid</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/poverty</loc>
+    <loc>https://donatetoafrica.org/causes/religious</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/racial-justice</loc>
+    <loc>https://donatetoafrica.org/charities/religious</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/sports-recreation</loc>
+    <loc>https://donatetoafrica.org/causes/rescue-services</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/vision-health</loc>
+    <loc>https://donatetoafrica.org/charities/rescue-services</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://donatetoafrica.org/causes/water-sanitation</loc>
+    <loc>https://donatetoafrica.org/causes/social-welfare</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/social-welfare</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/sport-and-recreation</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/sport-and-recreation</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/causes/visual-impairments</loc>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://donatetoafrica.org/charities/visual-impairments</loc>
     <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
