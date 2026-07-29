@@ -8,7 +8,7 @@ import { useCountUp } from '@/hooks/useCountUp'
 import HeroBlogCarousel from '@/components/HeroBlogCarousel'
 import BlogCarousel from '@/components/BlogCarousel'
 import { categories } from '@/lib/categories'
-import { images } from '@/lib/images'
+import { images, causeImages } from '@/lib/images'
 
 const stagger = {
   hidden: {},
@@ -229,44 +229,62 @@ function HomePageContent() {
         viewport={{ once: true, amount: 0.15 }}
         variants={{ show: { transition: { staggerChildren: 0.06 } } }}
         className="py-20 md:py-28"
+        style={{ background: '#FBF7F1' }}
       >
         <div className="container-page">
           <motion.div variants={fadeInUp} className="text-center">
-            <span className="text-label">Our Programs</span>
+            <span className="text-label text-ochre-dark">Our Programs</span>
             <h2 className="section-heading mt-3">Where Your Donation Goes</h2>
             <p className="section-subheading mx-auto">
               Every dollar is directed to where it's needed most. Choose a cause that resonates with you.
             </p>
           </motion.div>
 
-          <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {topCauses.map((cause) => {
               const progress = Math.round((cause.raisedAmount / cause.goalAmount) * 100)
-              const Icon = cause.icon
+              const causeImage = causeImages[cause.slug]
               return (
                 <motion.div key={cause.slug} variants={fadeInUp}>
-                  <Link to={`/blog/category/${cause.slug}`} className="card group block">
-                    <div className="overflow-hidden rounded-sm">
-                      <div className={`inline-flex rounded-sm p-2.5 ${cause.bgColor} ${cause.color}`}>
-                        <Icon className="h-5 w-5" />
-                      </div>
-                    </div>
-                    <h3 className="mt-4 font-display text-base font-medium text-ink group-hover:text-ochre-dark transition-colors">
-                      {cause.name}
-                    </h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink-soft line-clamp-2">
-                      {cause.tagline}
-                    </p>
-                    <div className="mt-4">
-                      <div className="flex justify-between text-2xs font-mono text-ink-soft">
-                        <span>${(cause.raisedAmount / 1000).toFixed(0)}K raised</span>
-                        <span>{progress}%</span>
-                      </div>
-                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-parchment">
-                        <div
-                          className="h-full rounded-full bg-ochre progress-stripe"
-                          style={{ width: `${progress}%` }}
+                  <Link
+                    to={`/causes/${cause.slug}`}
+                    className="group block rounded-lg overflow-hidden shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
+                    style={{ background: '#FFFFFF', border: '1px solid #DDD0BE' }}
+                  >
+                    <div className="h-36 overflow-hidden bg-amber-900">
+                      {causeImage ? (
+                        <img
+                          src={causeImage}
+                          alt={cause.name}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <cause.icon className="h-8 w-8" style={{ color: 'rgba(255,255,255,0.3)' }} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3
+                        className="text-base font-semibold leading-snug group-hover:text-orange-700 transition-colors"
+                        style={{ fontFamily: 'var(--font-display-figma)', color: '#1C1612' }}
+                      >
+                        {cause.name}
+                      </h3>
+                      <p className="mt-1 text-xs leading-relaxed line-clamp-2" style={{ color: '#8A7260' }}>
+                        {cause.tagline}
+                      </p>
+                      <div className="mt-3">
+                        <div className="flex justify-between text-2xs" style={{ color: '#8A7260' }}>
+                          <span>${(cause.raisedAmount / 1000).toFixed(0)}K raised</span>
+                          <span className="font-medium" style={{ color: '#C2571A' }}>{progress}%</span>
+                        </div>
+                        <div className="mt-1.5 h-1.5 rounded-full" style={{ background: '#EDE5D8' }}>
+                          <div
+                            className="h-1.5 rounded-full cause-progress-fill"
+                            style={{ width: `${progress}%`, background: '#C2571A' }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </Link>

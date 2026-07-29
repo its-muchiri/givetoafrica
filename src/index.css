@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -327,4 +327,36 @@
     border-bottom: 1px solid rgba(42, 36, 32, 0.08);
     color: #5B5248;
   }
+
+  /* ── Figma Cause Page Design System ── */
+  .cause-carousel-track {
+    display: flex;
+    animation: carousel-slide 32s linear infinite;
+    will-change: transform;
+  }
+  .cause-carousel-track:hover {
+    animation-play-state: paused;
+  }
+
+  .cause-progress-fill {
+    animation: fill-bar 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
+  .cause-fade-up {
+    animation: fade-up 0.7s ease both;
+  }
+}
+
+@keyframes carousel-slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes fill-bar {
+  from { width: 0; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

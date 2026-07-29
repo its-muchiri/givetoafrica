@@ -17,6 +17,23 @@ import newsWire from '@/img/afp_6a4298ae5b0e-1782749358.webp'
 import fieldPhoto from '@/img/IMG_4487-1384x923.avif'
 import webpPhoto from '@/img/3000.webp'
 import genericNews from '@/img/0000-456999956.jpg'
+import img5 from '@/img/images (5).jpg'
+import img6 from '@/img/images (6).jpg'
+import img7 from '@/img/images (7).jpg'
+import img8 from '@/img/images (8).jpg'
+import img9 from '@/img/images (9).jpg'
+import img10 from '@/img/images (10).jpg'
+import img11 from '@/img/images (11).jpg'
+import img12 from '@/img/images (12).jpg'
+import img13 from '@/img/images (13).jpg'
+import img14 from '@/img/images (14).jpg'
+import img15 from '@/img/images (15).jpg'
+import img16 from '@/img/images (16).jpg'
+import romanNguyen from '@/img/roman-nguyen-lPPkJ4NfQtQ-unsplash.jpg'
+import premiumPhoto from '@/img/premium_photo-1734351686087-1468b990e4f3.avif'
+import wordLitTrans from '@/img/Microsoft-Word-Lit-Trans-226-description-_rev_-1.jpg'
+import disabilityProtocol from '@/img/disability-protocol.webp'
+import b5458a3c from '@/img/b5458a3c6859e8bda50c5e130cf89d4e.webp'
 
 export const causeImages: Record<string, string> = {
   'education-and-training': educationHunger,
@@ -47,6 +64,37 @@ export const causeImages: Record<string, string> = {
   'religious': bwimeCommunity,
   'sport-and-recreation': zambiaCommunity,
   'visual-impairments': somaliaChildren,
+}
+
+export const causeGalleryImages: Record<string, string[]> = {
+  'education-and-training': [educationHunger, img5, img6, img7],
+  'health': [kenyaFoodCrisis, img8, img9, img10],
+  'hospitals': [kenyaFoodCrisis, img11, img12, img13],
+  'medical-research': [ebolaCrisis, img14, img15, img16],
+  'medical-welfare': [kenyaFoodCrisis, img5, img6, img7],
+  'overseas-aid': [hungerSouthAfrica, img8, img9, img10],
+  'international': [hungerSouthAfrica, img11, img12, img13],
+  'children-and-youth': [somaliaChildren, img14, img15, img16],
+  'disabled': [somaliaChildren, img5, img6, img7],
+  'human-rights': [somaliaChildren, img8, img9, img10],
+  'community': [zambiaCommunity, img11, img12, img13],
+  'family': [bwimeCommunity, img14, img15, img16],
+  'housing': [bwimeCommunity, img5, img6, img7],
+  'social-welfare': [zambiaCommunity, img8, img9, img10],
+  'environment': [ethiopiaDrought, img11, img12, img13],
+  'rescue-services': [ebolaCrisis, img14, img15, img16],
+  'mental-health': [kenyaFoodCrisis, img5, img6, img7],
+  'learning-disabilities-and-sen': [somaliaChildren, img8, img9, img10],
+  'aged': [bwimeCommunity, img11, img12, img13],
+  'animals': [ethiopiaDrought, img14, img15, img16],
+  'armed-and-ex-services': [zambiaCommunity, img5, img6, img7],
+  'culture-and-heritage': [bwimeCommunity, img8, img9, img10],
+  'employment-trades-and-professions': [zambiaCommunity, img11, img12, img13],
+  'hearing-impairments': [somaliaChildren, img14, img15, img16],
+  'hospices': [kenyaFoodCrisis, img5, img6, img7],
+  'religious': [bwimeCommunity, img8, img9, img10],
+  'sport-and-recreation': [zambiaCommunity, img11, img12, img13],
+  'visual-impairments': [somaliaChildren, img14, img15, img16],
 }
 
 export const images = {
@@ -92,5 +140,9 @@ export const images = {
     webpPhoto,
     genericNews,
     somaliaChildren,
+  },
+  gallery: {
+    img5, img6, img7, img8, img9, img10, img11, img12, img13, img14, img15, img16,
+    romanNguyen, premiumPhoto, wordLitTrans, disabilityProtocol, b5458a3c,
   },
 } as const
