@@ -42,15 +42,25 @@ const PROVIDER_ICONS: Record<PaymentProviderId, typeof Heart> = {
   bank_wire: Building2,
 }
 
-const BANK_DETAILS = {
-  bankName: 'Citibank',
-  bankAddress: '111 Wall Street New York, NY 10043 USA',
-  routingNumber: '031100209',
-  swiftCode: 'CITIUS33',
-  accountNumber: '70588190001175255',
-  accountType: 'CHECKING',
-  beneficiaryName: 'Brock Sherman',
-} as const
+const BANK_DETAILS: Record<string, { bankName: string; bankAddress: string; routingNumber?: string; swiftCode: string; accountNumber?: string; iban?: string; accountType: string; beneficiaryName: string }> = {
+  USD: {
+    bankName: 'Citibank',
+    bankAddress: '111 Wall Street New York, NY 10043 USA',
+    routingNumber: '031100209',
+    swiftCode: 'CITIUS33',
+    accountNumber: '70588190001175255',
+    accountType: 'CHECKING',
+    beneficiaryName: 'Brock Sherman',
+  },
+  EUR: {
+    bankName: 'Banking Circle S.A.',
+    bankAddress: '2, Boulevard de la Foire L-1528 LUXEMBOURG',
+    swiftCode: 'BCIRLULL',
+    iban: 'LU094080000050960177',
+    accountType: 'CHECKING',
+    beneficiaryName: 'Brock Sherman',
+  },
+}
 
 const PROVIDER_METHOD_MAP: Record<PaymentProviderId, DonationFormData['paymentMethod']> = {
   nowpayments: 'crypto',
@@ -424,34 +434,39 @@ export default function DonatePage() {
                     )}
                   </div>
 
-                  {/* Bank transfer details - shown inline when bank_wire is selected */}
-                      {selectedProvider === 'bank_wire' && (
-                        <div className="rounded-sm border border-ink/10 bg-white p-5">
-                          <h4 className="font-display text-sm font-medium text-ink flex items-center gap-2">
-                            <Building2 className="h-4 w-4 text-ochre-dark" /> Bank Transfer Details
-                          </h4>
-                          <div className="mt-4 grid gap-1.5 text-sm">
-                            {[
-                              ['Bank', BANK_DETAILS.bankName],
-                              ['Address', BANK_DETAILS.bankAddress],
-                              ['Beneficiary', BANK_DETAILS.beneficiaryName],
-                              ['Account Number', BANK_DETAILS.accountNumber],
-                              ['Account Type', BANK_DETAILS.accountType],
-                              ['Routing (ABA)', BANK_DETAILS.routingNumber],
-                              ['SWIFT Code', BANK_DETAILS.swiftCode],
-                            ].map(([label, value]) => (
-                              <div key={label} className="flex justify-between gap-4">
-                                <span className="text-ink-soft">{label}</span>
-                                <span className="mono-number text-right font-medium text-ink">{value}</span>
-                              </div>
-                            ))}
-                          </div>
-                          <p className="mt-4 text-2xs text-ink-soft leading-relaxed bg-ochre-dark/5 rounded-sm p-2.5">
-                            Use the account number as the reference/memo in your wire transfer.
-                            Include your name and email for tracking purposes.
-                          </p>
-                        </div>
-                      )}
+{/* Bank transfer details - shown inline when bank_wire is selected */}
+                       {selectedProvider === 'bank_wire' && (() => {
+                         const bank = BANK_DETAILS[selectedCurrency] || BANK_DETAILS.USD
+                         return (
+                           <div className="rounded-sm border border-ink/10 bg-white p-5">
+                             <h4 className="font-display text-sm font-medium text-ink flex items-center gap-2">
+                               <Building2 className="h-4 w-4 text-ochre-dark" /> Bank Transfer Details
+                               <span className="text-2xs font-mono text-ink-soft bg-parchment px-1.5 py-0.5 rounded-sm">{selectedCurrency}</span>
+                             </h4>
+                             <div className="mt-4 grid gap-1.5 text-sm">
+{[
+                                  ['Bank', bank.bankName],
+                                  ['Address', bank.bankAddress],
+                                  ['Beneficiary', bank.beneficiaryName],
+                                  ...(bank.accountNumber ? [['Account Number', bank.accountNumber]] : []),
+                                  ...(bank.iban ? [['IBAN', bank.iban]] : []),
+                                  ['Account Type', bank.accountType],
+                                  ...(bank.routingNumber ? [['Routing (ABA)', bank.routingNumber]] : []),
+                                  ['SWIFT / BIC', bank.swiftCode],
+                                ].map(([label, value]) => (
+                                 <div key={label as string} className="flex justify-between gap-4">
+                                   <span className="text-ink-soft">{label}</span>
+                                   <span className="mono-number text-right font-medium text-ink">{value}</span>
+                                 </div>
+                               ))}
+                             </div>
+                             <p className="mt-4 text-2xs text-ink-soft leading-relaxed bg-ochre-dark/5 rounded-sm p-2.5">
+                               Use the account number or IBAN as the reference/memo in your wire transfer.
+                               Include your name and email for tracking purposes.
+                             </p>
+                           </div>
+                         )
+                       })()}
 
                       <label className="flex items-start gap-3 rounded-sm p-3.5 cursor-pointer ring-1 ring-ink/12">
                         <input type="checkbox" {...register('coverFees')} className="mt-0.5 h-4 w-4 rounded-sm border-ink/20 text-ochre-dark focus:ring-ochre-dark" />
