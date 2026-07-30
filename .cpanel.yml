@@ -12,7 +12,7 @@ deployment:
     - /bin/cp dist/favicon.ico $FRONTPATH
     - /bin/cp dist/favicon.svg $FRONTPATH
     - /bin/cp dist/logo-full.svg $FRONTPATH
-    - /bin/cp -R dist/server $BACKENDPATH
+    - /bin/cp -R dist/server/. $BACKENDPATH
     - /bin/cp -R prisma $BACKENDPATH
     - /bin/cp package.json $BACKENDPATH
     - /bin/cp package-lock.json $BACKENDPATH
