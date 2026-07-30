@@ -42,6 +42,16 @@ const PROVIDER_ICONS: Record<PaymentProviderId, typeof Heart> = {
   bank_wire: Building2,
 }
 
+const BANK_DETAILS = {
+  bankName: 'Citibank',
+  bankAddress: '111 Wall Street New York, NY 10043 USA',
+  routingNumber: '031100209',
+  swiftCode: 'CITIUS33',
+  accountNumber: '70588190001175255',
+  accountType: 'CHECKING',
+  beneficiaryName: 'Brock Sherman',
+} as const
+
 const PROVIDER_METHOD_MAP: Record<PaymentProviderId, DonationFormData['paymentMethod']> = {
   nowpayments: 'crypto',
   bank_wire: 'bank_transfer',
@@ -49,13 +59,12 @@ const PROVIDER_METHOD_MAP: Record<PaymentProviderId, DonationFormData['paymentMe
 
 export default function DonatePage() {
   const [searchParams] = useSearchParams()
-  const [step, setStep] = useState<'amount' | 'details' | 'payment' | 'processing' | 'success' | 'wire_instructions'>('amount')
+  const [step, setStep] = useState<'amount' | 'details' | 'payment' | 'processing' | 'success'>('amount')
   const [selectedCurrency, setSelectedCurrency] = useState('USD')
   const [selectedAmount, setSelectedAmount] = useState<number>(5000)
   const [customAmount, setCustomAmount] = useState('')
   const [isCustom, setIsCustom] = useState(false)
   const [selectedProvider, setSelectedProvider] = useState<PaymentProviderId>('nowpayments')
-  const [wireDetails, setWireDetails] = useState<any>(null)
   const {
     register, handleSubmit, watch, setValue, trigger, formState: { errors },
   } = useForm<DonationFormData>({
@@ -160,12 +169,6 @@ export default function DonatePage() {
       const result = await response.json()
       if (!response.ok) throw new Error(result.error || 'Payment failed')
 
-      if (selectedProvider === 'bank_wire' && result.wireDetails) {
-        setWireDetails(result.wireDetails)
-        setStep('wire_instructions')
-        return
-      }
-
       if (result.redirectUrl) { window.location.href = result.redirectUrl; return }
       setStep('success')
       toast.success('Thank you for your donation!')
@@ -174,50 +177,6 @@ export default function DonatePage() {
       const msg = err instanceof Error ? err.message : 'Something went wrong. Please try again.'
       toast.error(msg)
     }
-  }
-
-  if (step === 'wire_instructions' && wireDetails) {
-    return (
-      <div className="container-page py-20">
-        <div className="mx-auto max-w-lg text-center">
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 15 }}>
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-sm bg-ochre-dark/10">
-              <Building2 className="h-10 w-10 text-ochre-dark" />
-            </div>
-          </motion.div>
-          <h1 className="mt-8 font-display text-3xl font-medium text-ink">Wire Transfer Details</h1>
-          <p className="mt-4 text-ink-soft">Complete your transfer using the details below. We'll confirm once received.</p>
-
-          <div className="mt-8 rounded-lg border border-ink/10 bg-white p-6 text-left">
-            <h3 className="font-display text-base font-medium text-ink">Bank Details</h3>
-            <div className="mt-4 space-y-3 text-sm">
-              {[
-                ['Bank', wireDetails.bankName],
-                ['Account Name', wireDetails.accountName],
-                ['Account Number', wireDetails.accountNumber],
-                wireDetails.iban && ['IBAN', wireDetails.iban],
-                ['SWIFT/BIC', wireDetails.swift],
-                wireDetails.routingNumber && ['Routing', wireDetails.routingNumber],
-              ].filter(Boolean).map(([label, value]) => (
-                <div key={label as string} className="flex justify-between">
-                  <span className="text-ink-soft">{label}</span>
-                  <span className="mono-number font-medium text-ink">{value}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 rounded bg-ochre-dark/5 p-4 text-center">
-              <p className="text-2xs text-ink-soft">Your reference code (include in transfer memo)</p>
-              <p className="mono-number mt-1 text-lg font-bold text-ochre-dark tracking-wider">{wireDetails.reference}</p>
-            </div>
-            <p className="mt-4 text-xs text-ink-soft leading-relaxed">{wireDetails.instructions}</p>
-          </div>
-
-          <button onClick={() => setStep('success')} className="btn-primary mt-8">
-            <Check className="h-4 w-4" /> I've Made the Transfer
-          </button>
-        </div>
-      </div>
-    )
   }
 
   if (step === 'success') {
@@ -465,17 +424,46 @@ export default function DonatePage() {
                     )}
                   </div>
 
-                  <label className="flex items-start gap-3 rounded-sm p-3.5 cursor-pointer ring-1 ring-ink/12">
-                    <input type="checkbox" {...register('coverFees')} className="mt-0.5 h-4 w-4 rounded-sm border-ink/20 text-ochre-dark focus:ring-ochre-dark" />
-                    <div>
-                      <div className="text-sm font-medium text-ink">
-                        Cover transaction fees (+{currency.symbol}{(processingFee / 100).toFixed(2)})
-                      </div>
-                      <div className="text-2xs text-ink-soft">
-                        This ensures 100% of your donation goes to the cause. ~3% for card processing.
-                      </div>
-                    </div>
-                  </label>
+                  {/* Bank transfer details - shown inline when bank_wire is selected */}
+                      {selectedProvider === 'bank_wire' && (
+                        <div className="rounded-sm border border-ink/10 bg-white p-5">
+                          <h4 className="font-display text-sm font-medium text-ink flex items-center gap-2">
+                            <Building2 className="h-4 w-4 text-ochre-dark" /> Bank Transfer Details
+                          </h4>
+                          <div className="mt-4 grid gap-1.5 text-sm">
+                            {[
+                              ['Bank', BANK_DETAILS.bankName],
+                              ['Address', BANK_DETAILS.bankAddress],
+                              ['Beneficiary', BANK_DETAILS.beneficiaryName],
+                              ['Account Number', BANK_DETAILS.accountNumber],
+                              ['Account Type', BANK_DETAILS.accountType],
+                              ['Routing (ABA)', BANK_DETAILS.routingNumber],
+                              ['SWIFT Code', BANK_DETAILS.swiftCode],
+                            ].map(([label, value]) => (
+                              <div key={label} className="flex justify-between gap-4">
+                                <span className="text-ink-soft">{label}</span>
+                                <span className="mono-number text-right font-medium text-ink">{value}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <p className="mt-4 text-2xs text-ink-soft leading-relaxed bg-ochre-dark/5 rounded-sm p-2.5">
+                            Use the account number as the reference/memo in your wire transfer.
+                            Include your name and email for tracking purposes.
+                          </p>
+                        </div>
+                      )}
+
+                      <label className="flex items-start gap-3 rounded-sm p-3.5 cursor-pointer ring-1 ring-ink/12">
+                        <input type="checkbox" {...register('coverFees')} className="mt-0.5 h-4 w-4 rounded-sm border-ink/20 text-ochre-dark focus:ring-ochre-dark" />
+                        <div>
+                          <div className="text-sm font-medium text-ink">
+                            Cover transaction fees (+{currency.symbol}{(processingFee / 100).toFixed(2)})
+                          </div>
+                          <div className="text-2xs text-ink-soft">
+                            This ensures 100% of your donation goes to the cause. ~3% for card processing.
+                          </div>
+                        </div>
+                      </label>
 
                   <div className="flex items-center justify-center gap-6 py-2">
                     <div className="flex items-center gap-1.5 text-2xs text-ink-soft">
