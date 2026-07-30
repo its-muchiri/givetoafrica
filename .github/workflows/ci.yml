@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, staging]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
       - run: npm run lint
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
       - run: npx prisma generate
@@ -61,47 +61,57 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
-      - run: npm run build
-
-  deploy-staging:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, test, build]
-    if: github.ref == 'refs/heads/staging'
-    environment: staging
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy to HostPinnacle (Staging)
-        run: |
-          ssh ${{ secrets.HOSTPINECLE_USER }}@${{ secrets.HOSTPINECLE_HOST }} << 'EOF'
-            cd ~/domains/staging.givetoafrica.org
-            git pull origin staging
-            npm install
-            npm run build
-            pm2 restart givetoafrica-staging || pm2 start dist/server/index.js --name givetoafrica-staging
-            npx prisma migrate deploy
-          EOF
+      - run: npm run build:hostpinnacle
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            dist/
+            prisma/schema.prisma
+            package.json
+            package-lock.json
 
   deploy-production:
-    name: Deploy to Production
+    name: Deploy to Production (cPanel)
     runs-on: ubuntu-latest
-    needs: [lint-and-typecheck, test, build]
+    needs: [lint-and-typecheck, build]
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
-      url: https://givetoafrica.org
+      url: https://givetoafrica.net
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy to HostPinnacle (Production)
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: ./deploy
+      - name: Deploy to cPanel
         run: |
-          ssh ${{ secrets.HOSTPINECLE_USER }}@${{ secrets.HOSTPINECLE_HOST }} << 'EOF'
-            cd ~/domains/givetoafrica.org
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart givetoafrica || pm2 start dist/server/index.js --name givetoafrica
-            npx prisma migrate deploy
+          ssh ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }} << 'EOF'
+            set -e
+            BACKEND="/home2/datingsi/backend"
+            WEBDIR="/home2/datingsi/givetoafrica.net"
+            # Clean target directories
+            rm -rf "$BACKEND"/*
+            # Copy pre-built server output to backend
+            cp -R ./deploy/dist/server/* "$BACKEND/"
+            # Copy prisma schema + package files
+            cp -R ./deploy/prisma "$BACKEND/"
+            cp ./deploy/package.json "$BACKEND/"
+            cp ./deploy/package-lock.json "$BACKEND/"
+            # Install production deps only (no devDeps, no build tools needed)
+            export NODE="/home2/datingsi/nodevenv/backend/18/bin/node"
+            export NPM="/home2/datingsi/nodevenv/backend/18/bin/npm"
+            cd "$BACKEND"
+            $NPM ci --omit=dev
+            # Run Prisma migrations
+            $NPM exec prisma generate
+            $NPM exec prisma migrate deploy
+            # Restart via Passenger
+            mkdir -p "$BACKEND/tmp"
+            touch "$BACKEND/tmp/restart.txt"
           EOF

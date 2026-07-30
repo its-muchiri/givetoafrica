@@ -1,12 +1,24 @@
 #!/bin/bash
-cd /home2/datingsi/backend
+set -e
 
-echo "Starting deploy..."
+export NODE=/home2/datingsi/nodevenv/backend/18/bin/node
+export NPM=/home2/datingsi/nodevenv/backend/18/bin/npm
+export WORKDIR=/home2/datingsi/backend
 
-npm install --production
+echo "=== Deploying pre-built artifacts ==="
+cd "$WORKDIR"
 
-npx prisma generate
+echo "=== Installing production dependencies ==="
+$NPM ci --omit=dev
 
-npx prisma migrate deploy
+echo "=== Generating Prisma client ==="
+$NPM exec prisma generate
 
-echo "Deploy complete"
+echo "=== Running Prisma migrations ==="
+$NPM exec prisma migrate deploy
+
+echo "=== Restarting Passenger ==="
+mkdir -p "$WORKDIR/tmp"
+touch "$WORKDIR/tmp/restart.txt"
+
+echo "=== Deploy complete ==="

@@ -1,10 +1,20 @@
 ---
 deployment:
   tasks:
-    - export FRONTPATH=/home2/datingsi/givetoafrica.net/
     - export BACKENDPATH=/home2/datingsi/backend/
-    - cp -R dist/. $FRONTPATH
-    - cp -R dist/server/. $BACKENDPATH
-    - cp -R prisma $BACKENDPATH
-    - cp package.json $BACKENDPATH
-    - cp .env $BACKENDPATH
+    - export FRONTPATH=/home2/datingsi/givetoafrica.net/
+    - /bin/rm -rf $BACKENDPATH/*
+    - /bin/rm -rf $FRONTPATH/*
+    - /bin/cp -R dist/assets $FRONTPATH
+    - /bin/cp -R dist/blogs $FRONTPATH
+    - /bin/cp -R dist/img $FRONTPATH
+    - /bin/cp dist/index.html $FRONTPATH
+    - /bin/cp dist/favicon.ico $FRONTPATH
+    - /bin/cp dist/favicon.svg $FRONTPATH
+    - /bin/cp dist/logo-full.svg $FRONTPATH
+    - /bin/cp -R dist/server $BACKENDPATH
+    - /bin/cp -R prisma $BACKENDPATH
+    - /bin/cp package.json $BACKENDPATH
+    - /bin/cp package-lock.json $BACKENDPATH
+    - /bin/mkdir -p $BACKENDPATH/tmp
+    - /bin/touch $BACKENDPATH/tmp/restart.txt
