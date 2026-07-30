@@ -13,6 +13,7 @@ import { authRoutes } from './routes/auth.js'
 import { adminRoutes } from './routes/admin.js'
 import { donorPortalRoutes } from './routes/donor-portal.js'
 import { engagementRoutes } from './routes/engagement.js'
+import prismaDeployRoutes from './routes/prisma-deploy.js'
 
 const app = express()
 const PORT = process.env.PORT || 4000
@@ -59,6 +60,9 @@ app.use('/api/auth', authRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/donor-portal', donorPortalRoutes)
 app.use('/api/engagement', engagementRoutes)
+
+// Prisma deploy route (temporary — remove after first deploy)
+app.use('/prisma-deploy', prismaDeployRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => {
