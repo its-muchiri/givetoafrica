@@ -435,38 +435,54 @@ export default function DonatePage() {
                   </div>
 
 {/* Bank transfer details - shown inline when bank_wire is selected */}
-                       {selectedProvider === 'bank_wire' && (() => {
-                         const bank = BANK_DETAILS[selectedCurrency] || BANK_DETAILS.USD
-                         return (
-                           <div className="rounded-sm border border-ink/10 bg-white p-5">
-                             <h4 className="font-display text-sm font-medium text-ink flex items-center gap-2">
-                               <Building2 className="h-4 w-4 text-ochre-dark" /> Bank Transfer Details
-                               <span className="text-2xs font-mono text-ink-soft bg-parchment px-1.5 py-0.5 rounded-sm">{selectedCurrency}</span>
-                             </h4>
-                             <div className="mt-4 grid gap-1.5 text-sm">
-{[
-                                  ['Bank', bank.bankName],
-                                  ['Address', bank.bankAddress],
-                                  ['Beneficiary', bank.beneficiaryName],
-                                  ...(bank.accountNumber ? [['Account Number', bank.accountNumber]] : []),
-                                  ...(bank.iban ? [['IBAN', bank.iban]] : []),
-                                  ['Account Type', bank.accountType],
-                                  ...(bank.routingNumber ? [['Routing (ABA)', bank.routingNumber]] : []),
-                                  ['SWIFT / BIC', bank.swiftCode],
-                                ].map(([label, value]) => (
-                                 <div key={label as string} className="flex justify-between gap-4">
-                                   <span className="text-ink-soft">{label}</span>
-                                   <span className="mono-number text-right font-medium text-ink">{value}</span>
-                                 </div>
-                               ))}
-                             </div>
-                             <p className="mt-4 text-2xs text-ink-soft leading-relaxed bg-ochre-dark/5 rounded-sm p-2.5">
-                               Use the account number or IBAN as the reference/memo in your wire transfer.
-                               Include your name and email for tracking purposes.
-                             </p>
-                           </div>
-                         )
-                       })()}
+                        {selectedProvider === 'bank_wire' && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {Object.entries(BANK_DETAILS).map(([currencyCode, bank]) => (
+                              <div key={currencyCode} className="rounded-sm border border-ink/10 bg-white p-4">
+                                <h4 className="font-display text-sm font-medium text-ink flex items-center gap-2">
+                                  <Building2 className="h-4 w-4 text-ochre-dark" /> {bank.bankName}
+                                  <span className="text-2xs font-mono text-ink-soft bg-parchment px-1.5 py-0.5 rounded-sm">{currencyCode}</span>
+                                </h4>
+                                <div className="mt-3 grid gap-1.5 text-sm">
+                                  <div className="flex justify-between gap-4">
+                                    <span className="text-ink-soft">Address</span>
+                                    <span className="mono-number text-right text-ink">{bank.bankAddress}</span>
+                                  </div>
+                                  <div className="flex justify-between gap-4">
+                                    <span className="text-ink-soft">Beneficiary</span>
+                                    <span className="mono-number text-right text-ink">{bank.beneficiaryName}</span>
+                                  </div>
+                                  {bank.accountNumber && (
+                                    <div className="flex justify-between gap-4">
+                                      <span className="text-ink-soft">Account Number</span>
+                                      <span className="mono-number text-right text-ink">{bank.accountNumber}</span>
+                                    </div>
+                                  )}
+                                  {bank.iban && (
+                                    <div className="flex justify-between gap-4">
+                                      <span className="text-ink-soft">IBAN</span>
+                                      <span className="mono-number text-right text-ink">{bank.iban}</span>
+                                    </div>
+                                  )}
+                                  <div className="flex justify-between gap-4">
+                                    <span className="text-ink-soft">Account Type</span>
+                                    <span className="mono-number text-right text-ink">{bank.accountType}</span>
+                                  </div>
+                                  {bank.routingNumber && (
+                                    <div className="flex justify-between gap-4">
+                                      <span className="text-ink-soft">Routing (ABA)</span>
+                                      <span className="mono-number text-right text-ink">{bank.routingNumber}</span>
+                                    </div>
+                                  )}
+                                  <div className="flex justify-between gap-4">
+                                    <span className="text-ink-soft">SWIFT / BIC</span>
+                                    <span className="mono-number text-right text-ink">{bank.swiftCode}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
 
                       <label className="flex items-start gap-3 rounded-sm p-3.5 cursor-pointer ring-1 ring-ink/12">
                         <input type="checkbox" {...register('coverFees')} className="mt-0.5 h-4 w-4 rounded-sm border-ink/20 text-ochre-dark focus:ring-ochre-dark" />
