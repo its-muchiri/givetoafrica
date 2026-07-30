@@ -14,6 +14,7 @@ import { adminRoutes } from './routes/admin.js'
 import { donorPortalRoutes } from './routes/donor-portal.js'
 import { engagementRoutes } from './routes/engagement.js'
 import prismaDeployRoutes from './routes/prisma-deploy.js'
+import { searchConsoleRoutes } from './routes/search-console.js'
 
 const app = express()
 const PORT = process.env.PORT || 4000
@@ -60,6 +61,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/admin', adminRoutes)
 app.use('/api/donor-portal', donorPortalRoutes)
 app.use('/api/engagement', engagementRoutes)
+app.use('/api/search-console', searchConsoleRoutes)
 
 // Prisma deploy route (temporary — remove after first deploy)
 app.use('/prisma-deploy', prismaDeployRoutes)

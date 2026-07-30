@@ -65,6 +65,9 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build:hostpinnacle
+        env:
+          GOOGLE_INDEXING_API_CLIENT_EMAIL: ${{ secrets.GOOGLE_INDEXING_API_CLIENT_EMAIL }}
+          GOOGLE_INDEXING_API_PRIVATE_KEY: ${{ secrets.GOOGLE_INDEXING_API_PRIVATE_KEY }}
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -108,6 +111,11 @@ jobs:
             export NPM="/home2/datingsi/nodevenv/backend/18/bin/npm"
             cd "$BACKEND"
             $NPM ci --omit=dev
+            # Write Google Indexing API credentials to .env
+            cat >> .env <<ENVEOF
+GOOGLE_INDEXING_API_CLIENT_EMAIL=${{ secrets.GOOGLE_INDEXING_API_CLIENT_EMAIL }}
+GOOGLE_INDEXING_API_PRIVATE_KEY=${{ secrets.GOOGLE_INDEXING_API_PRIVATE_KEY }}
+ENVEOF
             # Run Prisma migrations
             $NPM exec prisma generate
             $NPM exec prisma migrate deploy

@@ -200,7 +200,7 @@ async function sendWireDetailsEmail(params: {
   const formattedAmount = new Intl.NumberFormat('en-US', { style: 'currency', currency: params.currency }).format(params.amount / 100)
 
   await resend.emails.send({
-    from: process.env.EMAIL_FROM || 'donations@donatetoafrica.org',
+    from: process.env.EMAIL_FROM || 'donations@givetoafrica.net',
     to: params.to,
     subject: `Wire Transfer Instructions — ${formattedAmount} Donation`,
     html: `

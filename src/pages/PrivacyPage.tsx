@@ -140,7 +140,7 @@ function PrivacyContent() {
                 <li><strong>Right to Lodge a Complaint:</strong> You have the right to file a complaint with your local data protection authority.</li>
               </ul>
               <p className="mt-3">
-                To exercise any of these rights, please contact us at privacy@donatetoafrica.org. We will respond to your request within 30 days.
+                To exercise any of these rights, please contact us at privacy@givetoafrica.net. We will respond to your request within 30 days.
               </p>
             </section>
 
@@ -158,7 +158,7 @@ function PrivacyContent() {
                 <li><strong>Right to Complain:</strong> You may file a complaint with the Information Regulator of South Africa if you believe your rights have been violated.</li>
               </ul>
               <p className="mt-3">
-                For POPIA-related inquiries, please contact our Information Officer at popia@donatetoafrica.org.
+                For POPIA-related inquiries, please contact our Information Officer at popia@givetoafrica.net.
               </p>
             </section>
 
@@ -201,7 +201,7 @@ function PrivacyContent() {
             <section id="childrens-privacy">
               <h2 className="font-display text-2xl font-medium text-ink mb-3">10. Children's Privacy</h2>
               <p>
-                Our services are not directed to individuals under the age of 16. We do not knowingly collect personal information from children under 16. If we become aware that we have collected personal information from a child under 16 without parental consent, we will take steps to delete that information promptly. If you believe that a child has provided us with personal information, please contact us at privacy@donatetoafrica.org.
+                Our services are not directed to individuals under the age of 16. We do not knowingly collect personal information from children under 16. If we become aware that we have collected personal information from a child under 16 without parental consent, we will take steps to delete that information promptly. If you believe that a child has provided us with personal information, please contact us at privacy@givetoafrica.net.
               </p>
             </section>
 
@@ -222,9 +222,9 @@ function PrivacyContent() {
               <div className="rounded-xl bg-parchment p-5 space-y-2 text-sm text-ink-soft">
                 <p><strong>GiveDirectly Inc.</strong></p>
                 <p>123 Impact Avenue, Washington, DC 20001, United States</p>
-                <p>Email: privacy@donatetoafrica.org</p>
+                <p>Email: privacy@givetoafrica.net</p>
                 <p>Phone: +1 (202) 555-1234</p>
-                <p>Data Protection Officer: dpo@donatetoafrica.org</p>
+                <p>Data Protection Officer: dpo@givetoafrica.net</p>
               </div>
             </section>
           </div>

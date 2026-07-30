@@ -5,7 +5,7 @@ import BlogArticleBody from '@/components/BlogArticleBody'
 import BlogSidebarCTA from '@/components/BlogSidebarCTA'
 import Seo from '@/components/Seo'
 
-const SITE_URL = 'https://donatetoafrica.org'
+const SITE_URL = 'https://givetoafrica.net'
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>()

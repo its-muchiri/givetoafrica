@@ -350,23 +350,24 @@ function main() {
 
   const wb = XLSX.readFile(xlsxPath)
 
-  // Sheet 1 keywords
-  const ws1 = wb.Sheets[wb.SheetNames[0]]
-  const data1 = XLSX.utils.sheet_to_json(ws1, { header: 1 })
-  const keywords1 = data1.filter((r: any) => r[0] && r[0].toString().trim()).map((r: any) => r[0].toString().trim())
+  // Read all sheet keywords
+  const allRawKeywords: string[] = []
+  for (let s = 0; s < wb.SheetNames.length; s++) {
+    const ws = wb.Sheets[wb.SheetNames[s]]
+    const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
+    const raw = data.filter((r: any) => r[0] && r[0].toString().trim()).map((r: any) => r[0].toString().trim())
+    // Remove numeric prefixes (e.g. "1. keyword") for sheets beyond the first
+    const keywords = s === 0 ? raw : raw.filter((k: string) => !k.match(/^\d+\./)).map((k: string) => k.replace(/^\d+\.\s*/, ''))
+    allRawKeywords.push(...keywords)
+    console.log(`Sheet ${s + 1} (${wb.SheetNames[s]}): ${keywords.length} keywords`)
+  }
 
-  // Sheet 2 keywords
-  const ws2 = wb.Sheets[wb.SheetNames[1]]
-  const data2 = XLSX.utils.sheet_to_json(ws2, { header: 1 })
-  const rawKw2 = data2.filter((r: any) => r[0] && r[0].toString().trim()).map((r: any) => r[0].toString().trim())
-  const sheet2Keywords = rawKw2.filter((k: string) => k.match(/^\d/)).map((k: string) => k.replace(/^\d+\.\s*/, ''))
-
-  console.log(`Sheet1: ${keywords1.length} | Sheet2: ${sheet2Keywords.length}`)
+  console.log(`Total raw keywords across all sheets: ${allRawKeywords.length}`)
 
   // Deduplicate
   const seen = new Set<string>()
   const allKeywords: string[] = []
-  for (const kw of [...keywords1, ...sheet2Keywords]) {
+  for (const kw of allRawKeywords) {
     const norm = kw.toLowerCase().trim()
     if (!seen.has(norm)) {
       seen.add(norm)
@@ -425,7 +426,7 @@ function main() {
     usedMetaDescs.add(metaDesc)
 
     // Derived keyword title
-    const kwClean = keyword.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
+    const kwClean = keyword.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '').trim()
     const kwTitle = kwClean.split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 
     // LSI keywords

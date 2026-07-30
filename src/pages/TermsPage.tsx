@@ -22,7 +22,7 @@ export default function TermsPage() {
             <section>
               <h2 className="font-display text-2xl font-medium text-ink mb-3">1. Acceptance of Terms</h2>
               <p>
-                By accessing or using the GiveDirectly website (donatetoafrica.org) and related services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website or services. These terms apply to all visitors, donors, and users of the site. We reserve the right to modify these terms at any time, and your continued use of the site constitutes acceptance of any changes.
+                By accessing or using the GiveDirectly website (givetoafrica.net) and related services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website or services. These terms apply to all visitors, donors, and users of the site. We reserve the right to modify these terms at any time, and your continued use of the site constitutes acceptance of any changes.
               </p>
             </section>
 
@@ -83,7 +83,7 @@ export default function TermsPage() {
                 GiveDirectly processes donations in good faith and generally all donations are final. However, we understand that mistakes can happen. The following refund policy applies:
               </p>
               <ul className="list-disc list-inside space-y-1.5">
-                <li><strong>Accidental Donations:</strong> If you made a donation by mistake (wrong amount, wrong payment method), you may request a refund within 30 calendar days of the transaction date by emailing support@donatetoafrica.org.</li>
+                <li><strong>Accidental Donations:</strong> If you made a donation by mistake (wrong amount, wrong payment method), you may request a refund within 30 calendar days of the transaction date by emailing support@givetoafrica.net.</li>
                 <li><strong>Duplicate Donations:</strong> If you were charged more than once for the same donation, we will promptly issue a full refund for the duplicate charge(s). Contact us with your transaction reference number.</li>
                 <li><strong>Failed Recurring Charges:</strong> If a retry charge was processed but you intended to cancel, we will refund the charge if you contact us within 15 business days.</li>
                 <li><strong>No Refund for Completed Transactions:</strong> Donations that have already been allocated to programs or projects are generally non-refundable. In exceptional circumstances, a refund may be considered at GiveDirectly's sole discretion.</li>
@@ -99,7 +99,7 @@ export default function TermsPage() {
               </p>
               <ul className="list-disc list-inside space-y-1.5">
                 <li>It is your responsibility to ensure your email address is correct so you receive your receipt.</li>
-                <li>Duplicate receipts can be requested by contacting support@donatetoafrica.org.</li>
+                <li>Duplicate receipts can be requested by contacting support@givetoafrica.net.</li>
                 <li>GiveDirectly is not responsible for your individual tax situation. Please consult a qualified tax professional for advice specific to your circumstances.</li>
               </ul>
             </section>
@@ -149,7 +149,7 @@ export default function TermsPage() {
               <div className="rounded-xl bg-parchment p-5 space-y-2 text-sm text-ink-soft">
                 <p><strong>GiveDirectly Inc.</strong></p>
                 <p>123 Impact Avenue, Washington, DC 20001, United States</p>
-                <p>Email: legal@donatetoafrica.org</p>
+                <p>Email: legal@givetoafrica.net</p>
                 <p>Phone: +1 (202) 555-1234</p>
               </div>
             </section>

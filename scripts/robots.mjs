@@ -8,7 +8,7 @@ const DIST = join(__dirname, '..', 'dist')
 const robots = `User-agent: *
 Allow: /
 
-Sitemap: https://donatetoafrica.org/sitemap.xml`
+Sitemap: https://givetoafrica.net/sitemap.xml`
 
 writeFileSync(join(DIST, 'robots.txt'), robots)
 console.log('Generated robots.txt')

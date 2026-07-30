@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const SITE_URL = 'https://donatetoafrica.org'
+const SITE_URL = 'https://givetoafrica.net'
 
 interface SeoProps {
   title?: string

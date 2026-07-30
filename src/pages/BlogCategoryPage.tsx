@@ -30,7 +30,7 @@ export default function BlogCategoryPage() {
     )
   }
 
-  const SITE_URL = 'https://donatetoafrica.org'
+  const SITE_URL = 'https://givetoafrica.net'
   const categoryUrl = `${SITE_URL}/blog/category/${category.slug}`
   const itemListElements = posts.map((post, index) => ({
     "@type": "ListItem",

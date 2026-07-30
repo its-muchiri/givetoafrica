@@ -63,6 +63,8 @@ export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [donorSearch, setDonorSearch] = useState('')
   const [adminUser, setAdminUser] = useState<{ name: string; email: string; role: string } | null>(null)
+  const [googleConfigured, setGoogleConfigured] = useState(false)
+  const [googleSubmitting, setGoogleSubmitting] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -86,6 +88,34 @@ export default function AdminDashboardPage() {
   function handleLogout() {
     localStorage.removeItem('admin_session')
     navigate('/admin/login')
+  }
+
+  useEffect(() => {
+    fetch('/api/search-console/status')
+      .then((r) => r.json())
+      .then((data) => setGoogleConfigured(data.configured))
+      .catch(() => setGoogleConfigured(false))
+  }, [])
+
+  async function handleNotifyGoogle() {
+    setGoogleSubmitting(true)
+    try {
+      const res = await fetch('/api/search-console/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: 'https://givetoafrica.net/blog' }),
+      })
+      const data = await res.json()
+      if (data.ok) {
+        alert(`Submitted ${data.submitted} URL(s) to Google for indexing`)
+      } else {
+        alert(`Failed: ${data.error}`)
+      }
+    } catch {
+      alert('Failed to submit URLs to Google')
+    } finally {
+      setGoogleSubmitting(false)
+    }
   }
 
   const filteredDonors = donors.filter(
@@ -526,6 +556,24 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
 
+              {/* Google Search Console */}
+              <div className="mt-6 card">
+                <h2 className="font-display text-lg font-medium text-ink">Google Search Console</h2>
+                <p className="mt-1 text-sm text-ink-soft">Auto-submit new blog posts for indexing.</p>
+                <div className="mt-4 flex items-center gap-3">
+                  <span className={cn(
+                    'inline-flex h-2 w-2 rounded-full',
+                    googleConfigured ? 'bg-savanna' : 'bg-red-500'
+                  )} />
+                  <span className="text-sm text-ink-soft">
+                    {googleConfigured ? 'API configured — posts auto-submitted on build' : 'API not configured — add GOOGLE_INDEXING_API_CLIENT_EMAIL and GOOGLE_INDEXING_API_PRIVATE_KEY'}
+                  </span>
+                </div>
+  <button className="mt-3 btn-secondary text-sm" disabled={googleSubmitting} onClick={handleNotifyGoogle}>
+    Resubmit All Blog Posts
+  </button>
+              </div>
+
               <div className="mt-6 card overflow-hidden p-0">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -588,7 +636,7 @@ export default function AdminDashboardPage() {
                     </div>
                     <div>
                       <label className="label-text">Email</label>
-                      <input type="email" defaultValue="admin@donatetoafrica.org" className="input-field" />
+                      <input type="email" defaultValue="admin@givetoafrica.net" className="input-field" />
                     </div>
                   </div>
                   <div>

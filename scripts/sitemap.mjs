@@ -6,7 +6,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const DIST = join(ROOT, 'dist')
 
-const SITE_URL = 'https://donatetoafrica.org'
+const SITE_URL = 'https://givetoafrica.net'
 
 const STATIC_ROUTES = [
   { path: '/', priority: 1.0, changefreq: 'weekly' },

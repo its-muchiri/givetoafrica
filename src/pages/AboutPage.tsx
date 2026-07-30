@@ -418,7 +418,7 @@ deliver
               </div>
             </div>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-ink-soft">
-              <span className="flex items-center gap-2"><Mail className="h-4 w-4 text-ochre-dark" /> info@donatetoafrica.org</span>
+              <span className="flex items-center gap-2"><Mail className="h-4 w-4 text-ochre-dark" /> info@givetoafrica.net</span>
               <span className="flex items-center gap-2"><Phone className="h-4 w-4 text-savanna" /> +1 (202) 555-0187</span>
               <span className="flex items-center gap-2"><BookOpen className="h-4 w-4 text-ochre-dark" /> Annual reports publicly available</span>
             </div>

@@ -3,7 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "engines": { "node": "20.x" },
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "vite",
     "dev:server": "tsx watch server/index.ts",
@@ -11,7 +13,7 @@
     "build": "tsc && vite build",
     "build:ssg": "tsc && vite build && node scripts/sitemap.mjs && node scripts/robots.mjs && node scripts/prerender.mjs",
     "build:server": "tsc -p tsconfig.server.json",
-    "build:hostpinnacle": "npm run build:server && npm run build:ssg",
+    "build:hostpinnacle": "npm run build:server && npm run build:ssg && npm run notify-google:site",
     "start": "node dist/server/index.js",
     "start:pm2": "pm2 start dist/server/index.js --name givetoafrica",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -24,7 +26,9 @@
     "db:studio": "prisma studio",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "notify-google": "node scripts/notify-google.mjs",
+    "notify-google:site": "node scripts/notify-google.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
@@ -37,6 +41,7 @@
     "express": "^4.19.2",
     "express-rate-limit": "^7.2.0",
     "framer-motion": "^11.2.10",
+    "googleapis": "^173.0.0",
     "helmet": "^7.1.0",
     "lucide-react": "^0.390.0",
     "morgan": "^1.10.0",
