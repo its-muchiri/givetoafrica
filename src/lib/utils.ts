@@ -85,7 +85,7 @@ export const AFRICAN_COUNTRIES = [
   'Equatorial Guinea', 'São Tomé and Príncipe', 'Burundi', 'South Sudan',
 ]
 
-export type PaymentProviderId = 'nowpayments' | 'bank_wire'
+export type PaymentProviderId = 'nowpayments' | 'bank_wire' | 'paypal'
 
 export interface PaymentMethod {
   id: PaymentProviderId
@@ -111,6 +111,14 @@ export const PAYMENT_METHODS: PaymentMethod[] = [
     description: 'Direct wire / SEPA transfer — manual confirmation',
     provider: 'Bank Wire',
     trustBadge: 'Manual transfer',
+    supportsRecurring: false,
+  },
+  {
+    id: 'paypal',
+    label: 'PayPal',
+    description: 'Pay with PayPal — secure, no account needed for the donor',
+    provider: 'PayPal',
+    trustBadge: 'PayPal',
     supportsRecurring: false,
   },
 ]

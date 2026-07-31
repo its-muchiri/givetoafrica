@@ -1,0 +1,136 @@
+<div style="max-width:800px;margin:40px auto;padding:20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <h2 style="color:#1a1a2e;margin-bottom:8px;">Donate / Pay with PayPal</h2>
+  <p style="color:#555;margin-bottom:24px;">No account needed for the donor. Payments go directly to your PayPal inbox.</p>
+
+  <!-- ============================================================ -->
+  <!-- SINGLE BUTTON EXAMPLE                                       -->
+  <!--                                                             -->
+  <!-- ✏️  REPLACE THIS with your real PayPal email address:       -->
+  <!--     <input type='hidden' name='business'                    -->
+  <!--            value='your-paypal-email@example.com'>           -->
+  <!--                                                             -->
+  <!-- ✏️  CHANGE these for your product/service:                  -->
+  <!--     item_name  → describe what the donor is paying for     -->
+  <!--     amount     ← set the price (e.g. 25.00)                -->
+  <!--     currency_code ← USD, EUR, GBP, etc.                    -->
+  <!--                                                             -->
+  <!-- ✏️  POINT these URLs to your own pages:                    -->
+  <!--     return        → thank-you / confirmation page          -->
+  <!--     cancel_return → page shown if donor cancels             -->
+  <!--                                                             -->
+  <!-- 📝  This method does NOT require a PayPal Business API     -->
+  <!--     app, client ID, secret, or SDK. Just a valid PayPal   -->
+  <!--     account email is enough.                               -->
+  <!-- ============================================================ -->
+
+  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" role="form" aria-label="Pay with PayPal for GiveToAfrica Donation">
+    <input type="hidden" name="cmd" value="_donations">
+    <input type="hidden" name="business" value="your-paypal-email@example.com">
+    <input type="hidden" name="item_name" value="GiveToAfrica Donation">
+    <input type="hidden" name="amount" value="25.00">
+    <input type="hidden" name="currency_code" value="USD">
+    <input type="hidden" name="no_shipping" value="1">
+    <input type="hidden" name="no_note" value="1">
+    <input type="hidden" name="return" value="https://givetoafrica.net/thank-you">
+    <input type="hidden" name="cancel_return" value="https://givetoafrica.net/donate">
+    <!-- Optional: Uncomment below if you have an IPN listener for server-side payment notifications -->
+    <!-- <input type="hidden" name="notify_url" value="https://givetoafrica.net/api/webhooks/paypal"> -->
+    <button type="submit" class="paypal-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:8px;" aria-hidden="true">
+        <path d="M7.5 4C5.5 4 4 5.5 4 7.5 4 9.5 5.5 11 7.5 11c1 0 2-.3 2.8-.8l-.3 1.3c-.4.2-.9.3-1.4.3-1.4 0-2.5-1.1-2.5-2.5 0-1.4 1.1-2.5 2.5-2.5.6 0 1.2.2 1.6.6l1.2-1.2C10.6 4.6 9.1 4 7.5 4zM16.5 13c1.9 0 3.5-1.1 3.5-2.5 0-1.4-1.1-2.5-2.5-2.5-.7 0-1.3.2-1.8.6l-1.2-1.2c.7-.4 1.5-.6 2.4-.6 2.5 0 4.5 2 4.5 4.5 0 1.9-1.4 3.4-3.3 3.9l.3 1.3c.5-.2 1-.3 1.5-.3 1.4 0 2.5 1.1 2.5 2.5 0 1.4-1.1 2.5-2.5 2.5-.7 0-1.3-.2-1.8-.6l-1.2 1.2c.7.4 1.5.6 2.4.6 3.6 0 6.5-2.9 6.5-6.5 0-2.8-2.1-5.1-4.8-5.4l-.4-1.4c1.7-.3 3.2-1.5 3.7-3.1.3-.9.1-2-.6-2.8-.6-.8-1.6-1.2-2.6-1.2-.7 0-1.3.2-1.8.6l1.2 1.2C18.3 5.2 17.6 5 17 5c-1.7 0-3 1-3.7 2.4l-1.3-.5c.6-1.5 2.1-2.6 3.9-2.6 2.3 0 4.2 1.6 4.7 3.7l1.4.4c.1 1.4-.6 2.8-1.9 3.7-.9.7-2.1 1-3.3.9l-1 1.7c1.3.5 2.3 1.6 2.6 3 1.2 0 2.2-1 2.5-2.4l1.4.4c-.4 1.7-1.9 3-3.9 3.5z" fill="#0070ba"/>
+      </svg>
+      Pay with PayPal
+    </button>
+  </form>
+
+  <!-- ============================================================ -->
+  <!-- MULTIPLE BUTTONS — DUPLICATE THE FORM BELOW                 -->
+  <!-- Change item_name and amount for each service/product       -->
+  <!-- ============================================================ -->
+  <hr style="margin:40px 0;border:none;border-top:1px solid #e0e0e0;">
+  <h3 style="color:#1a1a2e;">Other Donation Amounts</h3>
+
+  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" role="form" aria-label="Pay $50 with PayPal">
+    <input type="hidden" name="cmd" value="_donations">
+    <input type="hidden" name="business" value="your-paypal-email@example.com">
+    <input type="hidden" name="item_name" value="GiveToAfrica Donation — $50">
+    <input type="hidden" name="amount" value="50.00">
+    <input type="hidden" name="currency_code" value="USD">
+    <input type="hidden" name="no_shipping" value="1">
+    <input type="hidden" name="return" value="https://givetoafrica.net/thank-you">
+    <input type="hidden" name="cancel_return" value="https://givetoafrica.net/donate">
+    <button type="submit" class="paypal-btn paypal-btn--secondary">$50 — Give</button>
+  </form>
+
+  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" role="form" aria-label="Pay $100 with PayPal" style="margin-top:12px;">
+    <input type="hidden" name="cmd" value="_donations">
+    <input type="hidden" name="business" value="your-paypal-email@example.com">
+    <input type="hidden" name="item_name" value="GiveToAfrica Donation — $100">
+    <input type="hidden" name="amount" value="100.00">
+    <input type="hidden" name="currency_code" value="USD">
+    <input type="hidden" name="no_shipping" value="1">
+    <input type="hidden" name="return" value="https://givetoafrica.net/thank-you">
+    <input type="hidden" name="cancel_return" value="https://givetoafrica.net/donate">
+    <button type="submit" class="paypal-btn paypal-btn--secondary">$100 — Super Give</button>
+  </form>
+</div>
+
+<style>
+.paypal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  color: #fff;
+  background-color: #0070ba;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 112, 186, 0.3);
+  text-decoration: none;
+  user-select: none;
+}
+.paypal-btn:hover {
+  background-color: #005ea6;
+  box-shadow: 0 4px 16px rgba(0, 112, 186, 0.4);
+  transform: translateY(-1px);
+}
+.paypal-btn:active {
+  background-color: #004a80;
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 112, 186, 0.2);
+}
+.paypal-btn:focus-visible {
+  outline: 3px solid #ffc439;
+  outline-offset: 2px;
+}
+.paypal-btn--secondary {
+  background-color: #ffc439;
+  color: #1a1a2e;
+  box-shadow: 0 2px 8px rgba(255, 196, 57, 0.3);
+}
+.paypal-btn--secondary:hover {
+  background-color: #e6a800;
+  box-shadow: 0 4px 16px rgba(255, 196, 57, 0.4);
+}
+.paypal-btn--secondary:active {
+  background-color: #cc9500;
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(255, 196, 57, 0.2);
+}
+.paypal-btn--secondary:focus-visible {
+  outline-color: #0070ba;
+}
+@media (max-width: 600px) {
+  .paypal-btn {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 15px;
+  }
+}
+</style>

@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
 import {
   Heart, Shield, Building2, Check,
-  Lock, ChevronDown, Info, Repeat, Zap, Globe, Bitcoin,
+  Lock, ChevronDown, Info, Repeat, Zap, Globe, Bitcoin, Wallet,
 } from 'lucide-react'
 import {
   cn, CURRENCIES, SUGGESTED_AMOUNTS,
@@ -27,7 +27,7 @@ const donationSchema = z.object({
   isAnonymous: z.boolean(),
   coverFees: z.boolean(),
   paymentMethod: z.enum(['crypto', 'bank_transfer']),
-  provider: z.enum(['nowpayments', 'bank_wire']),
+  provider: z.enum(['nowpayments', 'bank_wire', 'paypal']),
 })
 
 type DonationFormData = z.infer<typeof donationSchema>
@@ -40,6 +40,7 @@ const campaignList = [
 const PROVIDER_ICONS: Record<PaymentProviderId, typeof Heart> = {
   nowpayments: Bitcoin,
   bank_wire: Building2,
+  paypal: Wallet,
 }
 
 const BANK_DETAILS: Record<string, { bankName: string; bankAddress: string; routingNumber?: string; swiftCode: string; accountNumber?: string; iban?: string; accountType: string; beneficiaryName: string }> = {
@@ -65,6 +66,7 @@ const BANK_DETAILS: Record<string, { bankName: string; bankAddress: string; rout
 const PROVIDER_METHOD_MAP: Record<PaymentProviderId, DonationFormData['paymentMethod']> = {
   nowpayments: 'crypto',
   bank_wire: 'bank_transfer',
+  paypal: 'bank_transfer',
 }
 
 export default function DonatePage() {
@@ -483,6 +485,32 @@ export default function DonatePage() {
                             ))}
                           </div>
                         )}
+
+                      {/* PayPal — shown inline when paypal is selected */}
+                      {selectedProvider === 'paypal' && (
+                        <div className="rounded-sm border border-ink/10 bg-white p-4">
+                          <h4 className="font-display text-sm font-medium text-ink flex items-center gap-2">
+                            <Wallet className="h-4 w-4 text-[#0070ba]" /> PayPal
+                          </h4>
+                          <p className="mt-2 text-sm text-ink-soft">
+                            You will be redirected to PayPal to complete your payment securely. No PayPal account is required.
+                          </p>
+                          <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" className="mt-3">
+                            <input type="hidden" name="cmd" value="_donations" />
+                            <input type="hidden" name="business" value="calliecortez333@gmail.com" />
+                            <input type="hidden" name="item_name" value={`GiveToAfrica Donation — ${currency.symbol}${totalAmount / 100}`} />
+                            <input type="hidden" name="amount" value={(totalAmount / 100).toFixed(2)} />
+                            <input type="hidden" name="currency_code" value={currency.code} />
+                            <input type="hidden" name="no_shipping" value="1" />
+                            <input type="hidden" name="no_note" value="1" />
+                            <input type="hidden" name="return" value="https://givetoafrica.net/thank-you" />
+                            <input type="hidden" name="cancel_return" value="https://givetoafrica.net/donate" />
+                            <button type="submit" className="btn-primary w-full py-3 text-sm">
+                              Pay with PayPal
+                            </button>
+                          </form>
+                        </div>
+                      )}
 
                       <label className="flex items-start gap-3 rounded-sm p-3.5 cursor-pointer ring-1 ring-ink/12">
                         <input type="checkbox" {...register('coverFees')} className="mt-0.5 h-4 w-4 rounded-sm border-ink/20 text-ochre-dark focus:ring-ochre-dark" />
