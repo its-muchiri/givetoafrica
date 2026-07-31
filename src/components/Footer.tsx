@@ -80,8 +80,8 @@ export default function Footer() {
             </p>
 
             <div className="mt-6 space-y-2.5 text-sm">
-              <a href="mailto:info@givetoafrica.org" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
-                <Mail className="h-4 w-4" /> info@givetoafrica.org
+              <a href="mailto:info@givetoafrica.net" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
+                <Mail className="h-4 w-4" /> info@givetoafrica.net
               </a>
               <a href="tel:+1234567890" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
                 <Phone className="h-4 w-4" /> +1 (234) 567-890

@@ -26,7 +26,7 @@ export async function sendReceiptEmail(params: SendReceiptEmailParams) {
   }).format(params.amount / 100)
 
   await getResend().emails.send({
-            from: process.env.EMAIL_FROM || 'receipts@givetoafrica.org',
+            from: process.env.EMAIL_FROM || 'receipts@givetoafrica.net',
     to: params.to,
     subject: `Thank you for your donation of ${formattedAmount} - GiveToAfrica`,
     html: `
@@ -75,7 +75,7 @@ export async function sendReceiptEmail(params: SendReceiptEmailParams) {
         <div style="text-align: center; padding: 20px 0; border-top: 1px solid #e7e7e7; margin-top: 30px;">
           <p style="color: #888; font-size: 12px;">
             GiveToAfrica Foundation · 123 Impact Avenue, Washington DC 20001<br>
-            <a href="mailto:info@givetoafrica.org" style="color: #ef5723;">info@givetoafrica.org</a>
+            <a href="mailto:info@givetoafrica.net" style="color: #ef5723;">info@givetoafrica.net</a>
           </p>
         </div>
       </body>
@@ -91,7 +91,7 @@ interface SendWelcomeEmailParams {
 
 export async function sendWelcomeEmail(to: string, donorName: string) {
   await getResend().emails.send({
-            from: process.env.EMAIL_FROM || 'welcome@givetoafrica.org',
+            from: process.env.EMAIL_FROM || 'welcome@givetoafrica.net',
     to,
     subject: `Welcome to GiveToAfrica, ${donorName}!`,
     html: `
@@ -122,7 +122,7 @@ export async function sendWelcomeEmail(to: string, donorName: string) {
         <div style="text-align: center; padding: 20px 0; border-top: 1px solid #e7e7e7; margin-top: 30px;">
           <p style="color: #888; font-size: 12px;">
             GiveToAfrica Foundation · 123 Impact Avenue, Washington DC 20001<br>
-            <a href="mailto:info@givetoafrica.org" style="color: #146B38;">info@givetoafrica.org</a>
+            <a href="mailto:info@givetoafrica.net" style="color: #146B38;">info@givetoafrica.net</a>
           </p>
         </div>
       </body>
@@ -133,7 +133,7 @@ export async function sendWelcomeEmail(to: string, donorName: string) {
 
 export async function sendNewsletterDigestEmail(to: string, subject: string, content: string) {
   await getResend().emails.send({
-            from: process.env.EMAIL_FROM || 'newsletter@givetoafrica.org',
+            from: process.env.EMAIL_FROM || 'newsletter@givetoafrica.net',
     to,
     subject: `GiveToAfrica Newsletter — ${subject}`,
     html: `
@@ -173,7 +173,7 @@ export async function sendMagicLinkEmail(email: string, token: string) {
   const magicLink = `${process.env.VITE_APP_URL}/auth/verify?token=${token}`
 
   await getResend().emails.send({
-    from: process.env.EMAIL_FROM || 'auth@givetoafrica.org',
+    from: process.env.EMAIL_FROM || 'auth@givetoafrica.net',
     to: email,
     subject: 'Sign in to GiveToAfrica',
     html: `

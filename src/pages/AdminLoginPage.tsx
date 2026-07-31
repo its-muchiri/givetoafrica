@@ -123,7 +123,7 @@ export default function AdminLoginPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@givedirectly.org"
+                    placeholder="admin@givetoafrica.net"
                     required
                     className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-sm text-white placeholder-white/30 focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/20"
                   />

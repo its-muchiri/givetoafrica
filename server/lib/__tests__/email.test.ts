@@ -14,7 +14,7 @@ vi.mock('resend', () => {
 describe('email', () => {
   beforeEach(() => {
     process.env.RESEND_API_KEY = 're_test_key'
-    process.env.EMAIL_FROM = 'test@givedirectly.org'
+    process.env.EMAIL_FROM = 'test@givetoafrica.net'
     process.env.VITE_APP_URL = 'http://localhost:3000'
   })
 

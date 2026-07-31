@@ -27,7 +27,7 @@ const faqs = [
     id: 'refunds',
     question: 'Can I get a refund?',
     answer:
-      "We understand that mistakes happen. If you made an accidental or duplicate donation, you can request a full refund within 30 calendar days of the transaction. Simply email support@givetoafrica.org with your name, email address used for the donation, and the transaction reference number. We aim to process all refund requests within 5-7 business days. Please note that for recurring donations, you can cancel future charges at any time through your donor portal. Refunds for completed charges follow the same 30-day policy.",
+      "We understand that mistakes happen. If you made an accidental or duplicate donation, you can request a full refund within 30 calendar days of the transaction. Simply email support@givetoafrica.net with your name, email address used for the donation, and the transaction reference number. We aim to process all refund requests within 5-7 business days. Please note that for recurring donations, you can cancel future charges at any time through your donor portal. Refunds for completed charges follow the same 30-day policy.",
   },
   {
     question: 'How do I manage my recurring donation?',

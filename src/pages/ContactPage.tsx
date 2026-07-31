@@ -138,7 +138,7 @@ function ContactContent({ submitted, setSubmitted }: { submitted: boolean; setSu
                     <div>
                       <div className="text-sm font-semibold text-ink">Email</div>
                       <a href="mailto:hello@givetoafrica.net" className="text-sm text-ochre-dark hover:text-ochre-dark font-medium">
-hello@givetoafrica.org
+hello@givetoafrica.net
                       </a>
                     </div>
                   </div>
@@ -214,7 +214,7 @@ hello@givetoafrica.org
                   If you're experiencing an issue with a recent donation or need immediate assistance with a
                   transaction, please email{' '}
                   <a href="mailto:support@givetoafrica.net" className="font-semibold underline">
-support@givetoafrica.org
+support@givetoafrica.net
                   </a>{' '}
                   with "Urgent" in the subject line.
                 </p>
