@@ -37,3 +37,4 @@ prisma/migrations/
 
 # Logs
 *.log
+dist/
