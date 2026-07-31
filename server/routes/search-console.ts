@@ -7,7 +7,7 @@ const CLIENT_EMAIL = process.env.GOOGLE_INDEXING_API_CLIENT_EMAIL || ''
 const PRIVATE_KEY = (process.env.GOOGLE_INDEXING_API_PRIVATE_KEY || '')
   .replace(/\\n/g, '\n')
 
-function getClient() {
+async function getClient() {
   if (!CLIENT_EMAIL || !PRIVATE_KEY) return null
 
   const auth = new google.auth.GoogleAuth({
@@ -20,6 +20,10 @@ function getClient() {
   return auth.getClient()
 }
 
+function makeIndexing(client: any) {
+  return google.indexing({ version: 'v3', auth: client })
+}
+
 router.post('/notify', async (_req, res) => {
   try {
     const { url } = _req.body as { url?: string }
@@ -27,7 +31,7 @@ router.post('/notify', async (_req, res) => {
       return res.status(400).json({ error: 'url is required' })
     }
 
-    const client = getClient()
+    const client = await getClient()
     if (!client) {
       return res.status(503).json({
         error: 'Google Indexing API not configured',
@@ -35,7 +39,7 @@ router.post('/notify', async (_req, res) => {
       })
     }
 
-    const indexing = google.indexing({ version: 'v3', auth: client })
+    const indexing = makeIndexing(client)
     await indexing.urlNotifications.publish({
       requestBody: {
         url,
@@ -57,7 +61,7 @@ router.post('/notify-batch', async (_req, res) => {
       return res.status(400).json({ error: 'urls array is required' })
     }
 
-    const client = getClient()
+    const client = await getClient()
     if (!client) {
       return res.status(503).json({
         error: 'Google Indexing API not configured',
@@ -65,31 +69,34 @@ router.post('/notify-batch', async (_req, res) => {
       })
     }
 
-    const indexing = google.indexing({ version: 'v3', auth: client })
+    const indexing = makeIndexing(client)
     let submitted = 0
     const failed: string[] = []
 
-    const chunks = []
-    for (let i = 0; i < urls.length; i += 100) {
-      chunks.push(urls.slice(i, i + 100))
+    const chunks: string[][] = []
+    for (let i = 0; i < urls.length; i += 50) {
+      chunks.push(urls.slice(i, i + 50))
     }
 
     for (const chunk of chunks) {
-      try {
-        await indexing.urlNotifications.batchPublish({
-          requestBody: { submissions: chunk.map((url) => ({ url, type: 'URL_UPDATED' })) },
-        })
-        submitted += chunk.length
-      } catch (err) {
-        for (const url of chunk) {
+      const results = await Promise.all(
+        chunk.map(async (url) => {
           try {
             await indexing.urlNotifications.publish({
               requestBody: { url, type: 'URL_UPDATED' },
             })
-            submitted++
+            return { url, success: true }
           } catch {
-            failed.push(url)
+            return { url, success: false }
           }
+        })
+      )
+
+      for (const result of results) {
+        if (result.success) {
+          submitted++
+        } else {
+          failed.push(result.url)
         }
       }
     }
