@@ -12,6 +12,9 @@ deployment:
     - /bin/cp dist/favicon.ico $FRONTPATH
     - /bin/cp dist/favicon.svg $FRONTPATH
     - /bin/cp dist/logo-full.svg $FRONTPATH
+    - /bin/cp dist/sitemap.xml $FRONTPATH
+    - /bin/cp dist/robots.txt $FRONTPATH
+    - /bin/cp .htaccess $FRONTPATH
     - /bin/cp -R dist/server/. $BACKENDPATH
     - /bin/cp -R prisma $BACKENDPATH
     - /bin/cp package.json $BACKENDPATH
