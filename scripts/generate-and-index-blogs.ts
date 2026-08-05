@@ -68,7 +68,7 @@ function extractCategory(keyword: string): string {
   if (lower.includes('visual') || lower.includes('blind') || lower.includes('vision') || lower.includes('eye') || lower.includes('cataract') || lower.includes('retinopathy')) return 'visual-impairments'
   if (lower.includes('hospice') || lower.includes('palliative') || lower.includes('end of life') || lower.includes('comfort care') || lower.includes('bereavement')) return 'hospices'
   if (lower.includes('mental health') || lower.includes('depression') || lower.includes('trauma') || lower.includes('counselling') || lower.includes('psycholog') || lower.includes('stigma') || lower.includes('psychosocial')) return 'mental-health'
-  if (lower.includes('hospital') || lower.includes('medical equipment') || lower.includes('healthcare staffing') || lower.includes 'medical supplies' || lower.includes('clinical training')) return 'hospitals'
+  if (lower.includes('hospital') || lower.includes('medical equipment') || lower.includes('healthcare staffing') || lower.includes('medical supplies') || lower.includes('clinical training')) return 'hospitals'
   return 'community'
 }
 
@@ -97,60 +97,174 @@ function generateArticle(keyword: string, location: string, categorySlug: string
   const focusKeyword = keyword.toLowerCase()
   const locationLower = location.toLowerCase()
   const categoryName = cat.name
+  const lsiKeywords = cat.lsiBase || []
 
-  const h1 = `${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location}`
+  const h1 = keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase() + ' in ' + location
 
-  const paragraphs = [
-    `<p>${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location} represents one of the most impactful ways to support sustainable development across the African continent. At GiveToAfrica, we channel donations directly into community-led initiatives that address the root causes of poverty, inequality, and lack of access to essential services. Your contribution, whether large or small, creates lasting change in the lives of vulnerable populations across ${location}.</p>`,
-    `<p>Every ${keyword.toLowerCase()} initiative we fund is designed to be transparent, measurable, and community-driven. We partner with local organisations and grassroots leaders who understand the unique challenges facing their communities. This ensures that your donation reaches the people who need it most and creates meaningful, long-term impact.</p>`,
-    `<h2>Why ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location} Matters</h2>`,
-    `<p>The need for ${keyword.toLowerCase()} in ${location} has never been greater. Communities across ${location} face interconnected challenges that require targeted, sustained support. GiveToAfrica has been working across the continent for years, delivering results that you can see and measure.</p>`,
-    `<p>When you donate to ${keyword.toLowerCase()} efforts in ${location}, you are not just giving money — you are investing in futures. Families gain access to resources they could never afford on their own. Children get the chance to learn, grow, and thrive. Communities become stronger and more self-sufficient.</p>`,
-    `<h3>Our Impact in ${location}</h3>`,
-    `<p>GiveToAfrica has supported hundreds of ${keyword.toLowerCase()}-related projects across ${location} and beyond. Our track record of accountability and results means that every shilling, dollar, or euro you donate is put to work effectively. We publish detailed reports on how funds are used, so you always know exactly where your contribution goes.</p>`,
-    `<h2>How Your Donation Helps</h2>`,
-    `<p>When you choose to ${keyword.toLowerCase()} in ${location} through GiveToAfrica, your donation goes directly to on-the-ground programmes. Here is how your contribution makes a difference:</p>`,
-    `<ul><li><strong>Direct community support:</strong> Funds reach local organisations and community leaders who implement ${keyword.toLowerCase()} projects on the ground in ${location}.</li></ul>`,
-    `<ul><li><strong>Transparent reporting:</strong> We provide regular updates on how your donation is being used, including photos, stories, and financial reports from the field.</li></ul>`,
-    `<ul><li><strong>Sustainable impact:</strong> Our ${keyword.toLowerCase()} initiatives in ${location} are designed to create lasting change, not just temporary relief. We focus on building capacity and empowering communities to help themselves.</li></ul>`,
-    `<ul><li><strong>Tax-deductible donations:</strong> GiveToAfrica is a registered 501(c)(3) charity, making your donation tax-deductible in the United States.</li></ul>`,
-    `<h2>Ways to Contribute</h2>`,
-    `<p>There are many ways to get involved with ${keyword.toLowerCase()} in ${location}. Whether you donate monthly, make a one-time gift, or sponsor a specific project, every contribution counts:</p>`,
-    `<ul><li><strong>Monthly giving:</strong> Set up a recurring donation to provide sustained support for ${keyword.toLowerCase()} programmes in ${location}.</li></ul>`,
-    `<ul><li><strong>One-time gifts:</strong> Make a single donation to fund a specific ${keyword.toLowerCase()} initiative in ${location}.</li></ul>`,
-    `<ul><li><strong>Corporate matching:</strong> If your employer offers matching gift programmes, your donation can be doubled at no extra cost to you.</li></ul>`,
-    `<ul><li><strong>Sponsor a project:</strong> Fund a specific ${keyword.toLowerCase()} project in ${location} and receive detailed updates on its progress.</li></ul>`,
-    `<h2>Popular ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} Initiatives in ${location}</h2>`,
-    `<p>GiveToAfrica supports a wide range of ${keyword.toLowerCase()} initiatives across ${location}. Our programmes are designed to address the most pressing needs in communities, from education and healthcare to economic empowerment and environmental conservation.</p>`,
-    `<h3>Community-Led Development</h3>`,
-    `<p>Our ${keyword.toLowerCase()} programmes in ${location} are led by local community members who understand the challenges their communities face. This grassroots approach ensures that solutions are culturally appropriate, sustainable, and effective.</p>`,
-    `<h3>Education and Skills Training</h3>`,
-    `<p>Education is at the heart of our ${keyword.toLowerCase()} mission in ${location}. We fund school construction, teacher training, scholarship programmes, and vocational training centres that equip young people with the skills they need to build better futures.</p>`,
-    `<h3>Healthcare Access</h3>`,
-    `<p>Access to quality healthcare remains a challenge in many parts of ${location}. Our ${keyword.toLowerCase()} initiatives fund mobile clinics, medical supplies, health worker training, and hospital equipment upgrades that save lives every day.</p>`,
-    `<h3>Economic Empowerment</h3>`,
-    `<p>We believe in empowering communities to lift themselves out of poverty. Our ${keyword.toLowerCase()} programmes in ${location} support microfinance, vocational training, cooperative farming, and small business development that create lasting economic opportunities.</p>`,
-    `<h2>How to Donate to ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location}</h2>`,
-    `<p>Donating to ${keyword.toLowerCase()} in ${location} is simple and secure through GiveToAfrica. Our online donation platform accepts credit cards, bank transfers, and cryptocurrency. You can also donate via PayPal or set up a recurring monthly gift.</p>`,
-    `<p><strong>To donate by credit card or PayPal:</strong> Visit our donate page at <a href="${BASE_URL}/donate">${BASE_URL}/donate</a> and select ${keyword.toLowerCase()} in ${location} as your cause.</p>`,
-    `<p><strong>To donate by bank transfer:</strong> Contact our team at <a href="mailto:info@givetoafrica.net">info@givetoafrica.net</a> for bank details and instructions.</p>`,
-    `<p><strong>To donate by check:</strong> Mail your check to GiveToAfrica, P.O. Box 12345, Nairobi, Kenya. Please note ${keyword.toLowerCase()} in ${location} in the memo line.</p>`,
-    `<h2>Frequently Asked Questions</h2>`,
-    `<p><strong>How can I donate to ${keyword.toLowerCase()} in ${location}?</strong> You can donate online at ${BASE_URL}/donate, by bank transfer, or by check. All donations are tax-deductible.</p>`,
-    `<p><strong>What impact does ${keyword.toLowerCase()} have in ${location}?</strong> Our ${keyword.toLowerCase()} programmes in ${location} have reached thousands of beneficiaries, delivering measurable improvements in education, healthcare, and economic opportunity.</p>`,
-    `<p><strong>Where does the money go for ${keyword.toLowerCase()} in ${location}?</strong> At least 85% of every donation goes directly to programme costs in ${location}. We maintain transparent financial reporting and publish annual reports.</p>`,
-    `<p><strong>Can I sponsor a specific ${keyword.toLowerCase()} project in ${location}?</strong> Yes! You can sponsor a specific project and receive detailed updates on its progress. Contact us at <a href="mailto:info@givetoafrica.net">info@givetoafrica.net</a> for details.</p>`,
-    `<p><strong>Is GiveToAfrica a registered charity?</strong> Yes, GiveToAfrica is a registered 501(c)(3) nonprofit organisation. Our tax ID is available on request.</p>`,
-    `<h2>Contact Us</h2>`,
-    `<p>For more information about ${keyword.toLowerCase()} in ${location}, or to discuss how your donation can make the biggest impact, contact us:</p>`,
-    `<ul><li><strong>Email:</strong> <a href="mailto:info@givetoafrica.net">info@givetoafrica.net</a></li></ul>`,
-    `<ul><li><strong>Phone:</strong> <a href="tel:+254700000000">+254 700 000 000</a></li></ul>`,
-    `<ul><li><strong>WhatsApp:</strong> <a href="https://wa.me/254700000000">Chat with us on WhatsApp</a></li></ul>`,
-    `<ul><li><strong>Address:</strong> GiveToAfrica, P.O. Box 12345, Nairobi, Kenya</li></ul>`,
-    `<p><a href="${BASE_URL}/donate">Donate now to ${keyword.toLowerCase()} in ${location}</a> and help us build a brighter future for African communities.</p>`,
-  ]
+  const sections: string[] = []
 
-  return paragraphs.join('\n')
+  // Introduction (300+ words)
+  sections.push(`<p>${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location} represents one of the most impactful and meaningful ways to support sustainable development across the African continent. At GiveToAfrica, we believe that every donation, no matter the size, has the power to transform lives, uplift communities, and create lasting change for generations to come. Our mission is simple yet profound: channel donations directly into community-led initiatives that address the root causes of poverty, inequality, and lack of access to essential services in ${location} and across Africa.</p>
+
+<p>When you choose to ${focusKeyword} in ${location}, you are joining a global movement of compassionate individuals who understand that real change comes from within. We do not believe in handouts; we believe in hand-ups. Every ${focusKeyword} initiative we fund is designed to be transparent, measurable, and community-driven, ensuring that your contribution reaches the people who need it most and creates meaningful, long-term impact that echoes far beyond the initial donation.</p>
+
+<p>Africa is a continent of extraordinary diversity, resilience, and potential. From the bustling markets of Nairobi to the rural villages of rural Ethiopia, from the coastal communities of Mozambique to the desert regions of the Sahel, the need for targeted, sustained support has never been greater. GiveToAfrica has been working across the continent for years, building relationships with local partners, understanding community needs at the grassroots level, and delivering results that you can see, touch, and measure. Our track record of accountability means that every shilling, dollar, or euro you donate is put to work effectively and efficiently.</p>
+
+<p>This article provides a comprehensive guide to ${keyword.toLowerCase()} in ${location}, covering why it matters, how your donation helps, the different ways you can contribute, and answers to frequently asked questions. Whether you are a first-time donor or a seasoned supporter, we hope this resource helps you make an informed decision about how to direct your generosity for maximum impact.</p>
+
+<p>We invite you to read through this guide, explore the various ${focusKeyword} programmes we support in ${location}, and consider how you can become part of the solution. The challenges facing communities in ${location} are significant, but so is the generosity of people around the world who believe in a better future for Africa. Together, we can build that future.</p>`)
+
+  // Why it matters section (300+ words)
+  sections.push(`<h2>Why ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location} Matters</h2>
+
+<p>The need for ${focusKeyword} in ${location} has never been greater. Communities across ${location} face interconnected challenges that require targeted, sustained, and well-coordinated support. Poverty, inequality, lack of access to education, inadequate healthcare infrastructure, food insecurity, and climate vulnerability are just some of the factors that compound the difficulties faced by vulnerable populations in ${location}. GiveToAfrica has been working across the continent for years, delivering results that you can see and measure, and our ${focusKeyword} programmes are at the forefront of this effort.</p>
+
+<p>When you donate to ${focusKeyword} efforts in ${location}, you are not just giving money — you are investing in futures. Families gain access to resources they could never afford on their own. Children get the chance to learn, grow, and thrive in environments that nurture their potential. Communities become stronger, more resilient, and more self-sufficient, capable of tackling their own challenges with the tools and support they need.</p>
+
+<p>The impact of ${focusKeyword} in ${location} extends far beyond the immediate beneficiaries. When a child receives proper nutrition through a school meal programme, they are more likely to attend school regularly, perform better academically, and eventually contribute to their community's development. When a village gains access to clean water through a borehole project, the health outcomes improve dramatically, children miss fewer days of school, and women and girls are freed from the daily burden of walking long distances to fetch water.</p>
+
+<p>Every ${focusKeyword} initiative we fund is designed with sustainability at its core. We do not simply provide temporary relief; we build capacity, train local leaders, establish community-owned structures, and create systems that continue to deliver impact long after the initial investment. This approach ensures that the benefits of your donation compound over time, reaching more and more people with each passing year.</p>
+
+<p>GiveToAfrica maintains the highest standards of financial accountability and transparency. We publish detailed annual reports, provide regular updates to donors, and undergo independent audits to ensure that every penny is spent effectively. When you choose to ${focusKeyword} in ${location} through GiveToAfrica, you can be confident that your donation is making a real difference.</p>`)
+
+  // Our Impact section (300+ words)
+  sections.push(`<h3>Our Impact in ${location}</h3>
+
+<p>GiveToAfrica has supported hundreds of ${focusKeyword}-related projects across ${location} and throughout the broader African continent. Our impact spans multiple sectors, including education, healthcare, economic empowerment, environmental conservation, and community development. Each project is carefully selected based on community needs assessments, local partner recommendations, and our own due diligence process.</p>
+
+<p>In ${location} specifically, our ${focusKeyword} programmes have reached thousands of beneficiaries. We have funded the construction of schools and classrooms, provided scholarships to disadvantaged students, supplied medical equipment to rural health clinics, drilled boreholes to provide clean drinking water, and supported livelihood programmes that help families achieve economic independence. The results speak for themselves: improved school enrolment rates, better health outcomes, increased household incomes, and stronger community cohesion.</p>
+
+<p>Our track record of accountability and results means that every donation you make is put to work effectively. We publish detailed reports on how funds are used, including photographs, stories from beneficiaries, and financial summaries. This transparency builds trust and ensures that donors like you can see exactly where their contribution goes and what it achieves.</p>
+
+<p>We measure our impact using both quantitative and qualitative indicators. Quantitative metrics include the number of beneficiaries reached, the amount of infrastructure built, and the improvement in key health and education indicators. Qualitative metrics include the stories of individual lives transformed, the strength of community relationships built, and the sustainability of the programmes we fund. Together, these measures give us a comprehensive picture of the difference your ${focusKeyword} donation makes in ${location}.</p>
+
+<p>Looking ahead, we are committed to expanding our ${focusKeyword} programmes in ${location} and across Africa. We are always seeking new partnerships, new funding opportunities, and new ways to maximise the impact of every donation. If you are passionate about ${focusKeyword} in ${location}, we would love to hear from you and explore how we can work together to create lasting change.</p>`)
+
+  // How Your Donation Helps (300+ words)
+  sections.push(`<h2>How Your Donation Helps</h2>
+
+<p>When you choose to ${focusKeyword} in ${location} through GiveToAfrica, your donation goes directly to on-the-ground programmes that make a tangible difference. Here is a detailed look at how your contribution helps:</p>
+
+<p><strong>Direct community support:</strong> Funds reach local organisations and community leaders who implement ${focusKeyword} projects on the ground in ${location}. These local partners understand the unique cultural, social, and economic context of their communities, ensuring that programmes are culturally appropriate and effective. By working through local organisations, we ensure that at least 85% of every donation goes directly to programme costs.</p>
+
+<p><strong>Transparent reporting:</strong> We provide regular updates on how your donation is being used, including photos, stories, and financial reports from the field. Donors receive quarterly newsletters, annual impact reports, and personalised updates on the specific programmes they have supported. This transparency ensures that you can see the real-world impact of your ${focusKeyword} donation in ${location}.</p>
+
+<p><strong>Sustainable impact:</strong> Our ${focusKeyword} initiatives in ${location} are designed to create lasting change, not just temporary relief. We focus on building capacity, training local leaders, establishing community-owned structures, and creating systems that continue to deliver impact long after the initial investment. This approach ensures that the benefits of your donation compound over time.</p>
+
+<p><strong>Tax-deductible donations:</strong> GiveToAfrica is a registered 501(c)(3) charity, making your donation tax-deductible in the United States. We provide receipts for all donations, and our EIN is available upon request. This means that your ${focusKeyword} contribution in ${location} can also provide you with tax benefits while supporting a worthy cause.</p>
+
+<p><strong>Matching gift opportunities:</strong> Many employers offer matching gift programmes that can double your donation at no extra cost to you. If your employer participates, consider doubling your ${focusKeyword} contribution to ${location} through a matching gift. This simple step can significantly amplify the impact of your generosity.</p>
+
+<p><strong>Legacy giving:</strong> You can also include GiveToAfrica in your will or estate plan, ensuring that your commitment to ${focusKeyword} in ${location} continues to make a difference for generations to come. Legacy gifts provide stable, long-term funding that allows us to plan and implement large-scale programmes with confidence.</p>`)
+
+  // Ways to Contribute (300+ words)
+  sections.push(`<h2>Ways to Contribute to ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location}</h2>
+
+<p>There are many meaningful ways to get involved with ${focusKeyword} in ${location}. Whether you donate monthly, make a one-time gift, or sponsor a specific project, every contribution counts and makes a real difference in the lives of people in ${location}.</p>
+
+<p><strong>Monthly giving:</strong> Set up a recurring donation to provide sustained support for ${focusKeyword} programmes in ${location}. Monthly donors are the backbone of our organisation, providing predictable funding that allows us to plan long-term projects, hire local staff, and build lasting infrastructure. Even a small monthly contribution of $10 or $25 can fund a child's school supplies for an entire year or provide a family with clean water for a month.</p>
+
+<p><strong>One-time gifts:</strong> Make a single donation to fund a specific ${focusKeyword} initiative in ${location}. One-time gifts are ideal for donors who want to make a immediate impact or who wish to support a particular project, such as building a classroom, drilling a borehole, or funding a medical mission. Every one-time gift, regardless of size, goes directly towards programmes in ${location}.</p>
+
+<p><strong>Corporate matching:</strong> If your employer offers matching gift programmes, your donation can be doubled at no extra cost to you. Many companies match employee donations dollar-for-dollar or even pound-for-pound, effectively multiplying the impact of your ${focusKeyword} contribution to ${location}. Check with your HR department to see if your employer participates in a matching gift programme.</p>
+
+<p><strong>Sponsor a project:</strong> Fund a specific ${focusKeyword} project in ${location} and receive detailed updates on its progress. Project sponsorship is a wonderful way to connect directly with the impact of your donation. You will receive regular reports, photographs, and personal updates from the community you are supporting, giving you a front-row seat to the transformation your contribution enables.</p>
+
+<p><strong>Donate appreciated stock or securities:</strong> If you hold appreciated assets, donating them directly to GiveToAfrica can provide significant tax benefits while supporting ${focusKeyword} in ${location}. This approach allows you to avoid capital gains tax while receiving a full deduction for the fair market value of your donation.</p>
+
+<p><strong>Donate cryptocurrency:</strong> GiveToAfrica accepts donations in Bitcoin, Ethereum, and other major cryptocurrencies. Cryptocurrency donations are tax-efficient and allow you to support ${focusKeyword} initiatives in ${location} with minimal transaction fees.</p>
+
+<p><strong>Volunteer your skills:</strong> If you have professional expertise in areas such as marketing, accounting, IT, or project management, consider volunteering your time and skills to support our ${focusKeyword} programmes in ${location}. Remote volunteering opportunities are available, and your professional skills can help us operate more efficiently and effectively.</p>`)
+
+  // Popular Initiatives (300+ words)
+  sections.push(`<h2>Popular ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} Initiatives in ${location}</h2>
+
+<p>GiveToAfrica supports a wide range of ${focusKeyword} initiatives across ${location}. Our programmes are designed to address the most pressing needs in communities, from education and healthcare to economic empowerment and environmental conservation. Each programme is tailored to the specific context of ${location}, drawing on local knowledge and international best practices.</p>
+
+<p><strong>Community-Led Development:</strong> Our ${focusKeyword} programmes in ${location} are led by local community members who understand the challenges their communities face. This grassroots approach ensures that solutions are culturally appropriate, sustainable, and effective. Community-led development empowers local people to take ownership of their own progress, building capacity and resilience that lasts for generations.</p>
+
+<p><strong>Education and Skills Training:</strong> Education is at the heart of our ${focusKeyword} mission in ${location}. We fund school construction, teacher training, scholarship programmes, and vocational training centres that equip young people with the skills they need to build better futures. Our education programmes in ${location} have helped thousands of children access quality learning opportunities that would otherwise be out of reach.</p>
+
+<p><strong>Healthcare Access:</strong> Access to quality healthcare remains a challenge in many parts of ${location}. Our ${focusKeyword} initiatives fund mobile clinics, medical supplies, health worker training, and hospital equipment upgrades that save lives every day. We focus on preventive care, maternal and child health, and the treatment of common diseases that disproportionately affect communities in ${location}.</p>
+
+<p><strong>Economic Empowerment:</strong> We believe in empowering communities to lift themselves out of poverty. Our ${focusKeyword} programmes in ${location} support microfinance, vocational training, cooperative farming, and small business development that create lasting economic opportunities. By providing people with the tools, training, and capital they need, we help them build livelihoods that sustain their families and strengthen their communities.</p>
+
+<p><strong>Environmental Conservation:</strong> Protecting the natural environment is essential for the long-term well-being of communities in ${location}. Our ${focusKeyword} initiatives include reforestation projects, sustainable agriculture training, clean energy programmes, and wildlife conservation efforts that protect the natural heritage of ${location} for future generations.</p>
+
+<p><strong>Water and Sanitation:</strong> Access to clean water and adequate sanitation is fundamental to health and dignity. Our ${focusKeyword} programmes in ${location} include borehole drilling, water purification systems, rainwater harvesting, and sanitation facility construction that bring clean water to communities that need it most.</p>
+
+<p><strong>Gender Equality and Women's Empowerment:</strong> We are committed to ensuring that women and girls in ${location} have equal access to education, healthcare, and economic opportunities. Our ${focusKeyword} programmes specifically target the barriers that prevent women and girls from participating fully in community life, including cultural norms, economic constraints, and lack of access to services.</p>
+
+<p><strong>Youth Development:</strong> Young people are the future of ${location} and Africa as a whole. Our ${focusKeyword} initiatives include youth leadership programmes, mentorship schemes, sports and recreation programmes, and skills training that prepare young people for productive and fulfilling lives.</p>`)
+
+  // How to Donate section (200+ words)
+  sections.push(`<h2>How to Donate to ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location}</h2>
+
+<p>Donating to ${focusKeyword} in ${location} is simple and secure through GiveToAfrica. Our online donation platform accepts credit cards, bank transfers, and cryptocurrency. You can also donate via PayPal or set up a recurring monthly gift. Every donation, regardless of size, makes a meaningful contribution to our ${focusKeyword} programmes in ${location}.</p>
+
+<p><strong>To donate by credit card or PayPal:</strong> Visit our donate page at <a href="${BASE_URL}/donate">${BASE_URL}/donate</a> and select ${focusKeyword} in ${location} as your cause. Our secure payment processor ensures that your financial information is protected, and you will receive an instant confirmation email with your donation receipt.</p>
+
+<p><strong>To donate by bank transfer:</strong> Contact our team at <a href="mailto:info@givetoafrica.net">info@givetoafrica.net</a> for bank details and instructions. Please reference your donation with the keyword ${focusKeyword} and the location ${location} so that we can properly allocate your contribution.</p>
+
+<p><strong>To donate by check:</strong> Mail your check to GiveToAfrica, P.O. Box 12345, Nairobi, Kenya. Please note ${focusKeyword} in ${location} in the memo line so that we can properly acknowledge and allocate your donation.</p>
+
+<p><strong>To donate by stock or securities:</strong> Contact our development team at <a href="mailto:development@givetoafrica.net">development@givetoafrica.net</a> for instructions on making a gift of appreciated securities. This is a tax-efficient way to support ${focusKeyword} in ${location} while receiving a full deduction for the fair market value of your gift.</p>
+
+<p><strong>To donate by cryptocurrency:</strong> Contact us at <a href="mailto:crypto@givetoafrica.net">crypto@givetoafrica.net</a> for our cryptocurrency wallet addresses. We accept Bitcoin, Ethereum, and other major cryptocurrencies, and all cryptocurrency donations are tax-deductible.</p>
+
+<p><strong>To set up a monthly donation:</strong> Visit ${BASE_URL}/donate and select the monthly giving option. Monthly donors receive quarterly impact reports and exclusive updates on the programmes they support. You can cancel or modify your monthly donation at any time.</p>
+
+<p><strong>To donate anonymously:</strong> You may choose to donate anonymously through our online platform. Anonymous donations are fully tax-deductible, and we will not disclose your identity to any third party.</p>`)
+
+  // LSI Keywords and Internal Linking section (200+ words)
+  sections.push(`<h2>Related ${categoryName} Initiatives Across Africa</h2>
+
+<p>${focusKeyword} in ${location} is just one of many ways you can support transformative change across Africa. GiveToAfrica operates programmes in multiple countries and sectors, each designed to address the specific needs of local communities. Here are some of our related initiatives that complement your ${focusKeyword} contribution:</p>
+
+<p>Explore our broader range of ${categoryName} programmes across Africa, including initiatives in <a href="${BASE_URL}/blog/category/${categorySlug}">${categoryName}</a> projects, <a href="${BASE_URL}/causes">community development causes</a>, and <a href="${BASE_URL}/donate">emergency relief efforts</a>. Every programme is designed to create sustainable, measurable impact in the communities that need it most.</p>
+
+<p>For more information about our work in ${location} and across Africa, visit our <a href="${BASE_URL}/about">About Us</a> page, explore our <a href="${BASE_URL}/impact">Impact Reports</a>, or contact our team directly at <a href="mailto:info@givetoafrica.net">info@givetoafrica.net</a>. We are always happy to answer questions, provide additional information, and help you find the best way to support ${focusKeyword} in ${location}.</p>
+
+<p>You can also follow us on social media for updates on our ${focusKeyword} programmes and other initiatives across Africa. Our social media channels provide behind-the-scenes looks at the impact of your donations, stories from the communities we serve, and opportunities to get more involved in our mission.</p>
+
+<p>Thank you for considering ${focusKeyword} in ${location} as a way to make a difference. Your generosity has the power to transform lives, strengthen communities, and build a brighter future for Africa. We look forward to working with you to create lasting, positive change.</p>`)
+
+  // FAQ section (200+ words)
+  sections.push(`<h2>Frequently Asked Questions About ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location}</h2>
+
+<p><strong>How can I donate to ${focusKeyword} in ${location}?</strong> You can donate online at ${BASE_URL}/donate, by bank transfer, by check, by stock, or by cryptocurrency. All donations are tax-deductible. Simply visit our donate page, select ${focusKeyword} in ${location} as your cause, and follow the prompts to complete your donation securely.</p>
+
+<p><strong>What impact does ${focusKeyword} have in ${location}?</strong> Our ${focusKeyword} programmes in ${location} have reached thousands of beneficiaries, delivering measurable improvements in education, healthcare, economic opportunity, and community well-being. We publish detailed impact reports that document the results of our programmes, including beneficiary stories, quantitative metrics, and financial transparency data.</p>
+
+<p><strong>Where does the money go for ${focusKeyword} in ${location}?</strong> At least 85% of every donation goes directly to programme costs in ${location}. We maintain transparent financial reporting and publish annual reports that detail exactly how funds are allocated. Administrative costs are kept to a minimum, and we are committed to ensuring that the maximum possible amount reaches the communities we serve.</p>
+
+<p><strong>Can I sponsor a specific ${focusKeyword} project in ${location}?</strong> Yes! You can sponsor a specific project and receive detailed updates on its progress. Contact us at <a href="mailto:info@givetoafrica.net">info@givetoafrica.net</a> for details on current project opportunities and sponsorship packages. Project sponsors receive regular progress reports, photographs, and personal updates from the community they are supporting.</p>
+
+<p><strong>Is GiveToAfrica a registered charity?</strong> Yes, GiveToAfrica is a registered 501(c)(3) nonprofit organisation in the United States. Our tax ID is available on request, and all donations are tax-deductible to the extent permitted by law. We are also registered as a charity in Kenya and maintain partnerships with registered local organisations in ${location} and across Africa.</p>
+
+<p><strong>How can I verify the impact of my ${focusKeyword} donation in ${location}?</strong> We provide quarterly impact reports, annual financial statements, and personalised updates for all donors. You can also visit our website to read beneficiary stories, view programme photos, and access detailed information about our work in ${location}. We welcome donor visits to our programme sites and can arrange visits for those who are interested in seeing the impact of their donations firsthand.</p>
+
+<p><strong>Can I donate on behalf of a company or organisation?</strong> Absolutely. Corporate donations to ${focusKeyword} in ${location} are welcome and can be structured to maximise tax benefits for your organisation. We work with corporate partners to design giving programmes that align with their CSR goals and create meaningful impact in ${location}. Contact our corporate partnerships team at <a href="mailto:corporate@givetoafrica.net">corporate@givetoafrica.net</a> for more information.</p>`)
+
+  // Contact section (150+ words)
+  sections.push(`<h2>Contact Us About ${keyword.charAt(0).toUpperCase() + keyword.slice(1).toLowerCase()} in ${location}</h2>
+
+<p>For more information about ${focusKeyword} in ${location}, or to discuss how your donation can make the biggest impact, please contact us. Our team is always happy to answer questions, provide additional information, and help you find the best way to support ${focusKeyword} initiatives in ${location} and across Africa.</p>
+
+<ul>
+<li><strong>Email:</strong> <a href="mailto:info@givetoafrica.net">info@givetoafrica.net</a></li>
+<li><strong>Phone:</strong> <a href="tel:+254700000000">+254 700 000 000</a></li>
+<li><strong>WhatsApp:</strong> <a href="https://wa.me/254700000000">Chat with us on WhatsApp</a></li>
+<li><strong>Address:</strong> GiveToAfrica, P.O. Box 12345, Nairobi, Kenya</li>
+</ul>
+
+<p><strong>Office Hours:</strong> Monday to Friday, 9:00 AM to 5:00 PM EAT (East Africa Time). We aim to respond to all inquiries within 24 hours during business days.</p>
+
+<p><strong>Social Media:</strong> Follow us on Facebook, Twitter, Instagram, and LinkedIn for updates on our ${focusKeyword} programmes, success stories from the communities we serve, and opportunities to get more involved in our mission to support sustainable development across Africa.</p>
+
+<p><a href="${BASE_URL}/donate">Donate now to ${focusKeyword} in ${location}</a> and help us build a brighter future for African communities. Every contribution matters, and together, we can create lasting change that transforms lives for generations to come.</p>`)
+
+  return sections.join('\n')
 }
 
 function generateBlogPost(keyword: string): any {
