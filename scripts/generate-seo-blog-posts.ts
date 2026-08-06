@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'fs'
+﻿import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'fs'
 import { join } from 'path'
 
 import XLSX from 'xlsx'
@@ -102,28 +102,28 @@ const COUNTRY_NAMES = Object.keys(COUNTRIES)
 const TITLE_PATTERNS = [
   // Direct/informational
   (kw: string, cat: string, country: string) => {
-    const action = kw.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
+    const action = kw.replace(/^(how to )?give to africa to /i, '').replace(/^give to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
     const actionTitle = action.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
     const short = actionTitle.length > 45 ? actionTitle.slice(0, 42) + '...' : actionTitle
     return `How Donations Help ${short}`
   },
   // Number/list
   (kw: string, cat: string, country: string) => {
-    const action = kw.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
+    const action = kw.replace(/^(how to )?give to africa to /i, '').replace(/^give to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
     const actionTitle = action.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
     const short = actionTitle.length > 35 ? actionTitle.slice(0, 32) + '...' : actionTitle
     return `Why ${short} Matters in ${country}`
   },
   // Question
   (kw: string, cat: string, country: string) => {
-    const action = kw.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
+    const action = kw.replace(/^(how to )?give to africa to /i, '').replace(/^give to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
     const actionTitle = action.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
     const short = actionTitle.length > 40 ? actionTitle.slice(0, 37) + '...' : actionTitle
     return `What ${short} Looks Like in ${country}`
   },
   // Impact statement
   (kw: string, cat: string, country: string) => {
-    const action = kw.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
+    const action = kw.replace(/^(how to )?give to africa to /i, '').replace(/^give to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
     const actionTitle = action.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
     const short = actionTitle.length > 40 ? actionTitle.slice(0, 37) + '...' : actionTitle
     return `The Impact of ${short} in ${country}`
@@ -178,7 +178,7 @@ function generateMetaTitle(title: string): string {
 
 function generateMetaDescription(keyword: string, categorySlug: string, country: string): string {
   const cat = CATEGORIES[categorySlug]
-  const action = keyword.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
+  const action = keyword.replace(/^(how to )?give to africa to /i, '').replace(/^give to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
   const desc = `Discover how ${action} is transforming communities in ${country}. Support ${cat?.name || 'community development'} programmes that create lasting change.`
   if (desc.length > 155) return desc.slice(0, 152) + '...'
   if (desc.length < 140) return `${cat?.tagline || 'Building stronger communities'}. Learn how ${action} in ${country} creates lasting community change.`
@@ -228,7 +228,7 @@ function generateBody(params: {
   const catName = cat?.name || 'community development'
   const catTagline = cat?.tagline || 'building stronger communities'
   const ctx = COUNTRIES[country] || { challenges: 'Many communities across Africa face significant development barriers.', stats: 'Programmes supported by international donors are making a measurable difference.' }
-  const kw = keyword.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
+  const kw = keyword.replace(/^(how to )?give to africa to /i, '').replace(/^give to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '')
   const kwTitle = kw.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   const lsi1 = lsiKeywords[0] || ''
   const lsi2 = lsiKeywords[1] || ''
@@ -426,7 +426,7 @@ function main() {
     usedMetaDescs.add(metaDesc)
 
     // Derived keyword title
-    const kwClean = keyword.replace(/^(how to )?donate to africa to /i, '').replace(/^donate to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '').trim()
+    const kwClean = keyword.replace(/^(how to )?give to africa to /i, '').replace(/^give to africa to /i, '').replace(/^fund /i, '').replace(/^sponsor /i, '').replace(/^how to /i, '').trim()
     const kwTitle = kwClean.split(' ').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 
     // LSI keywords
@@ -478,7 +478,7 @@ function main() {
     if (kwCount > 8) qaIssues.push(`High keyword density (${kwCount}x): "${slug}"`)
 
     // Tags
-    const tags = [cat.name.toLowerCase(), 'donate to africa', 'charity', ...lsiKeywords.slice(0, 3)].slice(0, 6)
+    const tags = [cat.name.toLowerCase(), 'give to africa', 'charity', ...lsiKeywords.slice(0, 3)].slice(0, 6)
 
     // Image
     const featuredImage = getFeaturedImage(categorySlug, causesImagesDir, keyword)
@@ -565,3 +565,4 @@ function catTagline(title: string, lsi: string[]): string {
 }
 
 main()
+

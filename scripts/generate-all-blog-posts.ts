@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'fs'
+﻿import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import XLSX from 'xlsx'
 
@@ -140,8 +140,8 @@ function generateTitle(keyword: string, categorySlug: string): string {
   const cat = CATEGORIES[categorySlug]
   // Clean up keyword to make a title
   let title = keyword
-    .replace(/^how to donate to africa to /i, '')
-    .replace(/^donate to africa to /i, '')
+    .replace(/^how to give to africa to /i, '')
+    .replace(/^give to africa to /i, '')
     .replace(/^donate to /i, '')
     .replace(/^fund /i, '')
     .replace(/^sponsor /i, '')
@@ -319,7 +319,7 @@ function generateTags(keyword: string, categorySlug: string): string[] {
   const cat = CATEGORIES[categorySlug]
   const baseTags = [
     cat?.name.toLowerCase() || 'community development',
-    'donate to Africa',
+    'give to Africa',
     'charity',
     'nonprofit',
     'community impact',
@@ -569,3 +569,5 @@ function main() {
 }
 
 main()
+
+
