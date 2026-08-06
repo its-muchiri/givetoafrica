@@ -1,9 +1,10 @@
 import { spawn } from 'child_process'
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
+import { readFileSync, writeFileSync, mkdirSync, existsSync, mkdtempSync, rmSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { createRequire } from 'module'
 import puppeteer from 'puppeteer-core'
+import os from 'os'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -63,7 +64,7 @@ function getRoutes() {
   const blogCategoryRoutes = blogCategorySlugs.map(s => `/blog/category/${s}`)
   const blogPostRoutes = publishedPosts.map(p => `/blog/${p.slug}`)
 
-  return [...STATIC_ROUTES, ...categoryRoutes, ...charityRoutes, ...blogCategoryRoutes, ...blogPostRoutes]
+  return [...new Set([...STATIC_ROUTES, ...categoryRoutes, ...charityRoutes, ...blogCategoryRoutes, ...blogPostRoutes])]
 }
 
 function startPreviewServer() {
@@ -87,6 +88,39 @@ function startPreviewServer() {
   })
 }
 
+const BATCH_SIZE = 25
+
+async function prerenderBatch(routes, startIndex, browser, server) {
+  const endIndex = Math.min(startIndex + BATCH_SIZE, routes.length)
+
+  for (let i = startIndex; i < endIndex; i++) {
+    const route = routes[i]
+    const url = `http://localhost:4199${route}`
+    const outPath = join(DIST, route === '/' ? 'index.html' : `${route.replace(/^\//, '')}/index.html`)
+
+    let page
+    try {
+      page = await browser.newPage()
+      page.setDefaultTimeout(30000)
+      process.stdout.write(`  [${i + 1}/${routes.length}] ${route} `)
+      await page.goto(url, { waitUntil: 'networkidle0', timeout: 15000 })
+      await page.waitForSelector('#root > *', { timeout: 5000 }).catch(() => {})
+      await new Promise(r => setTimeout(r, 200))
+
+      const html = await page.content()
+      mkdirSync(dirname(outPath), { recursive: true })
+      writeFileSync(outPath, html)
+      console.log('✓')
+    } catch (err) {
+      console.log(`✗ — ${err.message}`)
+    } finally {
+      if (page) await page.close().catch(() => {})
+    }
+  }
+
+  return endIndex
+}
+
 async function prerender() {
   const routes = getRoutes()
   console.log(`Prerendering ${routes.length} routes...`)
@@ -99,38 +133,39 @@ async function prerender() {
     const chromePath = getChromePath()
     console.log(`Using browser: ${chromePath}`)
 
-    browser = await puppeteer.launch({
-      executablePath: chromePath,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--headless=new'],
-    })
-
-    const page = await browser.newPage()
-    page.setDefaultTimeout(30000)
-
-    for (let i = 0; i < routes.length; i++) {
-      const route = routes[i]
-      const url = `http://localhost:4199${route}`
-      const outPath = join(DIST, route === '/' ? 'index.html' : `${route.replace(/^\//, '')}/index.html`)
-
+    for (let i = 0; i < routes.length; ) {
+      let userDataDir
       try {
-        process.stdout.write(`  [${i + 1}/${routes.length}] ${route} `)
-        await page.goto(url, { waitUntil: 'networkidle', timeout: 20000 })
-        await page.waitForSelector('#root > *', { timeout: 10000 }).catch(() => {})
-        await new Promise(r => setTimeout(r, 500))
+        userDataDir = mkdtempSync(join(os.tmpdir(), 'puppeteer-chrome-'))
+        browser = await puppeteer.launch({
+          executablePath: chromePath,
+          args: ['--no-sandbox', '--disable-setuid-sandbox', '--headless=new',
+            '--disable-dev-shm-usage', '--disable-web-security',
+            '--disable-features=site-per-process,IsolateOrigins,site-per-process',
+            '--no-first-run', '--no-default-browser-check',
+            '--disable-gpu', '--disable-dev-tools'],
+          userDataDir,
+        })
 
-        const html = await page.content()
-        mkdirSync(dirname(outPath), { recursive: true })
-        writeFileSync(outPath, html)
-        console.log('✓')
+        i = await prerenderBatch(routes, i, browser, server)
+        await browser.close().catch(() => {})
+        browser = null
+        if (userDataDir) { try { rmSync(userDataDir, { recursive: true, force: true }) } catch {} }
+        console.log(`  [Progress] ${i}/${routes.length} routes processed, refreshed browser`)
       } catch (err) {
-        console.log(`✗ — ${err.message}`)
+        console.error(`Browser error at batch starting ${i}: ${err.message}`)
+        if (browser) {
+          await browser.close().catch(() => {})
+          browser = null
+        }
+        if (userDataDir) { try { rmSync(userDataDir, { recursive: true, force: true }) } catch {} }
+        await new Promise(r => setTimeout(r, 2000))
       }
     }
 
-    await page.close()
     console.log('\nPrerendering complete!')
   } finally {
-    if (browser) await browser.close()
+    if (browser) await browser.close().catch(() => {})
     server.kill()
   }
 }

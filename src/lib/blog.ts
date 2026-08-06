@@ -18,6 +18,7 @@ export interface BlogPost {
   needsFactCheck: boolean
   sourceKeyword: string
   source?: string
+  wordCount?: number
   bodyHtml: string
   ctaMidArticle: { categorySlug: string; categoryName: string; copy: string }
   ctaEndOfArticle: { categorySlug: string; categoryName: string; copy: string }

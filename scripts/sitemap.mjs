@@ -84,7 +84,11 @@ function generateSitemap() {
   </url>`)
   }
 
+  const seenUrls = new Set()
   for (const post of publishedPosts) {
+    const url = `${SITE_URL}/blog/${post.slug}`
+    if (seenUrls.has(url)) continue
+    seenUrls.add(url)
     const postDate = post.publishedAt ? post.publishedAt.split('T')[0] : today
     urls.push(`  <url>
     <loc>${SITE_URL}/blog/${post.slug}</loc>

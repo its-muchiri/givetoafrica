@@ -13,7 +13,7 @@
     "build": "tsc && vite build",
     "build:ssg": "tsc && vite build && node scripts/sitemap.mjs && node scripts/robots.mjs && node scripts/prerender.mjs",
     "build:server": "tsc -p tsconfig.server.json",
-    "build:hostpinnacle": "npm run build:server && npm run build:ssg && npm run notify-google:site",
+    "build:hostpinnacle": "npm run build:ssg && npm run build:server && npm run notify-google:site",
     "start": "node dist/server/index.js",
     "start:pm2": "pm2 start dist/server/index.js --name givetoafrica",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",

@@ -20,7 +20,7 @@ async function main() {
   const posts = getBlogPosts()
   const published = posts.filter((p) => p.publishedAt)
 
-  const urls = published.map((p) => `${BASE_URL}/blog/${p.slug}`)
+  const urls = [...new Set(published.map((p) => `${BASE_URL}/blog/${p.slug}`))]
 
   const clientEmail = process.env.GOOGLE_INDEXING_API_CLIENT_EMAIL || ''
   const privateKey = (process.env.GOOGLE_INDEXING_API_PRIVATE_KEY || '').replace(/\\n/g, '\n')
